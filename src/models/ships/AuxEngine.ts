@@ -5,7 +5,6 @@ export interface IAuxiliaryEngine extends Document {
   rpm: number;
   power: number;
   specificFuelOilConsumption: number;
-  quantity: number;
 }
 
 const auxiliaryEngineSchema: Schema = new Schema({
