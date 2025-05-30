@@ -1,34 +1,8 @@
 import { Request, Response } from 'express';
 import { AisService } from '../services/ais.service';
 import { handleError } from '../utils/error.handler';
-// import { IAisPosition } from '../types/ais.type';
 
 const aisService = new AisService();
-// export const createOrUpdateAisController = async (
-//   req: Request,
-//   res: Response,
-// ): Promise<void> => {
-//   try {
-//     const { mmsi, position }: { mmsi: string; position: IAisPosition } =
-//       req.body;
-//     if (!position) {
-//       res.status(400).json({
-//         message: 'Position data is required',
-//         success: false,
-//       });
-//       return;
-//     }
-//     const result = await aisService.createOrUpdateAis(mmsi, position);
-//     res.status(200).json({
-//       message: 'Ais data created/updated successfully',
-//       data: result,
-//       success: true,
-//     });
-//   } catch (error: unknown) {
-//     handleError(error, res);
-//   }
-// };
-
 export const getAllAisController = async (
   _req: Request,
   res: Response,
