@@ -4,7 +4,6 @@ import { handleError } from '../../utils/error.handler';
 
 const shipSizeService = new ShipSizeService();
 
-// Create ShipSize
 export const createShipSizeController = async (req: Request, res: Response) => {
   try {
     const shipSize = await shipSizeService.createShipSize(req.body);
@@ -18,7 +17,6 @@ export const createShipSizeController = async (req: Request, res: Response) => {
   }
 };
 
-// Get all ShipSizes
 export const getAllShipSizesController = async (
   _req: Request,
   res: Response,
@@ -35,7 +33,6 @@ export const getAllShipSizesController = async (
   }
 };
 
-// Get ShipSize by ID
 export const getShipSizeByIdController = async (
   req: Request,
   res: Response,
@@ -53,7 +50,6 @@ export const getShipSizeByIdController = async (
   }
 };
 
-// Update ShipSize
 export const updateShipSizeController = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
@@ -68,7 +64,6 @@ export const updateShipSizeController = async (req: Request, res: Response) => {
   }
 };
 
-// Delete ShipSize
 export const deleteShipSizeController = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {

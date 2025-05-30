@@ -1,21 +1,27 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export interface IVessel extends Document {
+export interface IShip extends Document {
   mmsi: string;
   generalData: mongoose.Schema.Types.ObjectId;
   sizeData: mongoose.Schema.Types.ObjectId;
   typeData: mongoose.Schema.Types.ObjectId;
   fuelType: mongoose.Schema.Types.ObjectId;
   engineSpecs: {
-    mainEngine: mongoose.Schema.Types.ObjectId;
-    auxiliaryEngine: mongoose.Schema.Types.ObjectId;
+    mainEngine: {
+      engine: mongoose.Schema.Types.ObjectId;
+      quantity: number;
+    };
+    auxiliaryEngine: {
+      engine: mongoose.Schema.Types.ObjectId[];
+      quantity: number;
+    };
   };
   fuelFormulas: {
     firstFuelFormula: mongoose.Schema.Types.ObjectId;
   };
 }
 
-const vesselSchema: Schema = new Schema({
+const shipSchema: Schema = new Schema({
   mmsi: {
     type: String,
     unique: true,
@@ -44,14 +50,28 @@ const vesselSchema: Schema = new Schema({
   },
   engineSpecs: {
     mainEngine: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'MainEngine',
-      required: true,
+      engine: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'MainEngine',
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
     },
     auxiliaryEngine: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'AuxiliaryEngine',
-      required: true,
+      engine: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'AuxiliaryEngine',
+          required: true,
+        },
+      ],
+      quantity: {
+        type: Number,
+        required: true,
+      },
     },
   },
   fuelFormulas: {
@@ -63,6 +83,6 @@ const vesselSchema: Schema = new Schema({
   },
 });
 
-const Vessel = mongoose.model<IVessel>('Vessel', vesselSchema);
+const Ship = mongoose.model<IShip>('Ship', shipSchema);
 
-export { Vessel };
+export { Ship };
