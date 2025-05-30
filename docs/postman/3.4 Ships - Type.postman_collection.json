@@ -1,0 +1,688 @@
+{
+	"info": {
+		"_postman_id": "386aee2a-390c-4e4c-b69c-568af5cf1b87",
+		"name": "3.4 Ships - Type",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33361122",
+		"_collection_link": "https://www.postman.com/ais444-7717/workspace/ais-its-seemp-cii/collection/33361122-386aee2a-390c-4e4c-b69c-568af5cf1b87?action=share&source=collection_link&creator=33361122"
+	},
+	"item": [
+		{
+			"name": "create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Cargo Ship\",\n  \"capacityUnit\": \"tons\",\n  \"a\": 50,\n  \"c\": 30,\n  \"d\": [\n    {\n      \"d1\": 10,\n      \"d2\": 20,\n      \"d3\": 30,\n      \"d4\": 40\n    }\n  ]\n}\n\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/{{version}}/ships/type",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"ships",
+						"type"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "create",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Cargo Ship\",\n  \"capacityUnit\": \"tons\",\n  \"a\": 50,\n  \"c\": 30,\n  \"d\": [\n    {\n      \"d1\": 10,\n      \"d2\": 20,\n      \"d3\": 30,\n      \"d4\": 40\n    }\n  ]\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/{{version}}/ships/type",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"{{version}}",
+								"ships",
+								"type"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+						},
+						{
+							"key": "Cross-Origin-Opener-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Cross-Origin-Resource-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Origin-Agent-Cluster",
+							"value": "?1"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "no-referrer"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-DNS-Prefetch-Control",
+							"value": "off"
+						},
+						{
+							"key": "X-Download-Options",
+							"value": "noopen"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "237"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"ed-+O/4nBEjtbiowojfBpqNrKGewWM\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 30 May 2025 07:35:57 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"ShipType created successfully\",\n    \"data\": {\n        \"name\": \"Cargo Ship\",\n        \"capacityUnit\": \"tons\",\n        \"a\": 50,\n        \"c\": 30,\n        \"d\": [\n            {\n                \"d1\": 10,\n                \"d2\": 20,\n                \"d3\": 30,\n                \"d4\": 40,\n                \"_id\": \"68395fdd57952b32c572cfc1\"\n            }\n        ],\n        \"_id\": \"68395fdd57952b32c572cfc0\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+				}
+			]
+		},
+		{
+			"name": "get all",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/{{version}}/ships/type",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"ships",
+						"type"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get all",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/{{version}}/ships/type",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"{{version}}",
+								"ships",
+								"type"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+						},
+						{
+							"key": "Cross-Origin-Opener-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Cross-Origin-Resource-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Origin-Agent-Cluster",
+							"value": "?1"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "no-referrer"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-DNS-Prefetch-Control",
+							"value": "off"
+						},
+						{
+							"key": "X-Download-Options",
+							"value": "noopen"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "244"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"f4-+PVo81k5CxV4VGs0lV7U4sf/DH4\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 30 May 2025 07:36:11 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"All ShipTypes fetched successfully\",\n    \"data\": [\n        {\n            \"_id\": \"68395fdd57952b32c572cfc0\",\n            \"name\": \"Cargo Ship\",\n            \"capacityUnit\": \"tons\",\n            \"a\": 50,\n            \"c\": 30,\n            \"d\": [\n                {\n                    \"d1\": 10,\n                    \"d2\": 20,\n                    \"d3\": 30,\n                    \"d4\": 40,\n                    \"_id\": \"68395fdd57952b32c572cfc1\"\n                }\n            ],\n            \"__v\": 0\n        }\n    ],\n    \"success\": true\n}"
+				}
+			]
+		},
+		{
+			"name": "get by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/{{version}}/ships/type/68395fdd57952b32c572cfc0",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"ships",
+						"type",
+						"68395fdd57952b32c572cfc0"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get by ID",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/{{version}}/ships/type/68395fdd57952b32c572cfc0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"{{version}}",
+								"ships",
+								"type",
+								"68395fdd57952b32c572cfc0"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+						},
+						{
+							"key": "Cross-Origin-Opener-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Cross-Origin-Resource-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Origin-Agent-Cluster",
+							"value": "?1"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "no-referrer"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-DNS-Prefetch-Control",
+							"value": "off"
+						},
+						{
+							"key": "X-Download-Options",
+							"value": "noopen"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "237"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"ed-uujWr2n6bkKM5O7qovYIN8ZRsk8\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 30 May 2025 07:36:36 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"ShipType fetched successfully\",\n    \"data\": {\n        \"_id\": \"68395fdd57952b32c572cfc0\",\n        \"name\": \"Cargo Ship\",\n        \"capacityUnit\": \"tons\",\n        \"a\": 50,\n        \"c\": 30,\n        \"d\": [\n            {\n                \"d1\": 10,\n                \"d2\": 20,\n                \"d3\": 30,\n                \"d4\": 40,\n                \"_id\": \"68395fdd57952b32c572cfc1\"\n            }\n        ],\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+				}
+			]
+		},
+		{
+			"name": "update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Cargo Ships\",\n  \"capacityUnit\": \"tons\",\n  \"a\": 50,\n  \"c\": 30,\n  \"d\": [\n    {\n      \"d1\": 10,\n      \"d2\": 20,\n      \"d3\": 30,\n      \"d4\": 40\n    }\n  ]\n}\n\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/{{version}}/ships/type/68395fdd57952b32c572cfc0",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"ships",
+						"type",
+						"68395fdd57952b32c572cfc0"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "update",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Cargo Ships\",\n  \"capacityUnit\": \"tons\",\n  \"a\": 50,\n  \"c\": 30,\n  \"d\": [\n    {\n      \"d1\": 10,\n      \"d2\": 20,\n      \"d3\": 30,\n      \"d4\": 40\n    }\n  ]\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/{{version}}/ships/type/68395fdd57952b32c572cfc0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"{{version}}",
+								"ships",
+								"type",
+								"68395fdd57952b32c572cfc0"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+						},
+						{
+							"key": "Cross-Origin-Opener-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Cross-Origin-Resource-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Origin-Agent-Cluster",
+							"value": "?1"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "no-referrer"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-DNS-Prefetch-Control",
+							"value": "off"
+						},
+						{
+							"key": "X-Download-Options",
+							"value": "noopen"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "238"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"ee-N67ilaMCwzYCbrp16sh3HfDudT0\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 30 May 2025 07:37:33 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"ShipType updated successfully\",\n    \"data\": {\n        \"_id\": \"68395fdd57952b32c572cfc0\",\n        \"name\": \"Cargo Ships\",\n        \"capacityUnit\": \"tons\",\n        \"a\": 50,\n        \"c\": 30,\n        \"d\": [\n            {\n                \"d1\": 10,\n                \"d2\": 20,\n                \"d3\": 30,\n                \"d4\": 40,\n                \"_id\": \"6839603d57952b32c572d094\"\n            }\n        ],\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+				}
+			]
+		},
+		{
+			"name": "delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/{{version}}/ships/type/68395fdd57952b32c572cfc0",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"ships",
+						"type",
+						"68395fdd57952b32c572cfc0"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "delete",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/{{version}}/ships/type/68395fdd57952b32c572cfc0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"{{version}}",
+								"ships",
+								"type",
+								"68395fdd57952b32c572cfc0"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+						},
+						{
+							"key": "Cross-Origin-Opener-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Cross-Origin-Resource-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Origin-Agent-Cluster",
+							"value": "?1"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "no-referrer"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-DNS-Prefetch-Control",
+							"value": "off"
+						},
+						{
+							"key": "X-Download-Options",
+							"value": "noopen"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "58"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"3a-D1diIq7o3o0iffrG5CAQ1X8VagU\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 30 May 2025 07:37:49 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"ShipType deleted successfully\",\n    \"success\": true\n}"
+				}
+			]
+		}
+	]
+}
