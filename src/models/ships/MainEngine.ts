@@ -12,7 +12,6 @@ const mainEngineSchema: Schema = new Schema({
   rpm: { type: Number, required: true },
   power: { type: Number, required: true },
   specificFuelOilConsumption: { type: Number, required: true },
-  quantity: { type: Number, required: true },
 });
 
 const MainEngine = mongoose.model<IMainEngine>('MainEngine', mainEngineSchema);
