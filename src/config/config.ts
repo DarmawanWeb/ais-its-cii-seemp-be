@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 
-// Load environment variables from .env file
 dotenv.config();
 
 interface Config {
@@ -13,6 +12,9 @@ interface Config {
   server: {
     port: number;
   };
+  cors: {
+    origin: string[];
+  };
   environment: string;
   jwt: {
     secret: string;
@@ -22,9 +24,12 @@ interface Config {
     secret: string;
     expiration: string;
   };
+  websocket: {
+    url: string;
+    token: string;
+  };
 }
 
-// Load configuration from environment variables
 const config: Config = {
   mongo: {
     username: process.env.MONGO_INITDB_ROOT_USERNAME || 'your_mongo_username',
@@ -40,6 +45,11 @@ const config: Config = {
         process.env.MONGO_DB_NAME || 'your_db_name'
       }?authSource=admin`,
   },
+  cors: {
+    origin: process.env.ALLOWED_ORIGINS?.split(',') || [
+      'http://localhost:3000',
+    ],
+  },
   server: {
     port: Number(process.env.PORT) || 3003,
   },
@@ -51,6 +61,10 @@ const config: Config = {
   refreshToken: {
     secret: process.env.REFRESH_TOKEN_SECRET || 'your_refresh_token_secret',
     expiration: process.env.REFRESH_TOKEN_EXPIRATION || '30d',
+  },
+  websocket: {
+    url: process.env.WEBSOCKET_URI || 'http://localhost:8080',
+    token: process.env.WEBSOCKET_TOKEN || 'your_websocket_token',
   },
 };
 

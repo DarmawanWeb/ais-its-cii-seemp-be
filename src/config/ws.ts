@@ -1,22 +1,36 @@
-import http from 'http';
-import { Server } from 'socket.io';
+import { io, Socket } from 'socket.io-client';
+import config from './config';
 import logger from './logger';
+import type { TimestampedMessage } from '../types/ais.type';
 
-const socketServer = http.createServer();
-const io = new Server(socketServer);
+const connectSocket = () => {
+  const socket: Socket = io(config.websocket.url, {
+    auth: {
+      token: config.websocket.token,
+    },
+    transports: ['websocket'],
+    withCredentials: true,
+  });
 
-io.on('connection', (socket) => {
-  logger.info('A user connected to WebSocket');
-  socket.emit('welcome', 'Welcome to the Socket.IO server on port 8081!');
+  socket.on('connect', () => {
+    logger.info(`WebSocket connection established with ID: ${socket.id}`);
+  });
 
-  socket.on('message', (msg: string) => {
-    logger.debug(`Received message: ${msg}`);
-    socket.emit('message', `Echo: ${msg}`);
+  socket.on('messageFromServer', (data: TimestampedMessage) => {
+    handleAisDataController(data);
+  });
+
+  socket.on('connect_error', (err: Error) => {
+    logger.error('Connection error:', err.message || err.stack);
   });
 
   socket.on('disconnect', () => {
-    logger.info('A user disconnected from WebSocket');
+    logger.info('WebSocket connection closed');
   });
-});
+};
 
-export default socketServer;
+const handleAisDataController = (data: TimestampedMessage) => {
+  console.log('Received data:', data.message.data?.mmsi);
+};
+
+export { connectSocket };

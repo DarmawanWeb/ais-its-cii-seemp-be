@@ -1,12 +1,14 @@
 import { Request, Response } from 'express';
-import { handleError } from '../utils/error.handler';
 import { validationResult } from 'express-validator';
-import {
-  registerUser,
-  loginUser,
-  refreshAccessToken,
-  logoutUser,
-} from '../services/auth.service';
+import { handleError } from '../utils/error.handler';
+import { AuthService } from '../services/auth.service';
+import { RefreshTokenRepository } from '../repositories/auth/refreshToken.repository';
+import { UserRepository } from '../repositories/auth/user.repository';
+
+const authService = new AuthService(
+  new UserRepository(),
+  new RefreshTokenRepository(),
+);
 
 export const registerController = async (
   req: Request,
@@ -20,9 +22,10 @@ export const registerController = async (
         errors: errors.array(),
         success: false,
       });
+      return;
     }
     const { name, email, password, role } = req.body;
-    const result = await registerUser({ name, email, password, role });
+    const result = await authService.register({ name, email, password, role });
     res.status(200).json({
       message: 'User registered successfully',
       data: result,
@@ -33,7 +36,10 @@ export const registerController = async (
   }
 };
 
-export const loginController = async (req: Request, res: Response) => {
+export const loginController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -42,15 +48,13 @@ export const loginController = async (req: Request, res: Response) => {
         errors: errors.array(),
         success: false,
       });
+      return;
     }
     const { email, password } = req.body;
-    const { accessToken, refreshToken, user } = await loginUser(
-      email,
-      password,
-    );
+    const result = await authService.login(email, password);
     res.status(200).json({
       message: 'User logged in successfully',
-      data: { accessToken, refreshToken, user },
+      data: result,
       success: true,
     });
   } catch (error: unknown) {
@@ -58,13 +62,16 @@ export const loginController = async (req: Request, res: Response) => {
   }
 };
 
-export const refreshController = async (req: Request, res: Response) => {
+export const refreshController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { refreshToken } = req.body;
-    const { accessToken } = await refreshAccessToken(refreshToken);
+    const result = await authService.refreshAccessToken(refreshToken);
     res.status(200).json({
       message: 'Access token refreshed successfully',
-      data: { accessToken },
+      data: result,
       success: true,
     });
   } catch (error: unknown) {
@@ -72,10 +79,13 @@ export const refreshController = async (req: Request, res: Response) => {
   }
 };
 
-export const logoutController = async (req: Request, res: Response) => {
+export const logoutController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { userId } = req.body;
-    const result = await logoutUser(userId);
+    const result = await authService.logout(userId);
     res.status(200).json({
       message: 'User logged out successfully',
       data: result,

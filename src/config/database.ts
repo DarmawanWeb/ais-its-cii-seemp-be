@@ -1,20 +1,15 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import logger from './logger';
+import config from './config';
 
-dotenv.config();
-
-const dbName = process.env.MONGO_DB_NAME || 'default_db';
-const mongoURI = process.env.MONGO_URI;
-
-if (!mongoURI) {
+if (!config.mongo.uri) {
   throw new Error('MONGO_URI environment variable is not defined.');
 }
 
 export const syncDatabase = async () => {
   try {
-    const conn = await mongoose.connect(mongoURI, {
-      dbName,
+    const conn = await mongoose.connect(config.mongo.uri, {
+      dbName: config.mongo.dbName,
     });
 
     logger.info(`MongoDB connected: ${conn.connection.host}`);
