@@ -5,7 +5,7 @@ export interface IShipType extends Document {
   capacityUnit: string;
   a: number;
   c: number;
-  dimensions: {
+  d: {
     d1?: number;
     d2?: number;
     d3?: number;
@@ -18,7 +18,7 @@ const shipTypeSchema: Schema = new Schema({
   capacityUnit: { type: String, required: true },
   a: { type: Number, required: true },
   c: { type: Number, required: true },
-  dimensions: [
+  d: [
     {
       d1: { type: Number },
       d2: { type: Number },
