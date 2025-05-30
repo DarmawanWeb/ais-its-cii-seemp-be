@@ -1,0 +1,30 @@
+import mongoose, { Schema } from 'mongoose';
+import { type IAis } from '../types/ais.type';
+
+const positionSchema = new Schema(
+  {
+    navstatus: { type: Number, required: true },
+    lat: { type: Number, required: true },
+    lon: { type: Number, required: true },
+    sog: { type: Number, required: true },
+    cog: { type: Number, required: true },
+    hdg: { type: Number, required: true },
+    timestamp: { type: Date, default: Date.now },
+  },
+  { _id: false },
+);
+
+const aisSchema = new Schema(
+  {
+    mmsi: { type: String, unique: true, required: true },
+    positions: {
+      type: [positionSchema],
+      required: true,
+    },
+  },
+  { timestamps: true },
+);
+
+const Ais = mongoose.model<IAis>('Ais', aisSchema);
+
+export default Ais;

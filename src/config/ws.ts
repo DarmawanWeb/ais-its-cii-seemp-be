@@ -1,8 +1,10 @@
 import { io, Socket } from 'socket.io-client';
 import config from './config';
 import logger from './logger';
-import type { TimestampedMessage } from '../types/ais.type';
+import type { TimestampedAisMessage } from '../types/ais.type';
+import { AisService } from '../services/ais.service';
 
+const aisService = new AisService();
 const connectSocket = () => {
   const socket: Socket = io(config.websocket.url, {
     auth: {
@@ -16,8 +18,17 @@ const connectSocket = () => {
     logger.info(`WebSocket connection established with ID: ${socket.id}`);
   });
 
-  socket.on('messageFromServer', (data: TimestampedMessage) => {
-    handleAisDataController(data);
+  socket.on('messageFromServer', async (data: TimestampedAisMessage) => {
+    try {
+      if (!data || !data.message || !data.timestamp) {
+        console.log('Invalid data received from server:', data);
+        return;
+      }
+      await aisService.createOrUpdateAis(data);
+    } catch (error) {
+      logger.error('Error processing message from server:', error);
+      return;
+    }
   });
 
   socket.on('connect_error', (err: Error) => {
@@ -27,10 +38,6 @@ const connectSocket = () => {
   socket.on('disconnect', () => {
     logger.info('WebSocket connection closed');
   });
-};
-
-const handleAisDataController = (data: TimestampedMessage) => {
-  console.log('Received data:', data.message.data?.mmsi);
 };
 
 export { connectSocket };
