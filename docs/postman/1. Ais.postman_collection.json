@@ -1,0 +1,268 @@
+{
+	"info": {
+		"_postman_id": "a9de8bcd-7f8d-406e-8352-816b4d8cffcc",
+		"name": "1. Ais",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33361122",
+		"_collection_link": "https://www.postman.com/ais444-7717/workspace/ais-its-seemp-cii/collection/33361122-a9de8bcd-7f8d-406e-8352-816b4d8cffcc?action=share&source=collection_link&creator=33361122"
+	},
+	"item": [
+		{
+			"name": "geta all",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/{{version}}/ais",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"ais"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get all",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/{{version}}/ais",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"{{version}}",
+								"ais"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+						},
+						{
+							"key": "Cross-Origin-Opener-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Cross-Origin-Resource-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Origin-Agent-Cluster",
+							"value": "?1"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "no-referrer"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-DNS-Prefetch-Control",
+							"value": "off"
+						},
+						{
+							"key": "X-Download-Options",
+							"value": "noopen"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "7917"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1eed-oKp5C4eaKsWYXm5mR4jk17J9xC0\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 30 May 2025 03:33:21 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Ais data fetched successfully\",\n    \"data\": [\n        {\n            \"_id\": \"683920b0dacd8ab59d2f0440\",\n            \"mmsi\": \"525005141\",\n            \"positions\": [\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.747773333333333,\n                    \"lon\": 116.05734,\n                    \"sog\": 0.1,\n                    \"cog\": 0,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:06:24.343Z\"\n                },\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.747791666666666,\n                    \"lon\": 116.05736666666667,\n                    \"sog\": 0,\n                    \"cog\": 0,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:33:12.373Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:06:24.367Z\",\n            \"updatedAt\": \"2025-05-30T03:33:12.383Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683920b0dacd8ab59d2f0442\",\n            \"mmsi\": \"525900057\",\n            \"positions\": [\n                {\n                    \"navstatus\": 8,\n                    \"lat\": -8.74322,\n                    \"lon\": 116.050975,\n                    \"sog\": 0,\n                    \"cog\": 338.9,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:06:24.345Z\"\n                },\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.743245,\n                    \"lon\": 116.05086166666666,\n                    \"sog\": 0,\n                    \"cog\": 294.7,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:33:14.196Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:06:24.371Z\",\n            \"updatedAt\": \"2025-05-30T03:33:14.210Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683920b0dacd8ab59d2f0444\",\n            \"mmsi\": \"525021167\",\n            \"positions\": [\n                {\n                    \"navstatus\": 15,\n                    \"lat\": -8.732433333333333,\n                    \"lon\": 116.07441333333334,\n                    \"sog\": 8.9,\n                    \"cog\": 75.3,\n                    \"hdg\": 74,\n                    \"timestamp\": \"2025-05-30T03:06:24.346Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:06:24.372Z\",\n            \"updatedAt\": \"2025-05-30T03:06:24.372Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683920b0dacd8ab59d2f0446\",\n            \"mmsi\": \"525300929\",\n            \"positions\": [\n                {\n                    \"navstatus\": 8,\n                    \"lat\": -8.604888333333333,\n                    \"lon\": 115.96077666666666,\n                    \"sog\": 9.2,\n                    \"cog\": 144.4,\n                    \"hdg\": 142,\n                    \"timestamp\": \"2025-05-30T03:06:24.346Z\"\n                },\n                {\n                    \"navstatus\": 8,\n                    \"lat\": -8.651336666666667,\n                    \"lon\": 115.99190666666667,\n                    \"sog\": 6.4,\n                    \"cog\": 138.1,\n                    \"hdg\": 137,\n                    \"timestamp\": \"2025-05-30T03:32:55.606Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:06:24.377Z\",\n            \"updatedAt\": \"2025-05-30T03:32:55.618Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683920b2dacd8ab59d2f044c\",\n            \"mmsi\": \"538009644\",\n            \"positions\": [\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.72579,\n                    \"lon\": 115.69813833333333,\n                    \"sog\": 11.3,\n                    \"cog\": 200.5,\n                    \"hdg\": 202,\n                    \"timestamp\": \"2025-05-30T03:06:26.057Z\"\n                },\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.778095,\n                    \"lon\": 115.676005,\n                    \"sog\": 9.3,\n                    \"cog\": 200.2,\n                    \"hdg\": 196,\n                    \"timestamp\": \"2025-05-30T03:26:26.495Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:06:26.107Z\",\n            \"updatedAt\": \"2025-05-30T03:26:26.551Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683920b2dacd8ab59d2f044e\",\n            \"mmsi\": \"525301379\",\n            \"positions\": [\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.731106666666667,\n                    \"lon\": 116.0738,\n                    \"sog\": 0,\n                    \"cog\": 360,\n                    \"hdg\": 224,\n                    \"timestamp\": \"2025-05-30T03:06:26.059Z\"\n                },\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.731096666666666,\n                    \"lon\": 116.07378666666666,\n                    \"sog\": 0,\n                    \"cog\": 360,\n                    \"hdg\": 224,\n                    \"timestamp\": \"2025-05-30T03:33:14.196Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:06:26.110Z\",\n            \"updatedAt\": \"2025-05-30T03:33:14.209Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683920b2dacd8ab59d2f0450\",\n            \"mmsi\": \"525701405\",\n            \"positions\": [\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.511093333333333,\n                    \"lon\": 115.88928,\n                    \"sog\": 27.1,\n                    \"cog\": 261.2,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:06:26.060Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:06:26.112Z\",\n            \"updatedAt\": \"2025-05-30T03:06:26.112Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683920b5dacd8ab59d2f0457\",\n            \"mmsi\": \"525007375\",\n            \"positions\": [\n                {\n                    \"navstatus\": 8,\n                    \"lat\": -8.750095,\n                    \"lon\": 116.05609,\n                    \"sog\": 0,\n                    \"cog\": 172.7,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:06:29.331Z\"\n                },\n                {\n                    \"navstatus\": 8,\n                    \"lat\": -8.750185,\n                    \"lon\": 116.05607333333333,\n                    \"sog\": 0.1,\n                    \"cog\": 172.7,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:33:16.036Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:06:29.348Z\",\n            \"updatedAt\": \"2025-05-30T03:33:16.047Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683920b5dacd8ab59d2f0459\",\n            \"mmsi\": \"636017563\",\n            \"positions\": [\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.311801666666666,\n                    \"lon\": 115.84716166666666,\n                    \"sog\": 12.4,\n                    \"cog\": 200.3,\n                    \"hdg\": 200,\n                    \"timestamp\": \"2025-05-30T03:06:29.334Z\"\n                },\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.397475,\n                    \"lon\": 115.81331166666666,\n                    \"sog\": 12.7,\n                    \"cog\": 199.7,\n                    \"hdg\": 202,\n                    \"timestamp\": \"2025-05-30T03:32:47.524Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:06:29.350Z\",\n            \"updatedAt\": \"2025-05-30T03:32:47.593Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683920b5dacd8ab59d2f045b\",\n            \"mmsi\": \"525005223\",\n            \"positions\": [\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.746616666666666,\n                    \"lon\": 116.05404666666666,\n                    \"sog\": 0,\n                    \"cog\": 7.4,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:06:29.334Z\"\n                },\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.733373333333333,\n                    \"lon\": 116.069915,\n                    \"sog\": 2.7,\n                    \"cog\": 68.2,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:32:28.435Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:06:29.351Z\",\n            \"updatedAt\": \"2025-05-30T03:32:28.549Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683920b5dacd8ab59d2f045d\",\n            \"mmsi\": \"525021199\",\n            \"positions\": [\n                {\n                    \"navstatus\": 8,\n                    \"lat\": -8.693536666666667,\n                    \"lon\": 115.9834,\n                    \"sog\": 9.1,\n                    \"cog\": 278.4,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:06:29.333Z\"\n                },\n                {\n                    \"navstatus\": 8,\n                    \"lat\": -8.690203333333333,\n                    \"lon\": 115.94544666666667,\n                    \"sog\": 8.9,\n                    \"cog\": 273.5,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:21:28.125Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:06:29.352Z\",\n            \"updatedAt\": \"2025-05-30T03:21:28.190Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"6839224527a125907fc3fa0b\",\n            \"mmsi\": \"354750000\",\n            \"positions\": [\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.97619,\n                    \"lon\": 115.728535,\n                    \"sog\": 9.4,\n                    \"cog\": 351.1,\n                    \"hdg\": 351,\n                    \"timestamp\": \"2025-05-30T03:13:09.890Z\"\n                },\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.937396666666666,\n                    \"lon\": 115.72729666666666,\n                    \"sog\": 9.5,\n                    \"cog\": 9.4,\n                    \"hdg\": 353,\n                    \"timestamp\": \"2025-05-30T03:28:28.971Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:13:09.920Z\",\n            \"updatedAt\": \"2025-05-30T03:28:28.981Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"6839224527a125907fc3fa0d\",\n            \"mmsi\": \"525010084\",\n            \"positions\": [\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.663246666666666,\n                    \"lon\": 115.83086333333334,\n                    \"sog\": 7.4,\n                    \"cog\": 86.4,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:13:09.892Z\"\n                },\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.660021666666667,\n                    \"lon\": 115.87331333333333,\n                    \"sog\": 8.2,\n                    \"cog\": 97.9,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:33:21.077Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:13:09.924Z\",\n            \"updatedAt\": \"2025-05-30T03:33:21.089Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"6839224527a125907fc3fa0f\",\n            \"mmsi\": \"525010323\",\n            \"positions\": [\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.740591666666667,\n                    \"lon\": 116.04767333333334,\n                    \"sog\": 0.1,\n                    \"cog\": 0,\n                    \"hdg\": 12,\n                    \"timestamp\": \"2025-05-30T03:13:09.893Z\"\n                },\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.740658333333334,\n                    \"lon\": 116.04755666666667,\n                    \"sog\": 0,\n                    \"cog\": 0,\n                    \"hdg\": 12,\n                    \"timestamp\": \"2025-05-30T03:33:21.074Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:13:09.925Z\",\n            \"updatedAt\": \"2025-05-30T03:33:21.086Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"6839229198ef76ca5f1f1cc3\",\n            \"mmsi\": \"538005810\",\n            \"positions\": [\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -9.054205,\n                    \"lon\": 115.69174333333333,\n                    \"sog\": 10.3,\n                    \"cog\": 162.6,\n                    \"hdg\": 172,\n                    \"timestamp\": \"2025-05-30T03:14:25.729Z\"\n                },\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -9.097325,\n                    \"lon\": 115.70339166666666,\n                    \"sog\": 10.5,\n                    \"cog\": 166,\n                    \"hdg\": 175,\n                    \"timestamp\": \"2025-05-30T03:29:46.988Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:14:25.744Z\",\n            \"updatedAt\": \"2025-05-30T03:29:47.057Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"6839229a98ef76ca5f1f1cda\",\n            \"mmsi\": \"525005045\",\n            \"positions\": [\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.481445,\n                    \"lon\": 115.85979333333333,\n                    \"sog\": 13.9,\n                    \"cog\": 152.9,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:14:34.613Z\"\n                },\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.539936666666666,\n                    \"lon\": 115.90280166666666,\n                    \"sog\": 14.3,\n                    \"cog\": 140.5,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:33:18.515Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:14:34.620Z\",\n            \"updatedAt\": \"2025-05-30T03:33:18.525Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683923c9214a65735b8fc2ea\",\n            \"mmsi\": \"525200935\",\n            \"positions\": [\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.730235,\n                    \"lon\": 116.07707833333333,\n                    \"sog\": 0,\n                    \"cog\": 6.7,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:19:37.202Z\"\n                },\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.730245,\n                    \"lon\": 116.07706833333333,\n                    \"sog\": 0,\n                    \"cog\": 6.7,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:31:38.025Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:19:37.214Z\",\n            \"updatedAt\": \"2025-05-30T03:31:38.032Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683923fd214a65735b8fc35d\",\n            \"mmsi\": \"525009143\",\n            \"positions\": [\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.747835,\n                    \"lon\": 116.05196,\n                    \"sog\": 0,\n                    \"cog\": 251.8,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:20:29.607Z\"\n                },\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.74784,\n                    \"lon\": 116.05196166666667,\n                    \"sog\": 0,\n                    \"cog\": 251.9,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:20:49.960Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:20:29.613Z\",\n            \"updatedAt\": \"2025-05-30T03:20:49.974Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"6839242c214a65735b8fc3d0\",\n            \"mmsi\": \"477961100\",\n            \"positions\": [\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.026716666666667,\n                    \"lon\": 115.99188666666667,\n                    \"sog\": 12.8,\n                    \"cog\": 207.6,\n                    \"hdg\": 206,\n                    \"timestamp\": \"2025-05-30T03:21:16.487Z\"\n                },\n                {\n                    \"navstatus\": 0,\n                    \"lat\": -8.063585,\n                    \"lon\": 115.97264666666666,\n                    \"sog\": 13.1,\n                    \"cog\": 207.2,\n                    \"hdg\": 206,\n                    \"timestamp\": \"2025-05-30T03:32:36.884Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:21:16.559Z\",\n            \"updatedAt\": \"2025-05-30T03:32:36.945Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"68392436214a65735b8fc3e8\",\n            \"mmsi\": \"525012103\",\n            \"positions\": [\n                {\n                    \"navstatus\": 5,\n                    \"lat\": -8.731373333333334,\n                    \"lon\": 116.06968,\n                    \"sog\": 0,\n                    \"cog\": 360,\n                    \"hdg\": 511,\n                    \"timestamp\": \"2025-05-30T03:21:26.433Z\"\n                }\n            ],\n            \"createdAt\": \"2025-05-30T03:21:26.521Z\",\n            \"updatedAt\": \"2025-05-30T03:21:26.521Z\",\n            \"__v\": 0\n        }\n    ],\n    \"success\": true\n}"
+				}
+			]
+		},
+		{
+			"name": "get by MMSI",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/{{version}}/ais",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"ais"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get by MMSI",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/{{version}}/ais/525005141",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"{{version}}",
+								"ais",
+								"525005141"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+						},
+						{
+							"key": "Cross-Origin-Opener-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Cross-Origin-Resource-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Origin-Agent-Cluster",
+							"value": "?1"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "no-referrer"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-DNS-Prefetch-Control",
+							"value": "off"
+						},
+						{
+							"key": "X-Download-Options",
+							"value": "noopen"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "468"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1d4-zPjJhiLA2PpDrFjvAxWIDZ6hRQk\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 30 May 2025 03:33:52 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Ais data fetched successfully\",\n    \"data\": {\n        \"_id\": \"683920b0dacd8ab59d2f0440\",\n        \"mmsi\": \"525005141\",\n        \"positions\": [\n            {\n                \"navstatus\": 0,\n                \"lat\": -8.747773333333333,\n                \"lon\": 116.05734,\n                \"sog\": 0.1,\n                \"cog\": 0,\n                \"hdg\": 511,\n                \"timestamp\": \"2025-05-30T03:06:24.343Z\"\n            },\n            {\n                \"navstatus\": 0,\n                \"lat\": -8.747796666666666,\n                \"lon\": 116.057365,\n                \"sog\": 0.1,\n                \"cog\": 0,\n                \"hdg\": 511,\n                \"timestamp\": \"2025-05-30T03:33:31.156Z\"\n            }\n        ],\n        \"createdAt\": \"2025-05-30T03:06:24.367Z\",\n        \"updatedAt\": \"2025-05-30T03:33:31.198Z\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+				}
+			]
+		}
+	]
+}
