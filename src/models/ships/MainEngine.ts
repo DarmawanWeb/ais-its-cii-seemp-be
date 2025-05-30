@@ -5,7 +5,6 @@ export interface IMainEngine extends Document {
   rpm: number;
   power: number;
   specificFuelOilConsumption: number;
-  quantity: number;
 }
 
 const mainEngineSchema: Schema = new Schema({
