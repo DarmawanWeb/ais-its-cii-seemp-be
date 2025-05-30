@@ -1,4 +1,4 @@
-import { IAis, IAisPosition } from '../types/ais.type';
+import { type IAis, type IAisPosition } from '../models/Ais';
 import { AisRepository } from '../repositories/ais.repository';
 import { TimestampedAisMessage } from '../types/ais.type';
 

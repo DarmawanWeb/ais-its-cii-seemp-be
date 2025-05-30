@@ -1,5 +1,18 @@
 import mongoose, { Schema } from 'mongoose';
-import { type IAis } from '../types/ais.type';
+export interface IAisPosition {
+  navstatus: number;
+  lat: number;
+  lon: number;
+  sog: number;
+  cog: number;
+  hdg: number;
+  timestamp: Date;
+}
+
+export interface IAis extends Document {
+  mmsi: string;
+  positions: IAisPosition[];
+}
 
 const positionSchema = new Schema(
   {

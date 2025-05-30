@@ -1,4 +1,4 @@
-import { type IUser } from '../../types/auth.types';
+import { type IUser } from '../../models/auth/User';
 import User from '../../models/auth/User';
 
 export interface IUserRepository {

@@ -1,5 +1,4 @@
-import { IAis, IAisPosition } from '../types/ais.type';
-import Ais from '../models/Ais';
+import Ais, { type IAisPosition, type IAis } from '../models/Ais';
 
 export interface IAisRepository {
   create(data: IAis): Promise<IAis>;

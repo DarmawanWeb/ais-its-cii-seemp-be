@@ -1,13 +1,4 @@
-import { Document } from 'mongoose';
 import { Role } from '../enums/role.enum';
-
-export interface IUser extends Document {
-  name: string;
-  email: string;
-  password: string;
-  role: Role;
-  active: boolean;
-}
 
 export interface IJwtPayload {
   id: string;

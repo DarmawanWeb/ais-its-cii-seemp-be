@@ -1,4 +1,14 @@
 import mongoose from 'mongoose';
+import { Document } from 'mongoose';
+import { Role } from '../../enums/role.enum';
+
+export interface IUser extends Document {
+  name: string;
+  email: string;
+  password: string;
+  role: Role;
+  active: boolean;
+}
 
 const userSchema = new mongoose.Schema(
   {
@@ -29,6 +39,6 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model<IUser>('User', userSchema);
 
 export default User;

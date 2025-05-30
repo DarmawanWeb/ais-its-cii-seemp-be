@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { AisService } from '../services/ais.service';
 import { handleError } from '../utils/error.handler';
 
