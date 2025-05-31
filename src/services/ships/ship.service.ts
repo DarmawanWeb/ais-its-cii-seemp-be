@@ -20,6 +20,10 @@ export class ShipService {
     return await this.shipRepository.getById(id);
   }
 
+  async getShipByMMSI(mmsi: string): Promise<IShip | null> {
+    return await this.shipRepository.getByMMSI(mmsi);
+  }
+
   async updateShip(id: string, data: Partial<IShip>): Promise<IShip | null> {
     return await this.shipRepository.update(id, data);
   }
