@@ -1,0 +1,77 @@
+import { type IAisPosition } from '../../models/Ais';
+const degreesToRadians = (degrees: number): number => degrees * (Math.PI / 180);
+
+const positionToRadians = (position: IAisPosition): [number, number] => [
+  degreesToRadians(position.lat),
+  degreesToRadians(position.lon),
+];
+
+const calculateDistance = (
+  firstPosition: IAisPosition,
+  secondPosition: IAisPosition,
+): {
+  firstPositionRad: { lat: number; lon: number };
+  secondPositionRad: { lat: number; lon: number };
+  distance: number;
+} => {
+  const radiusOfEarth = 3438;
+  const [firstLatRad, firstLonRad] = positionToRadians(firstPosition);
+  const [secondLatRad, secondLonRad] = positionToRadians(secondPosition);
+  const deltaLat = secondLatRad - firstLatRad;
+  const deltaLon = secondLonRad - firstLonRad;
+
+  const a =
+    Math.sin(deltaLat / 2) ** 2 +
+    Math.cos(firstLatRad) *
+      Math.cos(secondLatRad) *
+      Math.sin(deltaLon / 2) ** 2;
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return {
+    firstPositionRad: { lat: firstLatRad, lon: firstLonRad },
+    secondPositionRad: { lat: secondLatRad, lon: secondLonRad },
+    distance: radiusOfEarth * c,
+  };
+};
+
+export const calculateSpeed = (
+  lastTwoPosition: IAisPosition[],
+): {
+  firstPositionRad: { lat: number; lon: number };
+  secondPositionRad: { lat: number; lon: number };
+  distance: number;
+  speedKnot: number;
+  speedMs: number;
+  timeDifferenceHours: number;
+  timeDifferenceMinutes: number;
+} => {
+  const data = calculateDistance(lastTwoPosition[0], lastTwoPosition[1]);
+
+  const timeDifference =
+    Math.abs(
+      Number(lastTwoPosition[0].timestamp) -
+        Number(lastTwoPosition[1].timestamp),
+    ) / 3600000;
+
+  if (timeDifference === 0) {
+    return {
+      ...data,
+      speedKnot: 0,
+      speedMs: 0,
+      timeDifferenceHours: 0,
+      timeDifferenceMinutes: 0,
+    };
+  }
+
+  const speedKnot = data.distance / timeDifference;
+  const speedMs = speedKnot * 0.5144;
+
+  return {
+    ...data,
+    speedKnot,
+    speedMs,
+    timeDifferenceHours: timeDifference,
+    timeDifferenceMinutes: timeDifference * 60,
+  };
+};

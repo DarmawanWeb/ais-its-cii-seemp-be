@@ -12,7 +12,7 @@ import {
 const router: Router = express.Router();
 
 router.post('/', createFirstFuelFormulaController);
-router.get('/', getAllFirstFuelFormulasController);
+router.get('/all', getAllFirstFuelFormulasController);
 router.get('/:id', getFirstFuelFormulaByIdController);
 router.put('/:id', updateFirstFuelFormulaController);
 router.delete('/:id', deleteFirstFuelFormulaController);
