@@ -7,7 +7,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
     ports:
-      - "27017:27017"
+      - '27017:27017'
     volumes:
       - mongo_data:/data/db
     networks:
@@ -25,14 +25,13 @@ services:
       - REFRESH_TOKEN_EXPIRATION=${REFRESH_TOKEN_EXPIRATION}
       - PORT=${PORT}
       - NODE_ENV=${NODE_ENV}
-      - WEBSOCKET_PORT=${WEBSOCKET_PORT}
     ports:
-      - "3001:3001"
+      - '3001:3001'
     depends_on:
       - mongo
     networks:
       - backend
-    command: ["pm2", "start", "dist/bin/www.js", "--no-daemon"]
+    command: ['pm2', 'start', 'dist/bin/www.js', '--no-daemon']
     restart: always
 
 volumes:

@@ -1,4 +1,8 @@
-import { ISpeedCalculation, ISpeed } from '../../../types/second-formula.types';
+import {
+  ISpeedCalculation,
+  ISpeed,
+  IFrictionResistance,
+} from '../../../types/second-formula.types';
 import { IShipSize } from '../../../models/ships/Size';
 
 const calculateNewSpeed = (vesselSpeed: ISpeed, coefRed: number): ISpeed => {
@@ -36,15 +40,7 @@ export const calculateFrictionResistance = (
   vesselSpeed: ISpeedCalculation,
   coefRed: number,
   sizeData: IShipSize,
-): {
-  newSpeed: ISpeed;
-  newFn: number;
-  newTime: number;
-  Saap: number;
-  onePlusK2: number;
-  Raap: number;
-  Rf: number;
-} => {
+): IFrictionResistance => {
   const newSpeed = calculateNewSpeed(vesselSpeed, coefRed);
   const newFn = calculateNewFn(newSpeed.speedMs, sizeData.lwl);
   const newTime = calculateNewTime(newSpeed, vesselSpeed.distance);

@@ -1,6 +1,6 @@
 import { IShipSize } from '../../../models/ships/Size';
 
-const calculateLengthDisplacement = (sizeData: IShipSize): number => {
+export const calculateLengthDisplacement = (sizeData: IShipSize): number => {
   return (sizeData.lwl + sizeData.lpp) / 2;
 };
 

@@ -14,7 +14,28 @@ export interface ISpeedCalculation {
   timeDifferenceMinutes: number;
 }
 
+export interface IFrictionResistance {
+  newSpeed: ISpeed;
+  newFn: number;
+  newTime: number;
+  Saap: number;
+  onePlusK2: number;
+  Raap: number;
+  Rf: number;
+}
+
 export interface ISpeed {
   speedKnot: number;
   speedMs: number;
+}
+
+export interface ITotalResistance {
+  rt: number;
+  rtPlusSm: number;
+}
+
+export interface IFuelConsumption {
+  fuelConsumptionMeTon: number;
+  fuelConsumptionAeTon: number;
+  totalFuelConsumptionTon: number;
 }

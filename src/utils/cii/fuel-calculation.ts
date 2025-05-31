@@ -1,5 +1,9 @@
 import { IFuel } from '../../models/ships/Fuel';
 import { IFirstFuelFormula } from '../../models/ships/FirstFuelFormula';
+import {
+  IFrictionResistance,
+  IFuelConsumption,
+} from '../../types/second-formula.types';
 
 const fuelMultipliers: Record<number, { ME: number; AE: number }> = {
   0: { ME: 1, AE: 1 },
@@ -62,14 +66,7 @@ export const calculateFirstFormulaFuel = async (
   speedKnot: number,
   fuelFormulas: IFirstFuelFormula,
   timeDifferenceMinutes: number,
-): Promise<{
-  fuelEstimateAE: number;
-  fuelEstimateME: number;
-  fuelConsumptionMeMetricTon: number;
-  fuelConsumptionAeMetricTon: number;
-  totalFuelEstimate: number;
-  estimatedFuelTon: number;
-}> => {
+): Promise<IFuelConsumption> => {
   console.log('Calculating first formula fuel...');
   if (!fuelType || !fuelFormulas) {
     console.log(fuelFormulas);
@@ -96,20 +93,46 @@ export const calculateFirstFormulaFuel = async (
     (fuelData.totalME + fuelData.totalAE) * timeDifferenceMinutes;
 
   return {
-    fuelEstimateAE: fuelData.totalAE,
-    fuelEstimateME: fuelData.totalME,
-    fuelConsumptionMeMetricTon: calculateTotalFuelTon(
+    fuelConsumptionMeTon: calculateTotalFuelTon(
       fuelData.totalME,
       fuelType.fuelDensity,
     ),
-    fuelConsumptionAeMetricTon: calculateTotalFuelTon(
+    fuelConsumptionAeTon: calculateTotalFuelTon(
       fuelData.totalAE,
       fuelType.fuelDensity,
     ),
-    totalFuelEstimate,
-    estimatedFuelTon: calculateTotalFuelTon(
+    totalFuelConsumptionTon: calculateTotalFuelTon(
       totalFuelEstimate,
       fuelType.fuelDensity,
     ),
+  };
+};
+
+export const calculateSecondFormulaFuel = (
+  navstatus: number,
+  frictionResistance: IFrictionResistance,
+  bhpMCR: number,
+  SFOC: number,
+  fuelType: IFuel,
+): IFuelConsumption => {
+  const fuelEstimateME = (bhpMCR * SFOC * frictionResistance.newTime) / 1000000;
+  const fuelEstimateAE =
+    (1.5103 *
+      Math.exp(-0.064 * frictionResistance.newSpeed.speedKnot) *
+      fuelType.fuelDensity) /
+    1000;
+
+  const fuelData = getFuelByNavStatus(
+    navstatus,
+    fuelEstimateME,
+    fuelEstimateAE,
+  );
+
+  const totalFuelConsumptionTon = fuelData.totalME + fuelData.totalAE;
+
+  return {
+    fuelConsumptionMeTon: fuelData.totalME,
+    fuelConsumptionAeTon: fuelData.totalAE,
+    totalFuelConsumptionTon,
   };
 };

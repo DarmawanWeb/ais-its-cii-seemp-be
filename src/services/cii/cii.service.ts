@@ -4,7 +4,10 @@ import { ShipRepository } from '../../repositories/ships/ships.repository';
 import { IAis, IAisPosition } from '../../models/Ais';
 import { IShipData } from '../../types/ship.type';
 import { calculateSpeed } from '../../utils/cii/speed-calculation';
-import { calculateFirstFormulaFuel } from '../../utils/cii/fuel-calculation';
+import {
+  calculateFirstFormulaFuel,
+  calculateSecondFormulaFuel,
+} from '../../utils/cii/fuel-calculation';
 import {
   calculateWindCourse,
   calculateShipCourse,
@@ -15,6 +18,8 @@ import {
 } from '../../utils/cii/weather';
 import { calculateCoefisienReduction } from '../../utils/cii/second-formula/coefisien-reduction-calculation';
 import { calculateFrictionResistance } from '../../utils/cii/second-formula/friction-resistance-calculation';
+import { calculateTotalResistance } from '../../utils/cii/second-formula/total-resistance-calculation';
+import { calculateBHPMCR } from '../../utils/cii/second-formula/power-calculation';
 
 import { IWindCourse } from '../../types/second-formula.types';
 
@@ -76,10 +81,26 @@ export class CIIService {
       shipData.sizeData,
     );
 
-    console.log('First Formula Fuel:', firstFormulaFuel);
-    console.log('Wind Course:', windCourse);
-    console.log('Coefisien Reduction:', coefReduction);
-    console.log('Friction Resistance:', frictionResistance);
+    const totalResistance = calculateTotalResistance(
+      shipData.sizeData,
+      frictionResistance,
+    );
+
+    const bhpMCR = calculateBHPMCR(
+      frictionResistance,
+      totalResistance,
+      shipData.sizeData,
+    );
+
+    const secondFormulaFuel = calculateSecondFormulaFuel(
+      positions[1].navstatus,
+      frictionResistance,
+      bhpMCR,
+      shipData.engineSpecs.mainEngine.engine.specificFuelOilConsumption,
+      shipData.fuelType,
+    );
+
+    console.log(firstFormulaFuel, secondFormulaFuel);
   }
 
   async getCIIByMMSI(mmsi: string): Promise<void | null> {
