@@ -1,4 +1,5 @@
 import { Ship, IShip } from '../../models/ships/Ship';
+import { IShipData } from '../../types/ship.type';
 
 export class ShipRepository {
   async create(data: IShip): Promise<IShip> {
@@ -28,7 +29,7 @@ export class ShipRepository {
       .populate('fuelFormulas.firstFuelFormula');
   }
 
-  async getByMMSI(mmsi: string): Promise<IShip | null> {
+  async getByMMSI(mmsi: string): Promise<IShipData | null> {
     return Ship.findOne({ mmsi })
       .populate('generalData')
       .populate('sizeData')
@@ -36,7 +37,8 @@ export class ShipRepository {
       .populate('fuelType')
       .populate('engineSpecs.mainEngine.engine')
       .populate('engineSpecs.auxiliaryEngine.engine')
-      .populate('fuelFormulas.firstFuelFormula');
+      .populate('fuelFormulas.firstFuelFormula')
+      .lean<IShipData>();
   }
   async update(id: string, data: Partial<IShip>): Promise<IShip | null> {
     return Ship.findByIdAndUpdate(id, data, { new: true });

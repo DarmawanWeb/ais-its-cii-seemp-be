@@ -1,8 +1,10 @@
 import { AisRepository } from '../../repositories/ais.repository';
 import { ShipRepository } from '../../repositories/ships/ships.repository';
-import { IShip } from '../../models/ships/Ship';
+
 import { IAis, IAisPosition } from '../../models/Ais';
+import { IShipData } from '../../types/ship.type';
 import { calculateSpeed } from '../../utils/cii/speed-calculation';
+import { calculateFirstFormulaFuel } from '../../utils/cii/fuel-calculation';
 
 export class CIIService {
   private shipRepository: ShipRepository;
@@ -14,17 +16,24 @@ export class CIIService {
 
   async calculateCII(
     positions: IAisPosition[],
-    shipData: IShip,
+    shipData: IShipData,
   ): Promise<void> {
-    console.log('Calculating CII for ship:', shipData.generalData);
     const speedData = calculateSpeed(positions);
     if (!speedData) {
       throw new Error('Insufficient data to calculate speed');
     }
+    const firstFormulaFuel = await calculateFirstFormulaFuel(
+      positions[1].navstatus,
+      shipData.fuelType,
+      speedData.speedKnot,
+      shipData.fuelFormulas.firstFuelFormula,
+      speedData.timeDifferenceMinutes,
+    );
+    console.log('FIrst Formula Fuel:', firstFormulaFuel);
   }
 
   async getCIIByMMSI(mmsi: string): Promise<void | null> {
-    const ship: IShip | null = await this.shipRepository.getByMMSI(mmsi);
+    const ship = await this.shipRepository.getByMMSI(mmsi);
     if (!ship) {
       throw new Error(`Ship with MMSI ${mmsi} not found`);
     }
@@ -37,6 +46,6 @@ export class CIIService {
     if (!aisData.positions || aisData.positions.length < 2) {
       throw new Error(`Insufficient AIS positions for MMSI ${mmsi}`);
     }
-    await this.calculateCII(aisData.positions, ship);
+    await this.calculateCII(aisData.positions, ship as IShipData);
   }
 }

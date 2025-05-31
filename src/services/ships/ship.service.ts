@@ -1,5 +1,6 @@
 import { ShipRepository } from '../../repositories/ships/ships.repository';
 import { IShip } from '../../models/ships/Ship';
+import { IShipData } from '../../types/ship.type';
 
 export class ShipService {
   private shipRepository: ShipRepository;
@@ -20,7 +21,7 @@ export class ShipService {
     return await this.shipRepository.getById(id);
   }
 
-  async getShipByMMSI(mmsi: string): Promise<IShip | null> {
+  async getShipByMMSI(mmsi: string): Promise<IShipData | null> {
     return await this.shipRepository.getByMMSI(mmsi);
   }
 
