@@ -16,10 +16,10 @@ export interface IShip extends Document {
       quantity: number;
     };
   };
-  fuelFormulas: {
+  fuelFormulas?: {
     firstFuelFormula: mongoose.Schema.Types.ObjectId;
   };
-  shipPort: mongoose.Schema.Types.ObjectId[];
+  shipPort?: mongoose.Schema.Types.ObjectId[];
 }
 
 const shipSchema: Schema = new Schema({
@@ -79,14 +79,14 @@ const shipSchema: Schema = new Schema({
     firstFuelFormula: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'FirstFuelFormula',
-      required: true,
+      required: false,
     },
   },
   shipPort: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Port',
-      required: true,
+      required: false,
     },
   ],
 });

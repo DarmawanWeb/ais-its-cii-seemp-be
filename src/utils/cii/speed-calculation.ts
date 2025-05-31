@@ -1,4 +1,7 @@
 import { type IAisPosition } from '../../models/Ais';
+import { ISpeedCalculation } from '../../types/second-formula.types';
+import { ILocation } from '../../types/ais.type';
+
 const degreesToRadians = (degrees: number): number => degrees * (Math.PI / 180);
 
 const positionToRadians = (position: IAisPosition): [number, number] => [
@@ -10,8 +13,8 @@ const calculateDistance = (
   firstPosition: IAisPosition,
   secondPosition: IAisPosition,
 ): {
-  firstPositionRad: { lat: number; lon: number };
-  secondPositionRad: { lat: number; lon: number };
+  firstPositionRad: ILocation;
+  secondPositionRad: ILocation;
   distance: number;
 } => {
   const radiusOfEarth = 3438;
@@ -37,15 +40,7 @@ const calculateDistance = (
 
 export const calculateSpeed = (
   lastTwoPosition: IAisPosition[],
-): {
-  firstPositionRad: { lat: number; lon: number };
-  secondPositionRad: { lat: number; lon: number };
-  distance: number;
-  speedKnot: number;
-  speedMs: number;
-  timeDifferenceHours: number;
-  timeDifferenceMinutes: number;
-} => {
+): ISpeedCalculation => {
   const data = calculateDistance(lastTwoPosition[0], lastTwoPosition[1]);
 
   const timeDifference =

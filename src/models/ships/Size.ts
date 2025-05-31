@@ -11,7 +11,7 @@ export interface IShipSize extends Document {
   lpp: number;
   cp: number;
   cm: number;
-  cbnsp: boolean;
+  cbnsp: number;
   cstern: number;
   c1: number;
   c2: number;

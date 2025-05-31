@@ -17,3 +17,8 @@ export interface TimestampedAisMessage {
   message: AisMessage;
   timestamp: string;
 }
+
+export interface ILocation {
+  lat: number;
+  lon: number;
+}

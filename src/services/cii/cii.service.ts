@@ -5,6 +5,18 @@ import { IAis, IAisPosition } from '../../models/Ais';
 import { IShipData } from '../../types/ship.type';
 import { calculateSpeed } from '../../utils/cii/speed-calculation';
 import { calculateFirstFormulaFuel } from '../../utils/cii/fuel-calculation';
+import {
+  calculateWindCourse,
+  calculateShipCourse,
+} from '../../utils/cii/second-formula/course-calculation';
+import {
+  getWeatherByLocation,
+  type ICurrentWeather,
+} from '../../utils/cii/weather';
+import { calculateCoefisienReduction } from '../../utils/cii/second-formula/coefisien-reduction-calculation';
+import { calculateFrictionResistance } from '../../utils/cii/second-formula/friction-resistance-calculation';
+
+import { IWindCourse } from '../../types/second-formula.types';
 
 export class CIIService {
   private shipRepository: ShipRepository;
@@ -22,6 +34,7 @@ export class CIIService {
     if (!speedData) {
       throw new Error('Insufficient data to calculate speed');
     }
+
     const firstFormulaFuel = await calculateFirstFormulaFuel(
       positions[1].navstatus,
       shipData.fuelType,
@@ -29,7 +42,44 @@ export class CIIService {
       shipData.fuelFormulas.firstFuelFormula,
       speedData.timeDifferenceMinutes,
     );
-    console.log('FIrst Formula Fuel:', firstFormulaFuel);
+    const currentWeather = (await getWeatherByLocation(
+      positions[1].lat,
+      positions[1].lon,
+    )) as ICurrentWeather | string;
+
+    const shipCourse = calculateShipCourse(
+      speedData.firstPositionRad,
+      speedData.secondPositionRad,
+    );
+
+    if (typeof currentWeather === 'string') {
+      throw new Error(`Weather data retrieval failed: ${currentWeather}`);
+    }
+    if (!currentWeather) {
+      throw new Error('Current weather data is not available');
+    }
+
+    const windCourse: IWindCourse = calculateWindCourse(
+      shipCourse,
+      currentWeather,
+    );
+
+    const coefReduction = calculateCoefisienReduction(
+      windCourse,
+      speedData.speedMs,
+      shipData.sizeData,
+    );
+
+    const frictionResistance = calculateFrictionResistance(
+      speedData,
+      coefReduction,
+      shipData.sizeData,
+    );
+
+    console.log('First Formula Fuel:', firstFormulaFuel);
+    console.log('Wind Course:', windCourse);
+    console.log('Coefisien Reduction:', coefReduction);
+    console.log('Friction Resistance:', frictionResistance);
   }
 
   async getCIIByMMSI(mmsi: string): Promise<void | null> {

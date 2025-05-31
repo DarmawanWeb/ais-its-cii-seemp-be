@@ -70,6 +70,11 @@ export const calculateFirstFormulaFuel = async (
   totalFuelEstimate: number;
   estimatedFuelTon: number;
 }> => {
+  console.log('Calculating first formula fuel...');
+  if (!fuelType || !fuelFormulas) {
+    console.log(fuelFormulas);
+    throw new Error('Fuel type or fuel formulas are not provided');
+  }
   const context = { speedKnot };
 
   const fuelEstimateME = evaluateFormula(
