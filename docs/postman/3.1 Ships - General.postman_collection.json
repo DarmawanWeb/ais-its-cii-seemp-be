@@ -8,6 +8,153 @@
 	},
 	"item": [
 		{
+			"name": "create data",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Dharma Ferry VIII\",\n  \"flag\": \"ID\",\n  \"imoNumber\": \"9037941\",\n  \"annualVoyagePercentage\": 41.6666666666667,\n  \"shipStatus\": \"Normal\",\n  \"photoUrl\" : \"https://res.cloudinary.com/praktikaapp/image/upload/v1748594588/ais/phe1ubdv8kwcaafox2ph.jpg\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/{{version}}/ships/general/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"ships",
+						"general",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "create data",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Dharma Ferry VIII\",\n  \"flag\": \"ID\",\n  \"imoNumber\": \"9037941\",\n  \"route\": \"Lembar - Padang Bai\",\n  \"annualVoyagePercentage\": 41.6666666666667,\n  \"shipStatus\": \"Normal\",\n  \"photoUrl\" : \"https://res.cloudinary.com/praktikaapp/image/upload/v1748594588/ais/phe1ubdv8kwcaafox2ph.jpg\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/{{version}}/ships/general/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"{{version}}",
+								"ships",
+								"general",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+						},
+						{
+							"key": "Cross-Origin-Opener-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Cross-Origin-Resource-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Origin-Agent-Cluster",
+							"value": "?1"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "no-referrer"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-DNS-Prefetch-Control",
+							"value": "off"
+						},
+						{
+							"key": "X-Download-Options",
+							"value": "noopen"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "372"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"174-1/tqxNh3p9K7u6fV8e8FYxP531A\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 30 May 2025 09:12:12 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"ShipGeneral created successfully\",\n    \"data\": {\n        \"name\": \"Dharma Ferry VIII\",\n        \"flag\": \"ID\",\n        \"imoNumber\": \"9037941\",\n        \"annualVoyagePercentage\": 41.6666666666667,\n        \"shipStatus\": \"Normal\",\n        \"photoUrl\": \"https://res.cloudinary.com/praktikaapp/image/upload/v1748594588/ais/phe1ubdv8kwcaafox2ph.jpg\",\n        \"_id\": \"6839766ca8c139506b7a138a\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+				}
+			]
+		},
+		{
 			"name": "get all",
 			"request": {
 				"method": "GET",
@@ -130,7 +277,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"All ShipGenerals fetched successfully\",\n    \"data\": [\n        {\n            \"_id\": \"6839318c2e114b655cbb0389\",\n            \"name\": \"Ship A\",\n            \"flag\": \"USA\",\n            \"imoNumber\": \"IMO123456\",\n            \"route\": \"Port A - Port B\",\n            \"annualVoyagePercentage\": 75,\n            \"shipStatus\": \"Active\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683931b996346c6beb2b14df\",\n            \"name\": \"Ship A\",\n            \"flag\": \"USA\",\n            \"imoNumber\": \"IMO123456\",\n            \"route\": \"Port A - Port B\",\n            \"annualVoyagePercentage\": 75,\n            \"shipStatus\": \"Active\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683931c496346c6beb2b14f5\",\n            \"name\": \"Ship A\",\n            \"flag\": \"USA\",\n            \"imoNumber\": \"IMO123456\",\n            \"route\": \"Port A - Port B\",\n            \"annualVoyagePercentage\": 75,\n            \"shipStatus\": \"Active\",\n            \"__v\": 0\n        }\n    ],\n    \"success\": true\n}"
+					"body": "{\n    \"message\": \"All ShipGenerals fetched successfully\",\n    \"data\": [\n        {\n            \"_id\": \"6839318c2e114b655cbb0389\",\n            \"name\": \"Ship A\",\n            \"flag\": \"USA\",\n            \"imoNumber\": \"IMO123456\",\n            \"annualVoyagePercentage\": 75,\n            \"shipStatus\": \"Active\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683931b996346c6beb2b14df\",\n            \"name\": \"Ship A\",\n            \"flag\": \"USA\",\n            \"imoNumber\": \"IMO123456\",\n            \"annualVoyagePercentage\": 75,\n            \"shipStatus\": \"Active\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"683931c496346c6beb2b14f5\",\n            \"name\": \"Ship A\",\n            \"flag\": \"USA\",\n            \"imoNumber\": \"IMO123456\",\n            \"annualVoyagePercentage\": 75,\n            \"shipStatus\": \"Active\",\n            \"__v\": 0\n        }\n    ],\n    \"success\": true\n}"
 				}
 			]
 		},
@@ -259,154 +406,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"ShipGeneral fetched successfully\",\n    \"data\": {\n        \"_id\": \"683931c496346c6beb2b14f5\",\n        \"name\": \"Ship A\",\n        \"flag\": \"USA\",\n        \"imoNumber\": \"IMO123456\",\n        \"route\": \"Port A - Port B\",\n        \"annualVoyagePercentage\": 75,\n        \"shipStatus\": \"Active\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
-				}
-			]
-		},
-		{
-			"name": "create data",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"name\": \"Ship A\",\n  \"flag\": \"USA\",\n  \"imoNumber\": \"IMO123456\",\n  \"route\": \"Port A - Port B\",\n  \"annualVoyagePercentage\": 75,\n  \"shipStatus\": \"Active\"\n}\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{url}}/api/{{version}}/ships/general/",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"api",
-						"{{version}}",
-						"ships",
-						"general",
-						""
-					]
-				}
-			},
-			"response": [
-				{
-					"name": "create data",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"Ship A\",\n  \"flag\": \"USA\",\n  \"imoNumber\": \"IMO123456\",\n  \"route\": \"Port A - Port B\",\n  \"annualVoyagePercentage\": 75,\n  \"shipStatus\": \"Active\"\n}\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/api/{{version}}/ships/general/",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"api",
-								"{{version}}",
-								"ships",
-								"general",
-								""
-							]
-						}
-					},
-					"status": "Created",
-					"code": 201,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "Vary",
-							"value": "Origin"
-						},
-						{
-							"key": "Access-Control-Allow-Credentials",
-							"value": "true"
-						},
-						{
-							"key": "Content-Security-Policy",
-							"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
-						},
-						{
-							"key": "Cross-Origin-Opener-Policy",
-							"value": "same-origin"
-						},
-						{
-							"key": "Cross-Origin-Resource-Policy",
-							"value": "same-origin"
-						},
-						{
-							"key": "Origin-Agent-Cluster",
-							"value": "?1"
-						},
-						{
-							"key": "Referrer-Policy",
-							"value": "no-referrer"
-						},
-						{
-							"key": "Strict-Transport-Security",
-							"value": "max-age=31536000; includeSubDomains"
-						},
-						{
-							"key": "X-Content-Type-Options",
-							"value": "nosniff"
-						},
-						{
-							"key": "X-DNS-Prefetch-Control",
-							"value": "off"
-						},
-						{
-							"key": "X-Download-Options",
-							"value": "noopen"
-						},
-						{
-							"key": "X-Frame-Options",
-							"value": "SAMEORIGIN"
-						},
-						{
-							"key": "X-Permitted-Cross-Domain-Policies",
-							"value": "none"
-						},
-						{
-							"key": "X-XSS-Protection",
-							"value": "0"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "240"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"f0-UpQTU+wg7uGmI6qvBzZrliosaeY\""
-						},
-						{
-							"key": "Date",
-							"value": "Fri, 30 May 2025 04:19:16 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"message\": \"ShipGeneral created successfully\",\n    \"data\": {\n        \"name\": \"Ship A\",\n        \"flag\": \"USA\",\n        \"imoNumber\": \"IMO123456\",\n        \"route\": \"Port A - Port B\",\n        \"annualVoyagePercentage\": 75,\n        \"shipStatus\": \"Active\",\n        \"_id\": \"683931c496346c6beb2b14f5\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+					"body": "{\n    \"message\": \"ShipGeneral fetched successfully\",\n    \"data\": {\n        \"_id\": \"683931c496346c6beb2b14f5\",\n        \"name\": \"Ship A\",\n        \"flag\": \"USA\",\n        \"imoNumber\": \"IMO123456\",\n        \"annualVoyagePercentage\": 75,\n        \"shipStatus\": \"Active\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
 				}
 			]
 		},
@@ -446,7 +446,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Ship C\",\n  \"flag\": \"USA\",\n  \"imoNumber\": \"IMO123456\",\n  \"route\": \"Port A - Port B\",\n  \"annualVoyagePercentage\": 75,\n  \"shipStatus\": \"Active\"\n}\n",
+							"raw": "{\n  \"name\": \"Ship C\",\n  \"flag\": \"USA\",\n  \"imoNumber\": \"IMO123456\",\n  \"annualVoyagePercentage\": 75,\n  \"shipStatus\": \"Active\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -553,7 +553,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"ShipGeneral updated successfully\",\n    \"data\": {\n        \"_id\": \"6839318c2e114b655cbb0389\",\n        \"name\": \"Ship C\",\n        \"flag\": \"USA\",\n        \"imoNumber\": \"IMO123456\",\n        \"route\": \"Port A - Port B\",\n        \"annualVoyagePercentage\": 75,\n        \"shipStatus\": \"Active\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+					"body": "{\n    \"message\": \"ShipGeneral updated successfully\",\n    \"data\": {\n        \"_id\": \"6839318c2e114b655cbb0389\",\n        \"name\": \"Ship C\",\n        \"flag\": \"USA\",\n        \"imoNumber\": \"IMO123456\",\n        \"annualVoyagePercentage\": 75,\n        \"shipStatus\": \"Active\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
 				}
 			]
 		},

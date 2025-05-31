@@ -14,7 +14,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"mmsi\": \"123456789\",\n  \"generalData\": \"60f7b914cdb0a7a4d8f99b24\",\n  \"sizeData\": \"60f7b914cdb0a7a4d8f99b25\",\n  \"typeData\": \"60f7b914cdb0a7a4d8f99b26\",\n  \"fuelType\": \"60f7b914cdb0a7a4d8f99b27\",\n  \"engineSpecs\": {\n    \"mainEngine\": {\n      \"engine\": \"60f7b914cdb0a7a4d8f99b28\",\n      \"quantity\": 2\n    },\n    \"auxiliaryEngine\": {\n      \"engine\": [\n        \"60f7b914cdb0a7a4d8f99b29\",\n        \"60f7b914cdb0a7a4d8f99b2a\"\n      ],\n      \"quantity\": 4\n    }\n  },\n  \"fuelFormulas\": {\n    \"firstFuelFormula\": \"60f7b914cdb0a7a4d8f99b2b\"\n  }\n}\n",
+					"raw": "{\n  \"mmsi\": \"525005223\",\n  \"generalData\": \"6839766ca8c139506b7a138a\",\n  \"sizeData\": \"6839765ca8c139506b7a1368\",\n  \"typeData\": \"68397634a8c139506b7a1321\",\n  \"fuelType\": \"6839764ba8c139506b7a1350\",\n  \"engineSpecs\": {\n    \"mainEngine\": {\n      \"engine\": \"683975e1a8c139506b7a1281\",\n      \"quantity\": 2\n    },\n    \"auxiliaryEngine\": {\n      \"engine\": [\n        \"683975d4a8c139506b7a126b\",\n        \"683975d4a8c139506b7a126b\"\n      ],\n      \"quantity\": 2\n    }\n  },\n  \"fuelFormulas\": {\n    \"firstFuelFormula\": \"683975c0a8c139506b7a1243\"\n  },\n  \"shipPort\": [\n    \"683aaea451a9ea1864f63019\",\n    \"683aae4751a9ea1864f62f69\"\n  ]\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -22,14 +22,15 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/api/{{version}}/ships",
+					"raw": "{{url}}/api/{{version}}/ships/data",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
 						"{{version}}",
-						"ships"
+						"ships",
+						"data"
 					]
 				}
 			},
@@ -41,7 +42,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"mmsi\": \"525005223\",\n  \"generalData\": \"6839766ca8c139506b7a138a\",\n  \"sizeData\": \"6839765ca8c139506b7a1368\",\n  \"typeData\": \"68397634a8c139506b7a1321\",\n  \"fuelType\": \"6839764ba8c139506b7a1350\",\n  \"engineSpecs\": {\n    \"mainEngine\": {\n      \"engine\": \"683975e1a8c139506b7a1281\",\n      \"quantity\": 2\n    },\n    \"auxiliaryEngine\": {\n      \"engine\": [\n        \"683975d4a8c139506b7a126b\",\n        \"683975d4a8c139506b7a126b\"\n      ],\n      \"quantity\": 2\n    }\n  },\n  \"fuelFormulas\": {\n    \"firstFuelFormula\": \"683975c0a8c139506b7a1243\"\n  }\n}\n",
+							"raw": "{\n  \"mmsi\": \"525005223\",\n  \"generalData\": \"6839766ca8c139506b7a138a\",\n  \"sizeData\": \"6839765ca8c139506b7a1368\",\n  \"typeData\": \"68397634a8c139506b7a1321\",\n  \"fuelType\": \"6839764ba8c139506b7a1350\",\n  \"engineSpecs\": {\n    \"mainEngine\": {\n      \"engine\": \"683975e1a8c139506b7a1281\",\n      \"quantity\": 2\n    },\n    \"auxiliaryEngine\": {\n      \"engine\": [\n        \"683975d4a8c139506b7a126b\",\n        \"683975d4a8c139506b7a126b\"\n      ],\n      \"quantity\": 2\n    }\n  },\n  \"fuelFormulas\": {\n    \"firstFuelFormula\": \"683975c0a8c139506b7a1243\"\n  },\n  \"shipPort\": [\n    \"683aaea451a9ea1864f63019\",\n    \"683aae4751a9ea1864f62f69\"\n  ]\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -49,14 +50,15 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/{{version}}/ships",
+							"raw": "{{url}}/api/{{version}}/ships/data",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"api",
 								"{{version}}",
-								"ships"
+								"ships",
+								"data"
 							]
 						}
 					},
@@ -126,15 +128,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "519"
+							"value": "586"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"207-vjPb0HtsUlcjNURSZPRcFUoTKJQ\""
+							"value": "W/\"24a-0f10l4GRtqv5hNBOcgN31NImGHQ\""
 						},
 						{
 							"key": "Date",
-							"value": "Sat, 31 May 2025 02:25:11 GMT"
+							"value": "Sat, 31 May 2025 07:33:54 GMT"
 						},
 						{
 							"key": "Connection",
@@ -146,7 +148,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"Ship created successfully\",\n    \"data\": {\n        \"mmsi\": \"525005223\",\n        \"generalData\": \"6839766ca8c139506b7a138a\",\n        \"sizeData\": \"6839765ca8c139506b7a1368\",\n        \"typeData\": \"68397634a8c139506b7a1321\",\n        \"fuelType\": \"6839764ba8c139506b7a1350\",\n        \"engineSpecs\": {\n            \"mainEngine\": {\n                \"engine\": \"683975e1a8c139506b7a1281\",\n                \"quantity\": 2\n            },\n            \"auxiliaryEngine\": {\n                \"engine\": [\n                    \"683975d4a8c139506b7a126b\",\n                    \"683975d4a8c139506b7a126b\"\n                ],\n                \"quantity\": 2\n            }\n        },\n        \"fuelFormulas\": {\n            \"firstFuelFormula\": \"683975c0a8c139506b7a1243\"\n        },\n        \"_id\": \"683a6887833966e5a57ac3df\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+					"body": "{\n    \"message\": \"Ship created successfully\",\n    \"data\": {\n        \"mmsi\": \"525005223\",\n        \"generalData\": \"6839766ca8c139506b7a138a\",\n        \"sizeData\": \"6839765ca8c139506b7a1368\",\n        \"typeData\": \"68397634a8c139506b7a1321\",\n        \"fuelType\": \"6839764ba8c139506b7a1350\",\n        \"engineSpecs\": {\n            \"mainEngine\": {\n                \"engine\": \"683975e1a8c139506b7a1281\",\n                \"quantity\": 2\n            },\n            \"auxiliaryEngine\": {\n                \"engine\": [\n                    \"683975d4a8c139506b7a126b\",\n                    \"683975d4a8c139506b7a126b\"\n                ],\n                \"quantity\": 2\n            }\n        },\n        \"fuelFormulas\": {\n            \"firstFuelFormula\": \"683975c0a8c139506b7a1243\"\n        },\n        \"shipPort\": [\n            \"683aaea451a9ea1864f63019\",\n            \"683aae4751a9ea1864f62f69\"\n        ],\n        \"_id\": \"683ab0e288e28cca4c61173a\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
 				}
 			]
 		},
@@ -156,7 +158,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/{{version}}/ships/",
+					"raw": "{{url}}/api/{{version}}/ships/data",
 					"host": [
 						"{{url}}"
 					],
@@ -164,7 +166,7 @@
 						"api",
 						"{{version}}",
 						"ships",
-						""
+						"data"
 					]
 				}
 			},
@@ -175,7 +177,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/api/{{version}}/ships/",
+							"raw": "{{url}}/api/{{version}}/ships/data",
 							"host": [
 								"{{url}}"
 							],
@@ -183,7 +185,7 @@
 								"api",
 								"{{version}}",
 								"ships",
-								""
+								"data"
 							]
 						}
 					},
@@ -253,15 +255,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "2097"
+							"value": "1915"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"831-UAgdhacs9003DA28oHaMuy071Sk\""
+							"value": "W/\"77b-QzPzMSnbOh69QlsqA/RCzuMlcXc\""
 						},
 						{
 							"key": "Date",
-							"value": "Sat, 31 May 2025 02:33:06 GMT"
+							"value": "Sat, 31 May 2025 07:34:59 GMT"
 						},
 						{
 							"key": "Connection",
@@ -273,7 +275,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"All ships fetched successfully\",\n    \"data\": [\n        {\n            \"engineSpecs\": {\n                \"mainEngine\": {\n                    \"engine\": {\n                        \"_id\": \"683975e1a8c139506b7a1281\",\n                        \"engineName\": \"NIIGATA (6M28BET)\",\n                        \"rpm\": 390,\n                        \"power\": 2100,\n                        \"specificFuelOilConsumption\": 179.2,\n                        \"__v\": 0\n                    },\n                    \"quantity\": 2\n                },\n                \"auxiliaryEngine\": {\n                    \"engine\": [\n                        {\n                            \"_id\": \"683975d4a8c139506b7a126b\",\n                            \"generatorType\": \"MAN (D2866LE)\",\n                            \"rpm\": 1800,\n                            \"power\": 276,\n                            \"specificFuelOilConsumption\": 207,\n                            \"__v\": 0\n                        },\n                        {\n                            \"_id\": \"683975d4a8c139506b7a126b\",\n                            \"generatorType\": \"MAN (D2866LE)\",\n                            \"rpm\": 1800,\n                            \"power\": 276,\n                            \"specificFuelOilConsumption\": 207,\n                            \"__v\": 0\n                        }\n                    ],\n                    \"quantity\": 3\n                }\n            },\n            \"fuelFormulas\": {\n                \"firstFuelFormula\": {\n                    \"formulas\": {\n                        \"normal\": {\n                            \"mainEngineFormula\": \"-0.0382 * speedKnot ** 2 + 0.8658 * speedKnot - 0.0197\",\n                            \"auxiliaryEngineFormula\": \"1.5103 * Math.exp(-0.064 * speedKnot)\"\n                        },\n                        \"underDraft\": {\n                            \"mainEngineFormula\": \"-0.0324 * speedKnot ** 2 + 0.736 * speedKnot - 0.0167\",\n                            \"auxiliaryEngineFormula\": \"1.2837 * Math.exp(-0.064 * speedKnot)\"\n                        },\n                        \"other\": {\n                            \"mainEngineFormula\": \"-0.0439 * speedKnot ** 2 + 0.9957 * speedKnot - 0.0226\",\n                            \"auxiliaryEngineFormula\": \"1.7368 * Math.exp(-0.064 * speedKnot)\"\n                        }\n                    },\n                    \"_id\": \"683975c0a8c139506b7a1243\",\n                    \"__v\": 0\n                }\n            },\n            \"_id\": \"683a6887833966e5a57ac3df\",\n            \"mmsi\": \"525005223\",\n            \"generalData\": {\n                \"_id\": \"6839766ca8c139506b7a138a\",\n                \"name\": \"Dharma Ferry VIII\",\n                \"flag\": \"ID\",\n                \"imoNumber\": \"9037941\",\n                \"route\": \"Lembar - Padang Bai\",\n                \"annualVoyagePercentage\": 41.6666666666667,\n                \"shipStatus\": \"Normal\",\n                \"photoUrl\": \"https://res.cloudinary.com/praktikaapp/image/upload/v1748594588/ais/phe1ubdv8kwcaafox2ph.jpg\",\n                \"__v\": 0\n            },\n            \"sizeData\": {\n                \"_id\": \"6839765ca8c139506b7a1368\",\n                \"capacity\": 2877,\n                \"cb\": 0.644818,\n                \"lwl\": 69.72,\n                \"b\": 16.3,\n                \"t\": 4.1,\n                \"cwp\": 0.753,\n                \"loa\": 73.3,\n                \"lpp\": 66.4,\n                \"cp\": 0.673,\n                \"cm\": 0.9806,\n                \"cbnsp\": 0.661,\n                \"bulbosbow\": false,\n                \"cstern\": 8,\n                \"c1\": 1,\n                \"c2\": 1,\n                \"c3\": 1,\n                \"c5\": 1.5,\n                \"vs\": 12,\n                \"__v\": 0\n            },\n            \"typeData\": {\n                \"_id\": \"68397634a8c139506b7a1321\",\n                \"name\": \"Ro-ro Passenger Ship\",\n                \"capacityUnit\": \"GT\",\n                \"a\": 7540,\n                \"c\": 0.587,\n                \"d\": [\n                    {\n                        \"d1\": 0.72,\n                        \"d2\": 0.9,\n                        \"d3\": 1.12,\n                        \"d4\": 1.41,\n                        \"_id\": \"68397634a8c139506b7a1322\"\n                    }\n                ],\n                \"__v\": 0\n            },\n            \"fuelType\": {\n                \"_id\": \"6839764ba8c139506b7a1350\",\n                \"fuelType\": \"Diesel/Gas Oil\",\n                \"carbonContent\": 0.8744,\n                \"conversionFactor\": 3.206,\n                \"fuelDensity\": 0.86,\n                \"__v\": 0\n            },\n            \"__v\": 0\n        }\n    ],\n    \"success\": true\n}"
+					"body": "{\n    \"message\": \"All ships fetched successfully\",\n    \"data\": [\n        {\n            \"engineSpecs\": {\n                \"mainEngine\": {\n                    \"engine\": {\n                        \"_id\": \"683975e1a8c139506b7a1281\",\n                        \"engineName\": \"NIIGATA (6M28BET)\",\n                        \"rpm\": 390,\n                        \"power\": 2100,\n                        \"specificFuelOilConsumption\": 179.2,\n                        \"__v\": 0\n                    },\n                    \"quantity\": 2\n                },\n                \"auxiliaryEngine\": {\n                    \"engine\": [\n                        {\n                            \"_id\": \"683975d4a8c139506b7a126b\",\n                            \"generatorType\": \"MAN (D2866LE)\",\n                            \"rpm\": 1800,\n                            \"power\": 276,\n                            \"specificFuelOilConsumption\": 207,\n                            \"__v\": 0\n                        },\n                        {\n                            \"_id\": \"683975d4a8c139506b7a126b\",\n                            \"generatorType\": \"MAN (D2866LE)\",\n                            \"rpm\": 1800,\n                            \"power\": 276,\n                            \"specificFuelOilConsumption\": 207,\n                            \"__v\": 0\n                        }\n                    ],\n                    \"quantity\": 2\n                }\n            },\n            \"fuelFormulas\": {\n                \"firstFuelFormula\": null\n            },\n            \"_id\": \"683ab0e288e28cca4c61173a\",\n            \"mmsi\": \"525005223\",\n            \"generalData\": {\n                \"_id\": \"6839766ca8c139506b7a138a\",\n                \"name\": \"Dharma Ferry VIII\",\n                \"flag\": \"ID\",\n                \"imoNumber\": \"9037941\",\n                \"annualVoyagePercentage\": 41.6666666666667,\n                \"shipStatus\": \"Normal\",\n                \"photoUrl\": \"https://res.cloudinary.com/praktikaapp/image/upload/v1748594588/ais/phe1ubdv8kwcaafox2ph.jpg\",\n                \"__v\": 0\n            },\n            \"sizeData\": {\n                \"_id\": \"6839765ca8c139506b7a1368\",\n                \"capacity\": 2877,\n                \"cb\": 0.644818,\n                \"lwl\": 69.72,\n                \"b\": 16.3,\n                \"t\": 4.1,\n                \"cwp\": 0.753,\n                \"loa\": 73.3,\n                \"lpp\": 66.4,\n                \"cp\": 0.673,\n                \"cm\": 0.9806,\n                \"cbnsp\": 0.661,\n                \"bulbosbow\": false,\n                \"cstern\": 8,\n                \"c1\": 1,\n                \"c2\": 1,\n                \"c3\": 1,\n                \"c5\": 1.5,\n                \"vs\": 12,\n                \"__v\": 0\n            },\n            \"typeData\": {\n                \"_id\": \"68397634a8c139506b7a1321\",\n                \"name\": \"Ro-ro Passenger Ship\",\n                \"capacityUnit\": \"GT\",\n                \"a\": 7540,\n                \"c\": 0.587,\n                \"d\": [\n                    {\n                        \"d1\": 0.72,\n                        \"d2\": 0.9,\n                        \"d3\": 1.12,\n                        \"d4\": 1.41,\n                        \"_id\": \"68397634a8c139506b7a1322\"\n                    }\n                ],\n                \"__v\": 0\n            },\n            \"fuelType\": {\n                \"_id\": \"6839764ba8c139506b7a1350\",\n                \"fuelType\": \"Diesel/Gas Oil\",\n                \"carbonContent\": 0.8744,\n                \"conversionFactor\": 3.206,\n                \"fuelDensity\": 0.86,\n                \"__v\": 0\n            },\n            \"shipPort\": [\n                {\n                    \"location\": {\n                        \"latitude\": -8.5323949,\n                        \"longitude\": 115.5073505\n                    },\n                    \"_id\": \"683aaea451a9ea1864f63019\",\n                    \"name\": \"Padang Bai\",\n                    \"code\": \"PBI\",\n                    \"administrativeLocation\": \"51.07.03.2009\",\n                    \"__v\": 0\n                },\n                {\n                    \"location\": {\n                        \"latitude\": -8.7373119,\n                        \"longitude\": 116.049278\n                    },\n                    \"_id\": \"683aae4751a9ea1864f62f69\",\n                    \"name\": \"Lembar\",\n                    \"code\": \"LMR\",\n                    \"administrativeLocation\": \"52.01.13.2001\",\n                    \"__v\": 0\n                }\n            ],\n            \"__v\": 0\n        }\n    ],\n    \"success\": true\n}"
 				}
 			]
 		},
@@ -283,7 +285,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/{{version}}/ships/683969838c5f2801a649fde2",
+					"raw": "{{url}}/api/{{version}}/ships/data/683ab0e288e28cca4c61173a",
 					"host": [
 						"{{url}}"
 					],
@@ -291,7 +293,8 @@
 						"api",
 						"{{version}}",
 						"ships",
-						"683969838c5f2801a649fde2"
+						"data",
+						"683ab0e288e28cca4c61173a"
 					]
 				}
 			},
@@ -302,7 +305,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/api/{{version}}/ships/683a6887833966e5a57ac3df",
+							"raw": "{{url}}/api/{{version}}/ships/data/683ab0e288e28cca4c61173a",
 							"host": [
 								"{{url}}"
 							],
@@ -310,7 +313,8 @@
 								"api",
 								"{{version}}",
 								"ships",
-								"683a6887833966e5a57ac3df"
+								"data",
+								"683ab0e288e28cca4c61173a"
 							]
 						}
 					},
@@ -380,15 +384,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "2090"
+							"value": "1908"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"82a-cau8CP6TnHFWAhBkBFQuZI4LT+w\""
+							"value": "W/\"774-eJ735GSJFZEZscWz7zBl7mpRRMk\""
 						},
 						{
 							"key": "Date",
-							"value": "Sat, 31 May 2025 02:30:11 GMT"
+							"value": "Sat, 31 May 2025 07:35:23 GMT"
 						},
 						{
 							"key": "Connection",
@@ -400,7 +404,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"Ship fetched successfully\",\n    \"data\": {\n        \"engineSpecs\": {\n            \"mainEngine\": {\n                \"engine\": {\n                    \"_id\": \"683975e1a8c139506b7a1281\",\n                    \"engineName\": \"NIIGATA (6M28BET)\",\n                    \"rpm\": 390,\n                    \"power\": 2100,\n                    \"specificFuelOilConsumption\": 179.2,\n                    \"__v\": 0\n                },\n                \"quantity\": 2\n            },\n            \"auxiliaryEngine\": {\n                \"engine\": [\n                    {\n                        \"_id\": \"683975d4a8c139506b7a126b\",\n                        \"generatorType\": \"MAN (D2866LE)\",\n                        \"rpm\": 1800,\n                        \"power\": 276,\n                        \"specificFuelOilConsumption\": 207,\n                        \"__v\": 0\n                    },\n                    {\n                        \"_id\": \"683975d4a8c139506b7a126b\",\n                        \"generatorType\": \"MAN (D2866LE)\",\n                        \"rpm\": 1800,\n                        \"power\": 276,\n                        \"specificFuelOilConsumption\": 207,\n                        \"__v\": 0\n                    }\n                ],\n                \"quantity\": 3\n            }\n        },\n        \"fuelFormulas\": {\n            \"firstFuelFormula\": {\n                \"formulas\": {\n                    \"normal\": {\n                        \"mainEngineFormula\": \"-0.0382 * speedKnot ** 2 + 0.8658 * speedKnot - 0.0197\",\n                        \"auxiliaryEngineFormula\": \"1.5103 * Math.exp(-0.064 * speedKnot)\"\n                    },\n                    \"underDraft\": {\n                        \"mainEngineFormula\": \"-0.0324 * speedKnot ** 2 + 0.736 * speedKnot - 0.0167\",\n                        \"auxiliaryEngineFormula\": \"1.2837 * Math.exp(-0.064 * speedKnot)\"\n                    },\n                    \"other\": {\n                        \"mainEngineFormula\": \"-0.0439 * speedKnot ** 2 + 0.9957 * speedKnot - 0.0226\",\n                        \"auxiliaryEngineFormula\": \"1.7368 * Math.exp(-0.064 * speedKnot)\"\n                    }\n                },\n                \"_id\": \"683975c0a8c139506b7a1243\",\n                \"__v\": 0\n            }\n        },\n        \"_id\": \"683a6887833966e5a57ac3df\",\n        \"mmsi\": \"525005223\",\n        \"generalData\": {\n            \"_id\": \"6839766ca8c139506b7a138a\",\n            \"name\": \"Dharma Ferry VIII\",\n            \"flag\": \"ID\",\n            \"imoNumber\": \"9037941\",\n            \"route\": \"Lembar - Padang Bai\",\n            \"annualVoyagePercentage\": 41.6666666666667,\n            \"shipStatus\": \"Normal\",\n            \"photoUrl\": \"https://res.cloudinary.com/praktikaapp/image/upload/v1748594588/ais/phe1ubdv8kwcaafox2ph.jpg\",\n            \"__v\": 0\n        },\n        \"sizeData\": {\n            \"_id\": \"6839765ca8c139506b7a1368\",\n            \"capacity\": 2877,\n            \"cb\": 0.644818,\n            \"lwl\": 69.72,\n            \"b\": 16.3,\n            \"t\": 4.1,\n            \"cwp\": 0.753,\n            \"loa\": 73.3,\n            \"lpp\": 66.4,\n            \"cp\": 0.673,\n            \"cm\": 0.9806,\n            \"cbnsp\": 0.661,\n            \"bulbosbow\": false,\n            \"cstern\": 8,\n            \"c1\": 1,\n            \"c2\": 1,\n            \"c3\": 1,\n            \"c5\": 1.5,\n            \"vs\": 12,\n            \"__v\": 0\n        },\n        \"typeData\": {\n            \"_id\": \"68397634a8c139506b7a1321\",\n            \"name\": \"Ro-ro Passenger Ship\",\n            \"capacityUnit\": \"GT\",\n            \"a\": 7540,\n            \"c\": 0.587,\n            \"d\": [\n                {\n                    \"d1\": 0.72,\n                    \"d2\": 0.9,\n                    \"d3\": 1.12,\n                    \"d4\": 1.41,\n                    \"_id\": \"68397634a8c139506b7a1322\"\n                }\n            ],\n            \"__v\": 0\n        },\n        \"fuelType\": {\n            \"_id\": \"6839764ba8c139506b7a1350\",\n            \"fuelType\": \"Diesel/Gas Oil\",\n            \"carbonContent\": 0.8744,\n            \"conversionFactor\": 3.206,\n            \"fuelDensity\": 0.86,\n            \"__v\": 0\n        },\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+					"body": "{\n    \"message\": \"Ship fetched successfully\",\n    \"data\": {\n        \"engineSpecs\": {\n            \"mainEngine\": {\n                \"engine\": {\n                    \"_id\": \"683975e1a8c139506b7a1281\",\n                    \"engineName\": \"NIIGATA (6M28BET)\",\n                    \"rpm\": 390,\n                    \"power\": 2100,\n                    \"specificFuelOilConsumption\": 179.2,\n                    \"__v\": 0\n                },\n                \"quantity\": 2\n            },\n            \"auxiliaryEngine\": {\n                \"engine\": [\n                    {\n                        \"_id\": \"683975d4a8c139506b7a126b\",\n                        \"generatorType\": \"MAN (D2866LE)\",\n                        \"rpm\": 1800,\n                        \"power\": 276,\n                        \"specificFuelOilConsumption\": 207,\n                        \"__v\": 0\n                    },\n                    {\n                        \"_id\": \"683975d4a8c139506b7a126b\",\n                        \"generatorType\": \"MAN (D2866LE)\",\n                        \"rpm\": 1800,\n                        \"power\": 276,\n                        \"specificFuelOilConsumption\": 207,\n                        \"__v\": 0\n                    }\n                ],\n                \"quantity\": 2\n            }\n        },\n        \"fuelFormulas\": {\n            \"firstFuelFormula\": null\n        },\n        \"_id\": \"683ab0e288e28cca4c61173a\",\n        \"mmsi\": \"525005223\",\n        \"generalData\": {\n            \"_id\": \"6839766ca8c139506b7a138a\",\n            \"name\": \"Dharma Ferry VIII\",\n            \"flag\": \"ID\",\n            \"imoNumber\": \"9037941\",\n            \"annualVoyagePercentage\": 41.6666666666667,\n            \"shipStatus\": \"Normal\",\n            \"photoUrl\": \"https://res.cloudinary.com/praktikaapp/image/upload/v1748594588/ais/phe1ubdv8kwcaafox2ph.jpg\",\n            \"__v\": 0\n        },\n        \"sizeData\": {\n            \"_id\": \"6839765ca8c139506b7a1368\",\n            \"capacity\": 2877,\n            \"cb\": 0.644818,\n            \"lwl\": 69.72,\n            \"b\": 16.3,\n            \"t\": 4.1,\n            \"cwp\": 0.753,\n            \"loa\": 73.3,\n            \"lpp\": 66.4,\n            \"cp\": 0.673,\n            \"cm\": 0.9806,\n            \"cbnsp\": 0.661,\n            \"bulbosbow\": false,\n            \"cstern\": 8,\n            \"c1\": 1,\n            \"c2\": 1,\n            \"c3\": 1,\n            \"c5\": 1.5,\n            \"vs\": 12,\n            \"__v\": 0\n        },\n        \"typeData\": {\n            \"_id\": \"68397634a8c139506b7a1321\",\n            \"name\": \"Ro-ro Passenger Ship\",\n            \"capacityUnit\": \"GT\",\n            \"a\": 7540,\n            \"c\": 0.587,\n            \"d\": [\n                {\n                    \"d1\": 0.72,\n                    \"d2\": 0.9,\n                    \"d3\": 1.12,\n                    \"d4\": 1.41,\n                    \"_id\": \"68397634a8c139506b7a1322\"\n                }\n            ],\n            \"__v\": 0\n        },\n        \"fuelType\": {\n            \"_id\": \"6839764ba8c139506b7a1350\",\n            \"fuelType\": \"Diesel/Gas Oil\",\n            \"carbonContent\": 0.8744,\n            \"conversionFactor\": 3.206,\n            \"fuelDensity\": 0.86,\n            \"__v\": 0\n        },\n        \"shipPort\": [\n            {\n                \"location\": {\n                    \"latitude\": -8.5323949,\n                    \"longitude\": 115.5073505\n                },\n                \"_id\": \"683aaea451a9ea1864f63019\",\n                \"name\": \"Padang Bai\",\n                \"code\": \"PBI\",\n                \"administrativeLocation\": \"51.07.03.2009\",\n                \"__v\": 0\n            },\n            {\n                \"location\": {\n                    \"latitude\": -8.7373119,\n                    \"longitude\": 116.049278\n                },\n                \"_id\": \"683aae4751a9ea1864f62f69\",\n                \"name\": \"Lembar\",\n                \"code\": \"LMR\",\n                \"administrativeLocation\": \"52.01.13.2001\",\n                \"__v\": 0\n            }\n        ],\n        \"__v\": 0\n    },\n    \"success\": true\n}"
 				}
 			]
 		},
@@ -410,7 +414,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/{{version}}/ships/683969838c5f2801a649fde2",
+					"raw": "{{url}}/api/{{version}}/ships/data/mmsi/525005223",
 					"host": [
 						"{{url}}"
 					],
@@ -418,7 +422,9 @@
 						"api",
 						"{{version}}",
 						"ships",
-						"683969838c5f2801a649fde2"
+						"data",
+						"mmsi",
+						"525005223"
 					]
 				}
 			},
@@ -429,7 +435,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/api/{{version}}/ships/mmsi/525005223",
+							"raw": "{{url}}/api/{{version}}/ships/data/mmsi/525005223",
 							"host": [
 								"{{url}}"
 							],
@@ -437,6 +443,7 @@
 								"api",
 								"{{version}}",
 								"ships",
+								"data",
 								"mmsi",
 								"525005223"
 							]
@@ -508,15 +515,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "2090"
+							"value": "1908"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"82a-cau8CP6TnHFWAhBkBFQuZI4LT+w\""
+							"value": "W/\"774-P60FfLpQ4qTAYMQ3EU004ik2v0Y\""
 						},
 						{
 							"key": "Date",
-							"value": "Sat, 31 May 2025 02:33:41 GMT"
+							"value": "Sat, 31 May 2025 07:35:39 GMT"
 						},
 						{
 							"key": "Connection",
@@ -528,7 +535,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"Ship fetched successfully\",\n    \"data\": {\n        \"engineSpecs\": {\n            \"mainEngine\": {\n                \"engine\": {\n                    \"_id\": \"683975e1a8c139506b7a1281\",\n                    \"engineName\": \"NIIGATA (6M28BET)\",\n                    \"rpm\": 390,\n                    \"power\": 2100,\n                    \"specificFuelOilConsumption\": 179.2,\n                    \"__v\": 0\n                },\n                \"quantity\": 2\n            },\n            \"auxiliaryEngine\": {\n                \"engine\": [\n                    {\n                        \"_id\": \"683975d4a8c139506b7a126b\",\n                        \"generatorType\": \"MAN (D2866LE)\",\n                        \"rpm\": 1800,\n                        \"power\": 276,\n                        \"specificFuelOilConsumption\": 207,\n                        \"__v\": 0\n                    },\n                    {\n                        \"_id\": \"683975d4a8c139506b7a126b\",\n                        \"generatorType\": \"MAN (D2866LE)\",\n                        \"rpm\": 1800,\n                        \"power\": 276,\n                        \"specificFuelOilConsumption\": 207,\n                        \"__v\": 0\n                    }\n                ],\n                \"quantity\": 3\n            }\n        },\n        \"fuelFormulas\": {\n            \"firstFuelFormula\": {\n                \"formulas\": {\n                    \"normal\": {\n                        \"mainEngineFormula\": \"-0.0382 * speedKnot ** 2 + 0.8658 * speedKnot - 0.0197\",\n                        \"auxiliaryEngineFormula\": \"1.5103 * Math.exp(-0.064 * speedKnot)\"\n                    },\n                    \"underDraft\": {\n                        \"mainEngineFormula\": \"-0.0324 * speedKnot ** 2 + 0.736 * speedKnot - 0.0167\",\n                        \"auxiliaryEngineFormula\": \"1.2837 * Math.exp(-0.064 * speedKnot)\"\n                    },\n                    \"other\": {\n                        \"mainEngineFormula\": \"-0.0439 * speedKnot ** 2 + 0.9957 * speedKnot - 0.0226\",\n                        \"auxiliaryEngineFormula\": \"1.7368 * Math.exp(-0.064 * speedKnot)\"\n                    }\n                },\n                \"_id\": \"683975c0a8c139506b7a1243\",\n                \"__v\": 0\n            }\n        },\n        \"_id\": \"683a6887833966e5a57ac3df\",\n        \"mmsi\": \"525005223\",\n        \"generalData\": {\n            \"_id\": \"6839766ca8c139506b7a138a\",\n            \"name\": \"Dharma Ferry VIII\",\n            \"flag\": \"ID\",\n            \"imoNumber\": \"9037941\",\n            \"route\": \"Lembar - Padang Bai\",\n            \"annualVoyagePercentage\": 41.6666666666667,\n            \"shipStatus\": \"Normal\",\n            \"photoUrl\": \"https://res.cloudinary.com/praktikaapp/image/upload/v1748594588/ais/phe1ubdv8kwcaafox2ph.jpg\",\n            \"__v\": 0\n        },\n        \"sizeData\": {\n            \"_id\": \"6839765ca8c139506b7a1368\",\n            \"capacity\": 2877,\n            \"cb\": 0.644818,\n            \"lwl\": 69.72,\n            \"b\": 16.3,\n            \"t\": 4.1,\n            \"cwp\": 0.753,\n            \"loa\": 73.3,\n            \"lpp\": 66.4,\n            \"cp\": 0.673,\n            \"cm\": 0.9806,\n            \"cbnsp\": 0.661,\n            \"bulbosbow\": false,\n            \"cstern\": 8,\n            \"c1\": 1,\n            \"c2\": 1,\n            \"c3\": 1,\n            \"c5\": 1.5,\n            \"vs\": 12,\n            \"__v\": 0\n        },\n        \"typeData\": {\n            \"_id\": \"68397634a8c139506b7a1321\",\n            \"name\": \"Ro-ro Passenger Ship\",\n            \"capacityUnit\": \"GT\",\n            \"a\": 7540,\n            \"c\": 0.587,\n            \"d\": [\n                {\n                    \"d1\": 0.72,\n                    \"d2\": 0.9,\n                    \"d3\": 1.12,\n                    \"d4\": 1.41,\n                    \"_id\": \"68397634a8c139506b7a1322\"\n                }\n            ],\n            \"__v\": 0\n        },\n        \"fuelType\": {\n            \"_id\": \"6839764ba8c139506b7a1350\",\n            \"fuelType\": \"Diesel/Gas Oil\",\n            \"carbonContent\": 0.8744,\n            \"conversionFactor\": 3.206,\n            \"fuelDensity\": 0.86,\n            \"__v\": 0\n        },\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+					"body": "{\n    \"message\": \"Ship fetched successfully\",\n    \"data\": {\n        \"_id\": \"683ab0e288e28cca4c61173a\",\n        \"mmsi\": \"525005223\",\n        \"generalData\": {\n            \"_id\": \"6839766ca8c139506b7a138a\",\n            \"name\": \"Dharma Ferry VIII\",\n            \"flag\": \"ID\",\n            \"imoNumber\": \"9037941\",\n            \"annualVoyagePercentage\": 41.6666666666667,\n            \"shipStatus\": \"Normal\",\n            \"photoUrl\": \"https://res.cloudinary.com/praktikaapp/image/upload/v1748594588/ais/phe1ubdv8kwcaafox2ph.jpg\",\n            \"__v\": 0\n        },\n        \"sizeData\": {\n            \"_id\": \"6839765ca8c139506b7a1368\",\n            \"capacity\": 2877,\n            \"cb\": 0.644818,\n            \"lwl\": 69.72,\n            \"b\": 16.3,\n            \"t\": 4.1,\n            \"cwp\": 0.753,\n            \"loa\": 73.3,\n            \"lpp\": 66.4,\n            \"cp\": 0.673,\n            \"cm\": 0.9806,\n            \"cbnsp\": 0.661,\n            \"bulbosbow\": false,\n            \"cstern\": 8,\n            \"c1\": 1,\n            \"c2\": 1,\n            \"c3\": 1,\n            \"c5\": 1.5,\n            \"vs\": 12,\n            \"__v\": 0\n        },\n        \"typeData\": {\n            \"_id\": \"68397634a8c139506b7a1321\",\n            \"name\": \"Ro-ro Passenger Ship\",\n            \"capacityUnit\": \"GT\",\n            \"a\": 7540,\n            \"c\": 0.587,\n            \"d\": [\n                {\n                    \"d1\": 0.72,\n                    \"d2\": 0.9,\n                    \"d3\": 1.12,\n                    \"d4\": 1.41,\n                    \"_id\": \"68397634a8c139506b7a1322\"\n                }\n            ],\n            \"__v\": 0\n        },\n        \"fuelType\": {\n            \"_id\": \"6839764ba8c139506b7a1350\",\n            \"fuelType\": \"Diesel/Gas Oil\",\n            \"carbonContent\": 0.8744,\n            \"conversionFactor\": 3.206,\n            \"fuelDensity\": 0.86,\n            \"__v\": 0\n        },\n        \"engineSpecs\": {\n            \"mainEngine\": {\n                \"engine\": {\n                    \"_id\": \"683975e1a8c139506b7a1281\",\n                    \"engineName\": \"NIIGATA (6M28BET)\",\n                    \"rpm\": 390,\n                    \"power\": 2100,\n                    \"specificFuelOilConsumption\": 179.2,\n                    \"__v\": 0\n                },\n                \"quantity\": 2\n            },\n            \"auxiliaryEngine\": {\n                \"engine\": [\n                    {\n                        \"_id\": \"683975d4a8c139506b7a126b\",\n                        \"generatorType\": \"MAN (D2866LE)\",\n                        \"rpm\": 1800,\n                        \"power\": 276,\n                        \"specificFuelOilConsumption\": 207,\n                        \"__v\": 0\n                    },\n                    {\n                        \"_id\": \"683975d4a8c139506b7a126b\",\n                        \"generatorType\": \"MAN (D2866LE)\",\n                        \"rpm\": 1800,\n                        \"power\": 276,\n                        \"specificFuelOilConsumption\": 207,\n                        \"__v\": 0\n                    }\n                ],\n                \"quantity\": 2\n            }\n        },\n        \"fuelFormulas\": {\n            \"firstFuelFormula\": null\n        },\n        \"shipPort\": [\n            {\n                \"_id\": \"683aaea451a9ea1864f63019\",\n                \"name\": \"Padang Bai\",\n                \"code\": \"PBI\",\n                \"administrativeLocation\": \"51.07.03.2009\",\n                \"location\": {\n                    \"latitude\": -8.5323949,\n                    \"longitude\": 115.5073505\n                },\n                \"__v\": 0\n            },\n            {\n                \"_id\": \"683aae4751a9ea1864f62f69\",\n                \"name\": \"Lembar\",\n                \"code\": \"LMR\",\n                \"administrativeLocation\": \"52.01.13.2001\",\n                \"location\": {\n                    \"latitude\": -8.7373119,\n                    \"longitude\": 116.049278\n                },\n                \"__v\": 0\n            }\n        ],\n        \"__v\": 0\n    },\n    \"success\": true\n}"
 				}
 			]
 		},
@@ -539,7 +546,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"mmsi\": \"123456789\",\n  \"generalData\": \"60f7b914cdb0a7a4d8f99b24\",\n  \"sizeData\": \"60f7b914cdb0a7a4d8f99b25\",\n  \"typeData\": \"60f7b914cdb0a7a4d8f99b26\",\n  \"fuelType\": \"60f7b914cdb0a7a4d8f99b27\",\n  \"engineSpecs\": {\n    \"mainEngine\": {\n      \"engine\": \"60f7b914cdb0a7a4d8f99b28\",\n      \"quantity\": 2\n    },\n    \"auxiliaryEngine\": {\n      \"engine\": [\n        \"60f7b914cdb0a7a4d8f99b29\",\n        \"60f7b914cdb0a7a4d8f99b2a\"\n      ],\n      \"quantity\": 4\n    }\n  },\n  \"fuelFormulas\": {\n    \"firstFuelFormula\": \"60f7b914cdb0a7a4d8f99b2b\"\n  }\n}\n",
+					"raw": "{\n  \"mmsi\": \"525005223\",\n  \"generalData\": \"6839766ca8c139506b7a138a\",\n  \"sizeData\": \"6839765ca8c139506b7a1368\",\n  \"typeData\": \"68397634a8c139506b7a1321\",\n  \"fuelType\": \"6839764ba8c139506b7a1350\",\n  \"engineSpecs\": {\n    \"mainEngine\": {\n      \"engine\": \"683975e1a8c139506b7a1281\",\n      \"quantity\": 2\n    },\n    \"auxiliaryEngine\": {\n      \"engine\": [\n        \"683975d4a8c139506b7a126b\",\n        \"683975d4a8c139506b7a126b\"\n      ],\n      \"quantity\": 2\n    }\n  },\n  \"fuelFormulas\": {\n    \"firstFuelFormula\": \"683975c0a8c139506b7a1243\"\n  },\n  \"shipPort\": [\n    \"683aaea451a9ea1864f63019\",\n    \"683aae4751a9ea1864f62f69\"\n  ]\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -547,7 +554,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/api/{{version}}/ships/683969838c5f2801a649fde2",
+					"raw": "{{url}}/api/{{version}}/ships/data/683ab0e288e28cca4c61173a",
 					"host": [
 						"{{url}}"
 					],
@@ -555,7 +562,8 @@
 						"api",
 						"{{version}}",
 						"ships",
-						"683969838c5f2801a649fde2"
+						"data",
+						"683ab0e288e28cca4c61173a"
 					]
 				}
 			},
@@ -567,7 +575,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"mmsi\": \"123456789\",\n  \"generalData\": \"60f7b914cdb0a7a4d8f99b24\",\n  \"sizeData\": \"60f7b914cdb0a7a4d8f99b25\",\n  \"typeData\": \"60f7b914cdb0a7a4d8f99b26\",\n  \"fuelType\": \"60f7b914cdb0a7a4d8f99b27\",\n  \"engineSpecs\": {\n    \"mainEngine\": {\n      \"engine\": \"60f7b914cdb0a7a4d8f99b28\",\n      \"quantity\": 2\n    },\n    \"auxiliaryEngine\": {\n      \"engine\": [\n        \"60f7b914cdb0a7a4d8f99b29\",\n        \"60f7b914cdb0a7a4d8f99b2a\"\n      ],\n      \"quantity\": 4\n    }\n  },\n  \"fuelFormulas\": {\n    \"firstFuelFormula\": \"60f7b914cdb0a7a4d8f99b2b\"\n  }\n}\n",
+							"raw": "{\n  \"mmsi\": \"525005223\",\n  \"generalData\": \"6839766ca8c139506b7a138a\",\n  \"sizeData\": \"6839765ca8c139506b7a1368\",\n  \"typeData\": \"68397634a8c139506b7a1321\",\n  \"fuelType\": \"6839764ba8c139506b7a1350\",\n  \"engineSpecs\": {\n    \"mainEngine\": {\n      \"engine\": \"683975e1a8c139506b7a1281\",\n      \"quantity\": 2\n    },\n    \"auxiliaryEngine\": {\n      \"engine\": [\n        \"683975d4a8c139506b7a126b\",\n        \"683975d4a8c139506b7a126b\"\n      ],\n      \"quantity\": 2\n    }\n  },\n  \"fuelFormulas\": {\n    \"firstFuelFormula\": \"683975c0a8c139506b7a1243\"\n  },\n  \"shipPort\": [\n    \"683aaea451a9ea1864f63019\",\n    \"683aae4751a9ea1864f62f69\"\n  ]\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -575,7 +583,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/{{version}}/ships/683969838c5f2801a649fde2",
+							"raw": "{{url}}/api/{{version}}/ships/data/683ab0e288e28cca4c61173a",
 							"host": [
 								"{{url}}"
 							],
@@ -583,7 +591,8 @@
 								"api",
 								"{{version}}",
 								"ships",
-								"683969838c5f2801a649fde2"
+								"data",
+								"683ab0e288e28cca4c61173a"
 							]
 						}
 					},
@@ -653,15 +662,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "519"
+							"value": "586"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"207-HcrtShBUSz92z8bKhE2KAsIuVW8\""
+							"value": "W/\"24a-EcZi6UcVJJqNZaWZ79iHXdAcA34\""
 						},
 						{
 							"key": "Date",
-							"value": "Fri, 30 May 2025 08:18:05 GMT"
+							"value": "Sat, 31 May 2025 07:36:34 GMT"
 						},
 						{
 							"key": "Connection",
@@ -673,7 +682,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"Ship updated successfully\",\n    \"data\": {\n        \"engineSpecs\": {\n            \"mainEngine\": {\n                \"engine\": \"60f7b914cdb0a7a4d8f99b28\",\n                \"quantity\": 2\n            },\n            \"auxiliaryEngine\": {\n                \"engine\": [\n                    \"60f7b914cdb0a7a4d8f99b29\",\n                    \"60f7b914cdb0a7a4d8f99b2a\"\n                ],\n                \"quantity\": 4\n            }\n        },\n        \"fuelFormulas\": {\n            \"firstFuelFormula\": \"60f7b914cdb0a7a4d8f99b2b\"\n        },\n        \"_id\": \"683969838c5f2801a649fde2\",\n        \"mmsi\": \"123456789\",\n        \"generalData\": \"60f7b914cdb0a7a4d8f99b24\",\n        \"sizeData\": \"60f7b914cdb0a7a4d8f99b25\",\n        \"typeData\": \"60f7b914cdb0a7a4d8f99b26\",\n        \"fuelType\": \"60f7b914cdb0a7a4d8f99b27\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+					"body": "{\n    \"message\": \"Ship updated successfully\",\n    \"data\": {\n        \"engineSpecs\": {\n            \"mainEngine\": {\n                \"engine\": \"683975e1a8c139506b7a1281\",\n                \"quantity\": 2\n            },\n            \"auxiliaryEngine\": {\n                \"engine\": [\n                    \"683975d4a8c139506b7a126b\",\n                    \"683975d4a8c139506b7a126b\"\n                ],\n                \"quantity\": 2\n            }\n        },\n        \"fuelFormulas\": {\n            \"firstFuelFormula\": \"683975c0a8c139506b7a1243\"\n        },\n        \"_id\": \"683ab0e288e28cca4c61173a\",\n        \"mmsi\": \"525005223\",\n        \"generalData\": \"6839766ca8c139506b7a138a\",\n        \"sizeData\": \"6839765ca8c139506b7a1368\",\n        \"typeData\": \"68397634a8c139506b7a1321\",\n        \"fuelType\": \"6839764ba8c139506b7a1350\",\n        \"shipPort\": [\n            \"683aaea451a9ea1864f63019\",\n            \"683aae4751a9ea1864f62f69\"\n        ],\n        \"__v\": 0\n    },\n    \"success\": true\n}"
 				}
 			]
 		},
@@ -683,7 +692,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/{{version}}/ships/683969838c5f2801a649fde2",
+					"raw": "{{url}}/api/{{version}}/ships/data683969838c5f2801a649fde2",
 					"host": [
 						"{{url}}"
 					],
@@ -691,7 +700,7 @@
 						"api",
 						"{{version}}",
 						"ships",
-						"683969838c5f2801a649fde2"
+						"data683969838c5f2801a649fde2"
 					]
 				}
 			},
@@ -702,7 +711,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/api/{{version}}/ships/683969838c5f2801a649fde2",
+							"raw": "{{url}}/api/{{version}}/ships/data/683969838c5f2801a649fde2",
 							"host": [
 								"{{url}}"
 							],
@@ -710,6 +719,7 @@
 								"api",
 								"{{version}}",
 								"ships",
+								"data",
 								"683969838c5f2801a649fde2"
 							]
 						}

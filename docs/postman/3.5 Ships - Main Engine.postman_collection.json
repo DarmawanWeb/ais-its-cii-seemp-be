@@ -14,7 +14,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"engineName\": \"Main Engine A\",\n  \"rpm\": 1200,\n  \"power\": 2000,\n  \"specificFuelOilConsumption\": 0.15\n}\n",
+					"raw": "{\n  \"engineName\": \"NIIGATA (6M28BET)\",\n  \"rpm\": 390,\n  \"power\": 2100,\n  \"specificFuelOilConsumption\": 179.2\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -42,7 +42,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"engineName\": \"Main Engine A\",\n  \"rpm\": 1200,\n  \"power\": 2000,\n  \"specificFuelOilConsumption\": 0.15\n}\n",
+							"raw": "{\n  \"engineName\": \"NIIGATA (6M28BET)\",\n  \"rpm\": 390,\n  \"power\": 2100,\n  \"specificFuelOilConsumption\": 179.2\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -128,15 +128,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "197"
+							"value": "201"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"c5-p0I9VI7bKhb3PDQ69FvkqlwU7EU\""
+							"value": "W/\"c9-20tiUM2NqYJTVx2L626Z3hhIg/A\""
 						},
 						{
 							"key": "Date",
-							"value": "Fri, 30 May 2025 07:42:22 GMT"
+							"value": "Fri, 30 May 2025 09:09:53 GMT"
 						},
 						{
 							"key": "Connection",
@@ -148,7 +148,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"MainEngine created successfully\",\n    \"data\": {\n        \"engineName\": \"Main Engine A\",\n        \"rpm\": 1200,\n        \"power\": 2000,\n        \"specificFuelOilConsumption\": 0.15,\n        \"_id\": \"6839615e90454d7032d299ad\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+					"body": "{\n    \"message\": \"MainEngine created successfully\",\n    \"data\": {\n        \"engineName\": \"NIIGATA (6M28BET)\",\n        \"rpm\": 390,\n        \"power\": 2100,\n        \"specificFuelOilConsumption\": 179.2,\n        \"_id\": \"683975e1a8c139506b7a1281\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
 				}
 			]
 		},

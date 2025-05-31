@@ -14,7 +14,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"formulas\": {\n    \"normal\": {\n      \"mainEngineFormula\": \"ME_formula_normal\",\n      \"auxiliaryEngineFormula\": \"AE_formula_normal\"\n    },\n    \"underDraft\": {\n      \"mainEngineFormula\": \"ME_formula_underDraft\",\n      \"auxiliaryEngineFormula\": \"AE_formula_underDraft\"\n    },\n    \"other\": {\n      \"mainEngineFormula\": \"ME_formula_other\",\n      \"auxiliaryEngineFormula\": \"AE_formula_other\"\n    }\n  }\n}\n",
+					"raw": "{\n    \"mainEngineFormula\": \"-0.0382 * speedKnot ** 2 + 0.8658 * speedKnot - 0.0197\",\n    \"auxiliaryEngineFormula\": \"1.5103 * Math.exp(-0.064 * speedKnot)\" \n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -42,7 +42,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"formulas\": {\n    \"normal\": {\n      \"mainEngineFormula\": \"ME_formula_normal\",\n      \"auxiliaryEngineFormula\": \"AE_formula_normal\"\n    },\n    \"underDraft\": {\n      \"mainEngineFormula\": \"ME_formula_underDraft\",\n      \"auxiliaryEngineFormula\": \"AE_formula_underDraft\"\n    },\n    \"other\": {\n      \"mainEngineFormula\": \"ME_formula_other\",\n      \"auxiliaryEngineFormula\": \"AE_formula_other\"\n    }\n  }\n}\n",
+							"raw": "{\n    \"mainEngineFormula\": \"-0.0382 * speedKnot ** 2 + 0.8658 * speedKnot - 0.0197\",\n    \"auxiliaryEngineFormula\": \"1.5103 * Math.exp(-0.064 * speedKnot)\" \n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -128,15 +128,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "426"
+							"value": "258"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"1aa-GJNCyJu05FzN8wg0xXL8JNi05kA\""
+							"value": "W/\"102-Wo02UqBmkSZWD9Lr9ML8cxii28c\""
 						},
 						{
 							"key": "Date",
-							"value": "Fri, 30 May 2025 07:54:28 GMT"
+							"value": "Sat, 31 May 2025 04:37:09 GMT"
 						},
 						{
 							"key": "Connection",
@@ -148,7 +148,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"FirstFuelFormula created successfully\",\n    \"data\": {\n        \"formulas\": {\n            \"normal\": {\n                \"mainEngineFormula\": \"ME_formula_normal\",\n                \"auxiliaryEngineFormula\": \"AE_formula_normal\"\n            },\n            \"underDraft\": {\n                \"mainEngineFormula\": \"ME_formula_underDraft\",\n                \"auxiliaryEngineFormula\": \"AE_formula_underDraft\"\n            },\n            \"other\": {\n                \"mainEngineFormula\": \"ME_formula_other\",\n                \"auxiliaryEngineFormula\": \"AE_formula_other\"\n            }\n        },\n        \"_id\": \"6839643476edaef56f7a9add\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+					"body": "{\n    \"message\": \"FirstFuelFormula created successfully\",\n    \"data\": {\n        \"mainEngineFormula\": \"-0.0382 * speedKnot ** 2 + 0.8658 * speedKnot - 0.0197\",\n        \"auxiliaryEngineFormula\": \"1.5103 * Math.exp(-0.064 * speedKnot)\",\n        \"_id\": \"683a8775bf58b7a3c79e0682\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
 				}
 			]
 		},
@@ -177,7 +177,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/api/{{version}}/ships/firstformula",
+							"raw": "{{url}}/api/{{version}}/ships/firstformula/all",
 							"host": [
 								"{{url}}"
 							],
@@ -185,7 +185,8 @@
 								"api",
 								"{{version}}",
 								"ships",
-								"firstformula"
+								"firstformula",
+								"all"
 							]
 						}
 					},
@@ -255,15 +256,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "433"
+							"value": "265"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"1b1-L6AxkPwVsZ+6M05LQVIU4QChnhQ\""
+							"value": "W/\"109-uB5cRoxHVwyWiCEXam9AQaPib0U\""
 						},
 						{
 							"key": "Date",
-							"value": "Fri, 30 May 2025 07:54:41 GMT"
+							"value": "Sat, 31 May 2025 04:55:11 GMT"
 						},
 						{
 							"key": "Connection",
@@ -275,7 +276,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"All FirstFuelFormulas fetched successfully\",\n    \"data\": [\n        {\n            \"formulas\": {\n                \"normal\": {\n                    \"mainEngineFormula\": \"ME_formula_normal\",\n                    \"auxiliaryEngineFormula\": \"AE_formula_normal\"\n                },\n                \"underDraft\": {\n                    \"mainEngineFormula\": \"ME_formula_underDraft\",\n                    \"auxiliaryEngineFormula\": \"AE_formula_underDraft\"\n                },\n                \"other\": {\n                    \"mainEngineFormula\": \"ME_formula_other\",\n                    \"auxiliaryEngineFormula\": \"AE_formula_other\"\n                }\n            },\n            \"_id\": \"6839643476edaef56f7a9add\",\n            \"__v\": 0\n        }\n    ],\n    \"success\": true\n}"
+					"body": "{\n    \"message\": \"All FirstFuelFormulas fetched successfully\",\n    \"data\": [\n        {\n            \"_id\": \"683a8775bf58b7a3c79e0682\",\n            \"mainEngineFormula\": \"-0.0382 * speedKnot ** 2 + 0.8658 * speedKnot - 0.0197\",\n            \"auxiliaryEngineFormula\": \"1.5103 * Math.exp(-0.064 * speedKnot)\",\n            \"__v\": 0\n        }\n    ],\n    \"success\": true\n}"
 				}
 			]
 		},
@@ -285,7 +286,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/{{version}}/ships/firstformula/6839643476edaef56f7a9add",
+					"raw": "{{url}}/api/{{version}}/ships/firstformula/683a8775bf58b7a3c79e0682",
 					"host": [
 						"{{url}}"
 					],
@@ -294,7 +295,7 @@
 						"{{version}}",
 						"ships",
 						"firstformula",
-						"6839643476edaef56f7a9add"
+						"683a8775bf58b7a3c79e0682"
 					]
 				}
 			},
@@ -305,7 +306,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/api/{{version}}/ships/firstformula/6839643476edaef56f7a9add",
+							"raw": "{{url}}/api/{{version}}/ships/firstformula/683a8775bf58b7a3c79e0682",
 							"host": [
 								"{{url}}"
 							],
@@ -314,7 +315,7 @@
 								"{{version}}",
 								"ships",
 								"firstformula",
-								"6839643476edaef56f7a9add"
+								"683a8775bf58b7a3c79e0682"
 							]
 						}
 					},
@@ -384,15 +385,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "426"
+							"value": "258"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"1aa-8qRy1oN/c+CsbjfXqHuQQaDxM98\""
+							"value": "W/\"102-Vy4TzvYtGcXm9lZX887JGyWruDQ\""
 						},
 						{
 							"key": "Date",
-							"value": "Fri, 30 May 2025 07:55:03 GMT"
+							"value": "Sat, 31 May 2025 04:38:48 GMT"
 						},
 						{
 							"key": "Connection",
@@ -404,7 +405,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"FirstFuelFormula fetched successfully\",\n    \"data\": {\n        \"formulas\": {\n            \"normal\": {\n                \"mainEngineFormula\": \"ME_formula_normal\",\n                \"auxiliaryEngineFormula\": \"AE_formula_normal\"\n            },\n            \"underDraft\": {\n                \"mainEngineFormula\": \"ME_formula_underDraft\",\n                \"auxiliaryEngineFormula\": \"AE_formula_underDraft\"\n            },\n            \"other\": {\n                \"mainEngineFormula\": \"ME_formula_other\",\n                \"auxiliaryEngineFormula\": \"AE_formula_other\"\n            }\n        },\n        \"_id\": \"6839643476edaef56f7a9add\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+					"body": "{\n    \"message\": \"FirstFuelFormula fetched successfully\",\n    \"data\": {\n        \"_id\": \"683a8775bf58b7a3c79e0682\",\n        \"mainEngineFormula\": \"-0.0382 * speedKnot ** 2 + 0.8658 * speedKnot - 0.0197\",\n        \"auxiliaryEngineFormula\": \"1.5103 * Math.exp(-0.064 * speedKnot)\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
 				}
 			]
 		},
@@ -415,7 +416,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"formulas\": {\n    \"normal\": {\n      \"mainEngineFormula\": \"ME_formula_normal\",\n      \"auxiliaryEngineFormula\": \"AE_formula_normal\"\n    },\n    \"underDraft\": {\n      \"mainEngineFormula\": \"ME_formula_underDraft\",\n      \"auxiliaryEngineFormula\": \"AE_formula_underDraft\"\n    },\n    \"other\": {\n      \"mainEngineFormula\": \"ME_formula_other\",\n      \"auxiliaryEngineFormula\": \"AE_formula_other\"\n    }\n  }\n}\n",
+					"raw": "{\n    \"mainEngineFormula\": \"-0.0382 * speedKnot ** 2 + 0.8658 * speedKnot - 0.0197\",\n    \"auxiliaryEngineFormula\": \"1.5103 * Math.exp(-0.064 * speedKnot)\" \n}\n\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -423,7 +424,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/api/{{version}}/ships/firstformula/6839643476edaef56f7a9add",
+					"raw": "{{url}}/api/{{version}}/ships/firstformula/683a8775bf58b7a3c79e0682",
 					"host": [
 						"{{url}}"
 					],
@@ -432,7 +433,7 @@
 						"{{version}}",
 						"ships",
 						"firstformula",
-						"6839643476edaef56f7a9add"
+						"683a8775bf58b7a3c79e0682"
 					]
 				}
 			},
@@ -444,7 +445,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"formulas\": {\n    \"normal\": {\n      \"mainEngineFormula\": \"ME_formula_normal\",\n      \"auxiliaryEngineFormula\": \"AE_formula_normal\"\n    },\n    \"underDraft\": {\n      \"mainEngineFormula\": \"ME_formula_underDraft\",\n      \"auxiliaryEngineFormula\": \"AE_formula_underDraft\"\n    },\n    \"other\": {\n      \"mainEngineFormula\": \"ME_formula_other\",\n      \"auxiliaryEngineFormula\": \"AE_formula_other\"\n    }\n  }\n}\n",
+							"raw": "{\n    \"mainEngineFormula\": \"-0.0382 * speedKnot ** 2 + 0.8658 * speedKnot - 0.0197\",\n    \"auxiliaryEngineFormula\": \"1.5103 * Math.exp(-0.064 * speedKnot)\" \n}\n\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -452,7 +453,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/{{version}}/ships/firstformula/6839643476edaef56f7a9add",
+							"raw": "{{url}}/api/{{version}}/ships/firstformula/683a8775bf58b7a3c79e0682",
 							"host": [
 								"{{url}}"
 							],
@@ -461,7 +462,7 @@
 								"{{version}}",
 								"ships",
 								"firstformula",
-								"6839643476edaef56f7a9add"
+								"683a8775bf58b7a3c79e0682"
 							]
 						}
 					},
@@ -531,15 +532,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "426"
+							"value": "258"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"1aa-N0fecTRM2uqHXhSWP4CGPT0cdKk\""
+							"value": "W/\"102-sfo9N9BlMU2OR0BCvuo5EdERksY\""
 						},
 						{
 							"key": "Date",
-							"value": "Fri, 30 May 2025 07:55:33 GMT"
+							"value": "Sat, 31 May 2025 04:39:34 GMT"
 						},
 						{
 							"key": "Connection",
@@ -551,7 +552,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"FirstFuelFormula updated successfully\",\n    \"data\": {\n        \"formulas\": {\n            \"normal\": {\n                \"mainEngineFormula\": \"ME_formula_normal\",\n                \"auxiliaryEngineFormula\": \"AE_formula_normal\"\n            },\n            \"underDraft\": {\n                \"mainEngineFormula\": \"ME_formula_underDraft\",\n                \"auxiliaryEngineFormula\": \"AE_formula_underDraft\"\n            },\n            \"other\": {\n                \"mainEngineFormula\": \"ME_formula_other\",\n                \"auxiliaryEngineFormula\": \"AE_formula_other\"\n            }\n        },\n        \"_id\": \"6839643476edaef56f7a9add\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+					"body": "{\n    \"message\": \"FirstFuelFormula updated successfully\",\n    \"data\": {\n        \"_id\": \"683a8775bf58b7a3c79e0682\",\n        \"mainEngineFormula\": \"-0.0382 * speedKnot ** 2 + 0.8658 * speedKnot - 0.0197\",\n        \"auxiliaryEngineFormula\": \"1.5103 * Math.exp(-0.064 * speedKnot)\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
 				}
 			]
 		},

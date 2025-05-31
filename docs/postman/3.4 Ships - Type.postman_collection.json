@@ -14,7 +14,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"name\": \"Cargo Ship\",\n  \"capacityUnit\": \"tons\",\n  \"a\": 50,\n  \"c\": 30,\n  \"d\": [\n    {\n      \"d1\": 10,\n      \"d2\": 20,\n      \"d3\": 30,\n      \"d4\": 40\n    }\n  ]\n}\n\n",
+					"raw": "{\n  \"name\": \"Ro-ro Passenger Ship\",\n  \"capacityUnit\": \"GT\",\n  \"a\": 7540,\n  \"c\": 0.587,\n  \"d\": [\n    {\n      \"d1\": 0.72,\n      \"d2\": 0.9,\n      \"d3\": 1.12,\n      \"d4\": 1.41\n    }\n  ]\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -42,7 +42,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Cargo Ship\",\n  \"capacityUnit\": \"tons\",\n  \"a\": 50,\n  \"c\": 30,\n  \"d\": [\n    {\n      \"d1\": 10,\n      \"d2\": 20,\n      \"d3\": 30,\n      \"d4\": 40\n    }\n  ]\n}\n\n",
+							"raw": "{\n  \"name\": \"Ro-ro Passenger Ship\",\n  \"capacityUnit\": \"GT\",\n  \"a\": 7540,\n  \"c\": 0.587,\n  \"d\": [\n    {\n      \"d1\": 0.72,\n      \"d2\": 0.9,\n      \"d3\": 1.12,\n      \"d4\": 1.41\n    }\n  ]\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -128,15 +128,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "237"
+							"value": "257"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"ed-+O/4nBEjtbiowojfBpqNrKGewWM\""
+							"value": "W/\"101-52yvj1H5hNPrjyjoepQWBI1aVd8\""
 						},
 						{
 							"key": "Date",
-							"value": "Fri, 30 May 2025 07:35:57 GMT"
+							"value": "Fri, 30 May 2025 09:11:16 GMT"
 						},
 						{
 							"key": "Connection",
@@ -148,7 +148,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"ShipType created successfully\",\n    \"data\": {\n        \"name\": \"Cargo Ship\",\n        \"capacityUnit\": \"tons\",\n        \"a\": 50,\n        \"c\": 30,\n        \"d\": [\n            {\n                \"d1\": 10,\n                \"d2\": 20,\n                \"d3\": 30,\n                \"d4\": 40,\n                \"_id\": \"68395fdd57952b32c572cfc1\"\n            }\n        ],\n        \"_id\": \"68395fdd57952b32c572cfc0\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+					"body": "{\n    \"message\": \"ShipType created successfully\",\n    \"data\": {\n        \"name\": \"Ro-ro Passenger Ship\",\n        \"capacityUnit\": \"GT\",\n        \"a\": 7540,\n        \"c\": 0.587,\n        \"d\": [\n            {\n                \"d1\": 0.72,\n                \"d2\": 0.9,\n                \"d3\": 1.12,\n                \"d4\": 1.41,\n                \"_id\": \"68397634a8c139506b7a1322\"\n            }\n        ],\n        \"_id\": \"68397634a8c139506b7a1321\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
 				}
 			]
 		},

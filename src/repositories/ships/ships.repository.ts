@@ -15,7 +15,8 @@ export class ShipRepository {
       .populate('fuelType')
       .populate('engineSpecs.mainEngine.engine')
       .populate('engineSpecs.auxiliaryEngine.engine')
-      .populate('fuelFormulas.firstFuelFormula');
+      .populate('fuelFormulas.firstFuelFormula')
+      .populate('shipPort');
   }
 
   async getById(id: string): Promise<IShip | null> {
@@ -26,7 +27,8 @@ export class ShipRepository {
       .populate('fuelType')
       .populate('engineSpecs.mainEngine.engine')
       .populate('engineSpecs.auxiliaryEngine.engine')
-      .populate('fuelFormulas.firstFuelFormula');
+      .populate('fuelFormulas.firstFuelFormula')
+      .populate('shipPort');
   }
 
   async getByMMSI(mmsi: string): Promise<IShipData | null> {
@@ -38,6 +40,7 @@ export class ShipRepository {
       .populate('engineSpecs.mainEngine.engine')
       .populate('engineSpecs.auxiliaryEngine.engine')
       .populate('fuelFormulas.firstFuelFormula')
+      .populate('shipPort')
       .lean<IShipData>();
   }
   async update(id: string, data: Partial<IShip>): Promise<IShip | null> {

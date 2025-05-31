@@ -5,6 +5,7 @@ import { IFuel } from '../models/ships/Fuel';
 import { IMainEngine } from '../models/ships/MainEngine';
 import { IAuxiliaryEngine } from '../models/ships/AuxEngine';
 import { IFirstFuelFormula } from '../models/ships/FirstFuelFormula';
+import { IPort } from '../models/Port';
 
 export interface IShipData {
   mmsi: string;
@@ -25,4 +26,5 @@ export interface IShipData {
   fuelFormulas: {
     firstFuelFormula: IFirstFuelFormula;
   };
+  shipPort: IPort[];
 }

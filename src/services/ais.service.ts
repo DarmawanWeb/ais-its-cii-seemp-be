@@ -19,6 +19,10 @@ export class AisService {
     }
 
     const { mmsi, navstatus, lat, lon, sog, cog, hdg } = messageData;
+    if (mmsi === '525005223') {
+      console.log('AIS message for MMSI 525005223');
+      return null;
+    }
 
     if (
       !mmsi ||
@@ -52,7 +56,7 @@ export class AisService {
       return this.aisRepository.create(newAis as IAis);
     }
 
-    const updatedPositions = [existingAis.positions[0], newPosition];
+    const updatedPositions = [existingAis.positions[1], newPosition];
     this.aisRepository.updatePositions(mmsi, updatedPositions);
   }
 

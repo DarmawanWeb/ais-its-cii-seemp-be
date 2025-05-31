@@ -14,7 +14,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"generatorType\": \"Diesel Generator\",\n  \"rpm\": 1500,\n  \"power\": 500,\n  \"specificFuelOilConsumption\": 0.2\n}\n",
+					"raw": "{\n  \"generatorType\": \"MAN (D2866LE)\",\n  \"rpm\": 1800,\n  \"power\": 276,\n  \"specificFuelOilConsumption\": 207\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -42,7 +42,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"generatorType\": \"Diesel Generator\",\n  \"rpm\": 1500,\n  \"power\": 500,\n  \"specificFuelOilConsumption\": 0.2\n}\n",
+							"raw": "{\n  \"generatorType\": \"MAN (D2866LE)\",\n  \"rpm\": 1800,\n  \"power\": 276,\n  \"specificFuelOilConsumption\": 207\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -128,15 +128,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "206"
+							"value": "203"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"ce-4A+sJ92m5RK023wF/CUgVpOmr2k\""
+							"value": "W/\"cb-YgMREbhu6oTgNFHgrb67vFD+eyE\""
 						},
 						{
 							"key": "Date",
-							"value": "Fri, 30 May 2025 07:46:18 GMT"
+							"value": "Fri, 30 May 2025 09:09:40 GMT"
 						},
 						{
 							"key": "Connection",
@@ -148,7 +148,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"AuxiliaryEngine created successfully\",\n    \"data\": {\n        \"generatorType\": \"Diesel Generator\",\n        \"rpm\": 1500,\n        \"power\": 500,\n        \"specificFuelOilConsumption\": 0.2,\n        \"_id\": \"6839624a2f87b48ecf21b583\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
+					"body": "{\n    \"message\": \"AuxiliaryEngine created successfully\",\n    \"data\": {\n        \"generatorType\": \"MAN (D2866LE)\",\n        \"rpm\": 1800,\n        \"power\": 276,\n        \"specificFuelOilConsumption\": 207,\n        \"_id\": \"683975d4a8c139506b7a126b\",\n        \"__v\": 0\n    },\n    \"success\": true\n}"
 				}
 			]
 		},

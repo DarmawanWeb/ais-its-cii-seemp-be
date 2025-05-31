@@ -4,7 +4,6 @@ export interface IShipGeneral extends Document {
   name: string;
   flag: string;
   imoNumber: string;
-  route: string;
   annualVoyagePercentage: number;
   shipStatus: string;
   photoUrl?: string;
@@ -14,7 +13,6 @@ const shipGeneralSchema: Schema = new Schema({
   name: { type: String, required: true },
   flag: { type: String, required: true },
   imoNumber: { type: String, required: true },
-  route: { type: String, required: true },
   annualVoyagePercentage: { type: Number, required: true },
   shipStatus: { type: String, required: true },
   photoUrl: { type: String },

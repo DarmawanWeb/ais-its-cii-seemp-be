@@ -19,27 +19,7 @@ export interface IShip extends Document {
   fuelFormulas: {
     firstFuelFormula: mongoose.Schema.Types.ObjectId;
   };
-}
-
-export interface IShipData {
-  mmsi: string;
-  generalData: mongoose.Schema.Types.ObjectId;
-  sizeData: mongoose.Schema.Types.ObjectId;
-  typeData: mongoose.Schema.Types.ObjectId;
-  fuelType: mongoose.Schema.Types.ObjectId;
-  engineSpecs: {
-    mainEngine: {
-      engine: mongoose.Schema.Types.ObjectId;
-      quantity: number;
-    };
-    auxiliaryEngine: {
-      engine: mongoose.Schema.Types.ObjectId[];
-      quantity: number;
-    };
-  };
-  fuelFormulas: {
-    firstFuelFormula: mongoose.Schema.Types.ObjectId;
-  };
+  shipPort: mongoose.Schema.Types.ObjectId[];
 }
 
 const shipSchema: Schema = new Schema({
@@ -102,6 +82,13 @@ const shipSchema: Schema = new Schema({
       required: true,
     },
   },
+  shipPort: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Port',
+      required: true,
+    },
+  ],
 });
 
 const Ship = mongoose.model<IShip>('Ship', shipSchema);
