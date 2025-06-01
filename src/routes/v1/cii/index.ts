@@ -10,6 +10,6 @@ const router: Router = express.Router();
 
 router.get('/data/:mmsi', getCIIByMmsiController);
 router.use('/zvalue', zvalueRoute);
-router.use('/annualcii', anualCIIRoutes);
-router.use('/dailycii', dailyCIIRoutes);
+router.use('/annual', anualCIIRoutes);
+router.use('/daily', dailyCIIRoutes);
 export default router;
