@@ -24,19 +24,8 @@ export class DailyCIIService {
     return await this.dailyCiiRepository.getByMmsi(mmsi);
   }
 
-  async getDailyCiiByMmsiAndTimestamp(
-    mmsi: string,
-    timestamp: Date,
-  ): Promise<IDailyCII | null> {
-    return await this.dailyCiiRepository.getByMMSIAndTimestamp(mmsi, timestamp);
-  }
-
-  async updateDailyCii(
-    mmsi: string,
-    timestamp: Date,
-    data: Partial<ICIICalculation>,
-  ): Promise<IDailyCII | null> {
-    return await this.dailyCiiRepository.update(mmsi, timestamp, data);
+  async getLatestDailyCiiByMmsi(mmsi: string): Promise<IDailyCII | null> {
+    return await this.dailyCiiRepository.getLatestByMmsi(mmsi);
   }
 
   async deleteDailyCii(mmsi: string): Promise<IDailyCII | null> {

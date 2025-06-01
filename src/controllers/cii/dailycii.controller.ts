@@ -51,46 +51,26 @@ export const getDailyCiiByMmsiController = async (
   }
 };
 
-export const getDailyCiiByMmsiAndTimestampController = async (
+export const getLatestDailyCiiByMmsiController = async (
   req: Request,
   res: Response,
 ) => {
-  const { mmsi, timestamp } = req.params;
+  const { mmsi } = req.params;
   try {
-    const dailyCiiRecord = await dailyCiiService.getDailyCiiByMmsiAndTimestamp(
-      mmsi,
-      new Date(timestamp),
-    );
-    if (!dailyCiiRecord) {
+    const latestDailyCiiRecord =
+      await dailyCiiService.getLatestDailyCiiByMmsi(mmsi);
+    if (!latestDailyCiiRecord) {
       res.status(404).json({
-        message: 'Daily Cii record for the given timestamp not found',
+        message: 'No Daily Cii record found for the given MMSI',
         success: false,
       });
     } else {
       res.status(200).json({
-        message: 'Daily Cii record fetched successfully',
-        data: dailyCiiRecord,
+        message: 'Latest Daily Cii record fetched successfully',
+        data: latestDailyCiiRecord,
         success: true,
       });
     }
-  } catch (error: unknown) {
-    handleError(error, res);
-  }
-};
-
-export const updateDailyCiiController = async (req: Request, res: Response) => {
-  const { mmsi, timestamp } = req.params;
-  try {
-    const updatedDailyCii = await dailyCiiService.updateDailyCii(
-      mmsi,
-      new Date(timestamp),
-      req.body,
-    );
-    res.status(200).json({
-      message: 'Daily Cii updated successfully',
-      data: updatedDailyCii,
-      success: true,
-    });
   } catch (error: unknown) {
     handleError(error, res);
   }

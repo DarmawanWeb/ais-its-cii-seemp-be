@@ -5,8 +5,7 @@ import {
   createDailyCiiController,
   getAllDailyCiiController,
   getDailyCiiByMmsiController,
-  getDailyCiiByMmsiAndTimestampController,
-  updateDailyCiiController,
+  getLatestDailyCiiByMmsiController,
   deleteDailyCiiController,
 } from '../../../controllers/cii/dailycii.controller';
 
@@ -15,8 +14,7 @@ const router: Router = express.Router();
 router.post('/', createDailyCiiController);
 router.get('/', getAllDailyCiiController);
 router.get('/:mmsi', getDailyCiiByMmsiController);
-router.get('/:mmsi/:timestamp', getDailyCiiByMmsiAndTimestampController);
-router.put('/:mmsi/:timestamp', updateDailyCiiController);
+router.get('/:mmsi/latest', getLatestDailyCiiByMmsiController);
 router.delete('/:mmsi', deleteDailyCiiController);
 
 export default router;
