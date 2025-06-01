@@ -1,27 +1,16 @@
+import { IAis, IAisPosition } from '../../models/Ais';
 import { AisRepository } from '../../repositories/ais.repository';
 import { ShipRepository } from '../../repositories/ships/ships.repository';
 
-import { IAis, IAisPosition } from '../../models/Ais';
 import { IShipData } from '../../types/ship.type';
+
 import { calculateSpeed } from '../../utils/cii/speed-calculation';
 import {
   calculateFirstFormulaFuel,
   calculateSecondFormulaFuel,
 } from '../../utils/cii/fuel-calculation';
-import {
-  calculateWindCourse,
-  calculateShipCourse,
-} from '../../utils/cii/second-formula/course-calculation';
-import {
-  getWeatherByLocation,
-  type ICurrentWeather,
-} from '../../utils/cii/weather';
-import { calculateCoefisienReduction } from '../../utils/cii/second-formula/coefisien-reduction-calculation';
-import { calculateFrictionResistance } from '../../utils/cii/second-formula/friction-resistance-calculation';
-import { calculateTotalResistance } from '../../utils/cii/second-formula/total-resistance-calculation';
-import { calculateBHPMCR } from '../../utils/cii/second-formula/power-calculation';
-
-import { IWindCourse } from '../../types/second-formula.types';
+import { calculateCII } from '../../utils/cii/cii-calculation';
+import { ICIICalculation } from '../../types/second-formula.types';
 
 export class CIIService {
   private shipRepository: ShipRepository;
@@ -34,76 +23,45 @@ export class CIIService {
   async calculateCII(
     positions: IAisPosition[],
     shipData: IShipData,
-  ): Promise<void> {
+  ): Promise<ICIICalculation> {
     const speedData = calculateSpeed(positions);
     if (!speedData) {
       throw new Error('Insufficient data to calculate speed');
     }
+    let ciiResult: ICIICalculation | null = null;
+    if (shipData.fuelFormulas.firstFuelFormula !== null) {
+      const firstFormulaFuel = await calculateFirstFormulaFuel(
+        positions[1].navstatus,
+        shipData.fuelType,
+        speedData.speedKnot,
+        shipData.fuelFormulas.firstFuelFormula,
+        speedData.timeDifferenceMinutes,
+      );
 
-    const firstFormulaFuel = await calculateFirstFormulaFuel(
-      positions[1].navstatus,
-      shipData.fuelType,
-      speedData.speedKnot,
-      shipData.fuelFormulas.firstFuelFormula,
-      speedData.timeDifferenceMinutes,
-    );
-    const currentWeather = (await getWeatherByLocation(
-      positions[1].lat,
-      positions[1].lon,
-    )) as ICurrentWeather | string;
+      ciiResult = await calculateCII(
+        shipData,
+        firstFormulaFuel,
+        speedData.distance,
+        null,
+      );
+    } else {
+      const secondFormulaFuel = await calculateSecondFormulaFuel(
+        speedData,
+        positions,
+        shipData,
+      );
 
-    const shipCourse = calculateShipCourse(
-      speedData.firstPositionRad,
-      speedData.secondPositionRad,
-    );
-
-    if (typeof currentWeather === 'string') {
-      throw new Error(`Weather data retrieval failed: ${currentWeather}`);
+      ciiResult = await calculateCII(
+        shipData,
+        secondFormulaFuel,
+        speedData.distance,
+        null,
+      );
     }
-    if (!currentWeather) {
-      throw new Error('Current weather data is not available');
-    }
-
-    const windCourse: IWindCourse = calculateWindCourse(
-      shipCourse,
-      currentWeather,
-    );
-
-    const coefReduction = calculateCoefisienReduction(
-      windCourse,
-      speedData.speedMs,
-      shipData.sizeData,
-    );
-
-    const frictionResistance = calculateFrictionResistance(
-      speedData,
-      coefReduction,
-      shipData.sizeData,
-    );
-
-    const totalResistance = calculateTotalResistance(
-      shipData.sizeData,
-      frictionResistance,
-    );
-
-    const bhpMCR = calculateBHPMCR(
-      frictionResistance,
-      totalResistance,
-      shipData.sizeData,
-    );
-
-    const secondFormulaFuel = calculateSecondFormulaFuel(
-      positions[1].navstatus,
-      frictionResistance,
-      bhpMCR,
-      shipData.engineSpecs.mainEngine.engine.specificFuelOilConsumption,
-      shipData.fuelType,
-    );
-
-    console.log(firstFormulaFuel, secondFormulaFuel);
+    return ciiResult;
   }
 
-  async getCIIByMMSI(mmsi: string): Promise<void | null> {
+  async getCIIByMMSI(mmsi: string): Promise<ICIICalculation> {
     const ship = await this.shipRepository.getByMMSI(mmsi);
     if (!ship) {
       throw new Error(`Ship with MMSI ${mmsi} not found`);
@@ -117,6 +75,13 @@ export class CIIService {
     if (!aisData.positions || aisData.positions.length < 2) {
       throw new Error(`Insufficient AIS positions for MMSI ${mmsi}`);
     }
-    await this.calculateCII(aisData.positions, ship as IShipData);
+    const ciiResult = await this.calculateCII(
+      aisData.positions,
+      ship as IShipData,
+    );
+    if (!ciiResult) {
+      throw new Error(`CII calculation failed for MMSI ${mmsi}`);
+    }
+    return ciiResult;
   }
 }

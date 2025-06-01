@@ -1,9 +1,12 @@
 import { IFuel } from '../../models/ships/Fuel';
 import { IFirstFuelFormula } from '../../models/ships/FirstFuelFormula';
 import {
-  IFrictionResistance,
   IFuelConsumption,
+  ISpeedCalculation,
 } from '../../types/second-formula.types';
+import { IShipData } from '../../types/ship.type';
+import { perCalculateSecondFormulaFuel } from '../cii/second-formula';
+import { IAisPosition } from '../../models/Ais';
 
 const fuelMultipliers: Record<number, { ME: number; AE: number }> = {
   0: { ME: 1, AE: 1 },
@@ -94,11 +97,11 @@ export const calculateFirstFormulaFuel = async (
 
   return {
     fuelConsumptionMeTon: calculateTotalFuelTon(
-      fuelData.totalME,
+      fuelData.totalME * timeDifferenceMinutes,
       fuelType.fuelDensity,
     ),
     fuelConsumptionAeTon: calculateTotalFuelTon(
-      fuelData.totalAE,
+      fuelData.totalAE * timeDifferenceMinutes,
       fuelType.fuelDensity,
     ),
     totalFuelConsumptionTon: calculateTotalFuelTon(
@@ -108,26 +111,34 @@ export const calculateFirstFormulaFuel = async (
   };
 };
 
-export const calculateSecondFormulaFuel = (
-  navstatus: number,
-  frictionResistance: IFrictionResistance,
-  bhpMCR: number,
-  SFOC: number,
-  fuelType: IFuel,
-): IFuelConsumption => {
-  const fuelEstimateME = (bhpMCR * SFOC * frictionResistance.newTime) / 1000000;
+export const calculateSecondFormulaFuel = async (
+  speedData: ISpeedCalculation,
+  positions: IAisPosition[],
+  shipData: IShipData,
+): Promise<IFuelConsumption> => {
+  const preFuelCalculation = await perCalculateSecondFormulaFuel(
+    speedData,
+    positions,
+    shipData,
+  );
+  const fuelEstimateME =
+    (preFuelCalculation.bhpMCR *
+      shipData.engineSpecs.mainEngine.engine.specificFuelOilConsumption *
+      preFuelCalculation.frictionResistance.newTime) /
+    1000000;
   const fuelEstimateAE =
     (1.5103 *
-      Math.exp(-0.064 * frictionResistance.newSpeed.speedKnot) *
-      fuelType.fuelDensity) /
+      Math.exp(
+        -0.064 * preFuelCalculation.frictionResistance.newSpeed.speedKnot,
+      ) *
+      shipData.fuelType.fuelDensity) /
     1000;
 
   const fuelData = getFuelByNavStatus(
-    navstatus,
+    positions[1].navstatus,
     fuelEstimateME,
     fuelEstimateAE,
   );
-
   const totalFuelConsumptionTon = fuelData.totalME + fuelData.totalAE;
 
   return {

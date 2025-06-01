@@ -34,8 +34,29 @@ export interface ITotalResistance {
   rtPlusSm: number;
 }
 
+export interface IDdVector {
+  d1: number;
+  d2: number;
+  d3: number;
+  d4: number;
+}
+
 export interface IFuelConsumption {
   fuelConsumptionMeTon: number;
   fuelConsumptionAeTon: number;
   totalFuelConsumptionTon: number;
+}
+
+export interface ICIICalculation {
+  ciiRequired: number;
+  ciiAttained: number;
+  ciiRating: number;
+  ciiGrade: string;
+  totalDistance: number;
+  fuelConsumption: IFuelConsumption;
+}
+
+export interface IPreCalculateSecondFormulaFuel {
+  bhpMCR: number;
+  frictionResistance: IFrictionResistance;
 }

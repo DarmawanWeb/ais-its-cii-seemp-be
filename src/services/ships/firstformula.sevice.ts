@@ -15,7 +15,6 @@ export class FirstFuelFormulaService {
   }
 
   async getAllFirstFuelFormulas(): Promise<IFirstFuelFormula[]> {
-    console.log('Fetching all first fuel formulas');
     return await this.firstFuelFormulaRepository.getAll();
   }
 

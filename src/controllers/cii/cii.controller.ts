@@ -3,16 +3,13 @@ import { handleError } from '../../utils/error.handler';
 import { CIIService } from '../../services/cii/cii.service';
 
 const ciiService = new CIIService();
-
-export const getCIIByMmsiController = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
+export const getCIIByMmsiController = async (req: Request, res: Response) => {
   try {
     const { mmsi } = req.params;
-    await ciiService.getCIIByMMSI(mmsi);
+    const ciiResult = await ciiService.getCIIByMMSI(mmsi);
     res.status(200).json({
-      message: 'Ais data fetched successfully',
+      data: ciiResult,
+      message: `CII data for MMSI ${mmsi} fetched successfully`,
       success: true,
     });
   } catch (error: unknown) {

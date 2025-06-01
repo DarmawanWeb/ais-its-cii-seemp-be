@@ -60,11 +60,13 @@ export const calculateSpeed = (
   }
 
   const speedKnot = data.distance / timeDifference;
-  const speedMs = speedKnot * 0.5144;
+  const speedKnootNormalized = Math.min(speedKnot, 30);
+
+  const speedMs = speedKnootNormalized * 0.5144;
 
   return {
     ...data,
-    speedKnot,
+    speedKnot: speedKnootNormalized,
     speedMs,
     timeDifferenceHours: timeDifference,
     timeDifferenceMinutes: timeDifference * 60,
