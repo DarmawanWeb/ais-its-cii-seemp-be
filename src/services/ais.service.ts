@@ -18,7 +18,7 @@ export class AisService {
       return null;
     }
 
-    const { mmsi, navstatus, lat, lon, sog, cog, hdg } = messageData;
+    const { mmsi, navstatus, lat, lon, sog, cog, hdg, utc } = messageData;
     if (mmsi === '525005223') {
       console.log('AIS message for MMSI 525005223');
       return null;
@@ -36,6 +36,9 @@ export class AisService {
       return null;
     }
 
+    const timestamp = new Date(data.timestamp);
+    timestamp.setSeconds(timestamp.getSeconds() - utc);
+
     const newPosition: IAisPosition = {
       navstatus,
       lat,
@@ -43,7 +46,7 @@ export class AisService {
       sog,
       cog,
       hdg,
-      timestamp: new Date(data.timestamp),
+      timestamp,
     };
 
     const existingAis = await this.aisRepository.getByMmsi(mmsi);

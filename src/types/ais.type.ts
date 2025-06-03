@@ -9,6 +9,7 @@ interface AisMessage {
     cog: number;
     sog: number;
     hdg: number;
+    utc: number;
   };
   port: string;
 }

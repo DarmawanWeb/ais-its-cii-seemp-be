@@ -65,6 +65,30 @@ export const getShipByMMSIController = async (req: Request, res: Response) => {
   }
 };
 
+export const getSecondShipByMMSIController = async (
+  req: Request,
+  res: Response,
+) => {
+  const { mmsi } = req.params;
+  try {
+    const ship = await shipService.getSecondaryShipByMMSI(mmsi);
+    if (!ship) {
+      res.status(404).json({
+        message: 'Ship not found',
+        success: false,
+      });
+    } else {
+      res.status(200).json({
+        message: 'Ship fetched successfully',
+        data: ship,
+        success: true,
+      });
+    }
+  } catch (error: unknown) {
+    handleError(error, res);
+  }
+};
+
 export const updateShipController = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {

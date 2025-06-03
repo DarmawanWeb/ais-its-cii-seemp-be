@@ -15,11 +15,34 @@ export class AisRepository implements IAisRepository {
   }
 
   async getAll(): Promise<IAis[]> {
-    return Ais.find();
+    return Ais.aggregate([
+      {
+        $project: {
+          mmsi: 1,
+          positions: { $slice: ['$positions', -1] },
+        },
+      },
+    ]);
   }
 
   async getByMmsi(mmsi: string): Promise<IAis | null> {
     return Ais.findOne({ mmsi });
+  }
+
+  async getLastByMmsi(mmsi: string): Promise<IAis | null> {
+    const ais = await Ais.aggregate([
+      { $match: { mmsi: mmsi } },
+      {
+        $project: {
+          mmsi: 1,
+          positions: { $slice: ['$positions', -1] },
+        },
+      },
+    ]);
+    if (ais.length > 1) {
+      return ais[1];
+    }
+    return ais[0] || null;
   }
 
   async updatePositions(

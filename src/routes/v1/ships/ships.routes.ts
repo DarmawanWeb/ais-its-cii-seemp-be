@@ -5,6 +5,7 @@ import {
   getAllShipsController,
   getShipByIdController,
   getShipByMMSIController,
+  getSecondShipByMMSIController,
   updateShipController,
   deleteShipController,
 } from '../../../controllers/ships/ships.controller';
@@ -15,6 +16,7 @@ router.post('/', createShipController);
 router.get('/', getAllShipsController);
 router.get('/:id', getShipByIdController);
 router.get('/mmsi/:mmsi', getShipByMMSIController);
+router.get('/secondary/mmsi/:mmsi', getSecondShipByMMSIController);
 router.put('/:id', updateShipController);
 router.delete('/:id', deleteShipController);
 

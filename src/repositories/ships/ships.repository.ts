@@ -1,5 +1,8 @@
 import { Ship, IShip } from '../../models/ships/Ship';
+import { SecondaryShip } from '../../models/SecondaryShip';
 import { IShipData } from '../../types/ship.type';
+import { IShipType } from '../../models/ships/Type';
+import { ISecondaryShip } from '../../models/SecondaryShip';
 
 export class ShipRepository {
   async create(data: IShip): Promise<IShip> {
@@ -49,5 +52,16 @@ export class ShipRepository {
 
   async delete(id: string): Promise<IShip | null> {
     return Ship.findByIdAndDelete(id);
+  }
+
+  async getShipTypeByMmsi(mmsi: string): Promise<IShipType | null> {
+    const ship = await Ship.findOne({ mmsi })
+      .populate('typeData')
+      .lean<{ typeData: IShipType }>();
+    return ship ? ship.typeData : null;
+  }
+
+  async getSecondaryShipByMMSI(mmsi: string): Promise<ISecondaryShip | null> {
+    return await SecondaryShip.findOne({ MMSI: mmsi });
   }
 }

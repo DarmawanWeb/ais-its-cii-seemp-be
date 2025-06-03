@@ -1,4 +1,11 @@
+import { ISecondaryShip } from '../models/SecondaryShip';
 import { ILocation } from './ais.type';
+
+export interface IShipData extends ISecondaryShip {
+  positions: ILocation[];
+  foto?: string;
+}
+
 export interface IWindCourse {
   encounteredAngle: number;
   beafortNumber: number;
@@ -60,3 +67,12 @@ export interface IPreCalculateSecondFormulaFuel {
   bhpMCR: number;
   frictionResistance: IFrictionResistance;
 }
+
+export type ICIIGrafik = {
+  ciiData: {
+    ciiAttained: number;
+    timestamp: string;
+    ciiRequired?: number;
+  }[];
+  ddVector?: IDdVector;
+};

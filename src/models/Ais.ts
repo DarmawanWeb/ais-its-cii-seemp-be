@@ -11,6 +11,7 @@ export interface IAisPosition {
 
 export interface IAis extends Document {
   mmsi: string;
+  icon?: string;
   positions: IAisPosition[];
 }
 

@@ -1,5 +1,7 @@
 import { IAis, IAisPosition } from '../../models/Ais';
 import { AisRepository } from '../../repositories/ais.repository';
+// import { IDailyCII } from '../../models/cii/DailyCII';
+import { DailyCIIRepository } from '../../repositories/cii/dailycii.repository';
 import { ShipRepository } from '../../repositories/ships/ships.repository';
 
 import { IShipData } from '../../types/ship.type';
@@ -15,9 +17,11 @@ import { ICIICalculation } from '../../types/second-formula.types';
 export class CIIService {
   private shipRepository: ShipRepository;
   private aisRepository: AisRepository;
+  private dailyCiiRepository: DailyCIIRepository;
   constructor() {
     this.shipRepository = new ShipRepository();
     this.aisRepository = new AisRepository();
+    this.dailyCiiRepository = new DailyCIIRepository();
   }
 
   async calculateCII(
@@ -28,6 +32,10 @@ export class CIIService {
     if (!speedData) {
       throw new Error('Insufficient data to calculate speed');
     }
+    const latestCII = await this.dailyCiiRepository.getLatestByMmsi(
+      shipData.mmsi,
+    );
+
     let ciiResult: ICIICalculation | null = null;
     if (shipData.fuelFormulas.firstFuelFormula !== null) {
       const firstFormulaFuel = await calculateFirstFormulaFuel(
@@ -42,7 +50,9 @@ export class CIIService {
         shipData,
         firstFormulaFuel,
         speedData.distance,
-        null,
+        latestCII && latestCII.cii && latestCII.cii.length > 0
+          ? (latestCII.cii[0].cii ?? null)
+          : null,
       );
     } else {
       const secondFormulaFuel = await calculateSecondFormulaFuel(
@@ -55,9 +65,13 @@ export class CIIService {
         shipData,
         secondFormulaFuel,
         speedData.distance,
-        null,
+        latestCII && latestCII.cii && latestCII.cii.length > 0
+          ? (latestCII.cii[0].cii ?? null)
+          : null,
       );
     }
+
+    await this.dailyCiiRepository.update(shipData.mmsi, ciiResult);
     return ciiResult;
   }
 

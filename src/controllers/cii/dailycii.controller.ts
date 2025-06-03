@@ -76,6 +76,30 @@ export const getLatestDailyCiiByMmsiController = async (
   }
 };
 
+export const getAttainedCiiByMmsiController = async (
+  req: Request,
+  res: Response,
+) => {
+  const { mmsi } = req.params;
+  try {
+    const attainedCii = await dailyCiiService.getAttainedCiiByMmsi(mmsi);
+    if (!attainedCii) {
+      res.status(404).json({
+        message: 'No attained CII data found for the given MMSI',
+        success: false,
+      });
+    } else {
+      res.status(200).json({
+        message: 'Attained CII data fetched successfully',
+        data: attainedCii,
+        success: true,
+      });
+    }
+  } catch (error: unknown) {
+    handleError(error, res);
+  }
+};
+
 export const deleteDailyCiiController = async (req: Request, res: Response) => {
   const { mmsi } = req.params;
   try {
