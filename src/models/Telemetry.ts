@@ -6,6 +6,7 @@ export interface ITelemetry extends Document {
     fuelConsumptionMeTon: number;
     fuelConsumptionAeTon: number;
     totalFuelConsumptionTon: number;
+    timestamp: Date;
   }[];
 }
 
@@ -14,6 +15,7 @@ const fuelConsumptionSchema: Schema = new Schema(
     fuelConsumptionMeTon: { type: Number, required: true },
     fuelConsumptionAeTon: { type: Number, required: true },
     totalFuelConsumptionTon: { type: Number, required: true },
+    timestamp: { type: Date, required: true },
   },
   { _id: false },
 );
