@@ -70,9 +70,7 @@ export const calculateFirstFormulaFuel = async (
   fuelFormulas: IFirstFuelFormula,
   timeDifferenceMinutes: number,
 ): Promise<IFuelConsumption> => {
-  console.log('Calculating first formula fuel...');
   if (!fuelType || !fuelFormulas) {
-    console.log(fuelFormulas);
     throw new Error('Fuel type or fuel formulas are not provided');
   }
   const context = { speedKnot };

@@ -7,6 +7,7 @@ import shipsRoutes from './ships';
 import ciiRoutes from './cii';
 import portRoutes from './port.routes';
 import telemetryRoutes from './telemetry.routes';
+import seempRoutes from './seemp.routes';
 
 const router: Router = express.Router();
 
@@ -16,5 +17,6 @@ router.use('/ships', shipsRoutes);
 router.use('/cii', ciiRoutes);
 router.use('/port', portRoutes);
 router.use('/telemetry', telemetryRoutes);
+router.use('/seemp', seempRoutes);
 
 export default router;

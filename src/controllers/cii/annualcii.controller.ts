@@ -102,6 +102,31 @@ export const updateAnnualCiiController = async (
   }
 };
 
+export const getAnnualCiiByMMSIWithDDVectorController = async (
+  req: Request,
+  res: Response,
+) => {
+  const { mmsi } = req.params;
+  try {
+    const annualCiiWithDDVector =
+      await annualCiiService.getAnnualCiiByMMMSIWithDDVector(mmsi);
+    if (!annualCiiWithDDVector) {
+      res.status(404).json({
+        message: 'Annual Cii record not found',
+        success: false,
+      });
+    } else {
+      res.status(200).json({
+        message: 'Annual Cii with DD Vector fetched successfully',
+        data: annualCiiWithDDVector,
+        success: true,
+      });
+    }
+  } catch (error: unknown) {
+    handleError(error, res);
+  }
+};
+
 export const deleteAnnualCiiController = async (
   req: Request,
   res: Response,

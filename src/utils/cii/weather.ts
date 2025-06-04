@@ -17,10 +17,8 @@ export async function getWeatherByLocation(
       `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&wind_speed_unit=kn&current_weather=true`,
     );
     const weather: ICurrentWeather = response.data.current_weather;
-    console.log('Weather data retrieved:', weather);
     return weather;
-  } catch (error) {
-    console.error('Error fetching weather data:', error);
-    return 'Unable to retrieve weather data at the moment.';
+  } catch (error: unknown) {
+    throw new Error(`Error when fetch open mateo api with message ${error}`);
   }
 }

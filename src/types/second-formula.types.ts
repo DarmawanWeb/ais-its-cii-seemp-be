@@ -63,6 +63,23 @@ export interface ICIICalculation {
   fuelConsumption: IFuelConsumption;
 }
 
+export interface IDdVector {
+  d1: number;
+  d2: number;
+  d3: number;
+  d4: number;
+}
+
+export interface IAnnualCIIWithDDVector {
+  year: number;
+  ciiRequired: number;
+  ciiAttained: number;
+  ciiRating: number;
+  ciiGrade: string;
+  totalDistance: number;
+  ddVector: IDdVector;
+}
+
 export interface IPreCalculateSecondFormulaFuel {
   bhpMCR: number;
   frictionResistance: IFrictionResistance;
