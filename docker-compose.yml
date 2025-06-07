@@ -1,7 +1,7 @@
 services:
   mongo:
     image: mongo:latest
-    container_name: mongo
+    container_name: mongo-ais
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
@@ -16,7 +16,7 @@ services:
 
   app:
     build: .
-    container_name: express-app
+    container_name: ais-its
     environment:
       - MONGO_URI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/${MONGO_DB_NAME}?authSource=admin
       - JWT_SECRET=${JWT_SECRET}
