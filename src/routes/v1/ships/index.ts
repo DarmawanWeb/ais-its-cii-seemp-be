@@ -9,6 +9,7 @@ import auxEngineRoutes from './auxengine.routes';
 import mainEngineRoutes from './mainengine.routes';
 import firstFormulaRoutes from './firstformula.routes';
 import shipRoutes from './ships.routes';
+import fuelDataRoutes from './fuel-data.routes';
 
 const router: Router = express.Router();
 
@@ -20,5 +21,6 @@ router.use('/auxengine', auxEngineRoutes);
 router.use('/mainengine', mainEngineRoutes);
 router.use('/firstformula', firstFormulaRoutes);
 router.use('/data', shipRoutes);
+router.use('/fuel-data', fuelDataRoutes);
 
 export default router;

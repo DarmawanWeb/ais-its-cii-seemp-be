@@ -20,6 +20,7 @@ const connectSocket = () => {
 
   socket.on('messageFromServer', async (data: TimestampedAisMessage) => {
     try {
+      console.log('Received message from server:', data);
       if (!data || !data.message || !data.timestamp) {
         console.log('Invalid data received from server:', data);
         return;
