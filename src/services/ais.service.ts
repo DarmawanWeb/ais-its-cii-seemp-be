@@ -19,10 +19,6 @@ export class AisService {
     }
 
     const { mmsi, navstatus, lat, lon, sog, cog, hdg, utc } = messageData;
-    if (mmsi === '525005223') {
-      console.log('AIS message for MMSI 525005223');
-      return null;
-    }
 
     if (
       !mmsi ||
