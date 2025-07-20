@@ -7,11 +7,13 @@ import {
 import { IAnnualCII } from '../../models/cii/AnnualCII';
 import { IShipData } from '../../types/ship.type';
 import { ISEEMPFormulaResult } from './first-formula';
+import { calculateCostPerYear } from './cost-calc';
 
 export const calculateLNGFuel = async (
   ciiRequired: number,
   annualCII: IAnnualCII,
   shipData: IShipData,
+  higestZValueYear: number,
 ): Promise<ISEEMPFormulaResult> => {
   const { ciiRatingAfter, ciiGradeAfter } = calculateSecondCiiAndGrade(
     ciiRequired,
@@ -21,12 +23,19 @@ export const calculateLNGFuel = async (
   );
   const costPerKw = 1580;
   const cost = calculateCostbyPower(shipData, costPerKw);
+  const costPerYear = await calculateCostPerYear(
+    shipData.typeData,
+    shipData.sizeData.capacity,
+    ciiRatingAfter,
+    higestZValueYear,
+    cost,
+  );
 
   return {
     ciiRatingAfter,
     ciiGradeAfter,
-    cost,
-    costDisplay: formatCost(cost),
+    cost : costPerYear,
+    costDisplay: formatCost(costPerYear),
   };
 };
 
@@ -34,6 +43,7 @@ export const calculateBioFuel = async (
   ciiRequired: number,
   annualCII: IAnnualCII,
   shipData: IShipData,
+  higestZValueYear: number,
 ) => {
   const { ciiRatingAfter, ciiGradeAfter } = calculateSecondCiiAndGrade(
     ciiRequired,
@@ -43,11 +53,17 @@ export const calculateBioFuel = async (
   );
   const costPerKw = 20;
   const cost = calculateCostbyPower(shipData, costPerKw);
-
+  const costPerYear = await calculateCostPerYear(
+    shipData.typeData,
+    shipData.sizeData.capacity,
+    ciiRatingAfter,
+    higestZValueYear,
+    cost,
+  );
   return {
     ciiRatingAfter,
     ciiGradeAfter,
-    cost,
-    costDisplay: formatCost(cost),
+    cost: costPerYear,
+    costDisplay: formatCost(costPerYear),
   };
 };

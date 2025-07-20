@@ -52,7 +52,6 @@ export class AnnualCIIService {
           const { d1, d2, d3, d4 } = shipTypeData.d;
           const { ciiRequired } = annualCii.cii;
 
-          // Clean up the data by removing unnecessary Mongoose metadata and only returning relevant fields
           const result = {
             year: annualCii.year,
             ciiRequired: annualCii.cii.ciiRequired,

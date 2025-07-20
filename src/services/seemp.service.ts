@@ -1,6 +1,7 @@
 import { ShipRepository } from '../repositories/ships/ships.repository';
 import { AnnualCIIRepository } from '../repositories/cii/annualcii.repository';
 import { DailyCIIRepository } from '../repositories/cii/dailycii.repository';
+import { ZValueRepository } from '../repositories/cii/zvalue.repository';
 import {
   calculateAirLubrication,
   calculateResistanceReduceDevice,
@@ -20,22 +21,25 @@ import {
   calculateFuelCells,
 } from '../utils/seemp/third-formula';
 
+
 export class SEEMPService {
   private shipRepository: ShipRepository;
   private annualCiiRepository: AnnualCIIRepository;
   private dailyCiiRepository: DailyCIIRepository;
+  private zValueRepository: ZValueRepository;
 
   constructor() {
     this.shipRepository = new ShipRepository();
     this.annualCiiRepository = new AnnualCIIRepository();
     this.dailyCiiRepository = new DailyCIIRepository();
+    this.zValueRepository = new ZValueRepository();
   }
 
-  // Correctly use 'this' to call the method
   async calculateSemp(mmsi: string) {
     const anualCii = await this.annualCiiRepository.getByMmsi(mmsi);
     const thisYearCii = await this.dailyCiiRepository.getLatestByMmsi(mmsi);
     const vesselData = await this.shipRepository.getByMMSI(mmsi);
+    const highestYearZValue = await this.zValueRepository.getHighestYear();
 
     if (!vesselData) {
       throw new Error('Vessel data not found');
@@ -55,66 +59,76 @@ export class SEEMPService {
     const ciiRequired = thisYearCii?.cii[0].cii.ciiRequired ?? 0;
     const ciiAttained = anualCii?.cii[0].cii.ciiAttained ?? 0;
 
-    const airLubrication = calculateAirLubrication(
+    const airLubrication = await calculateAirLubrication(
       voyagePerYear,
       ciiRequired,
       ciiAttained,
       vesselData,
+      highestYearZValue,
     );
-    const resistanceReduction = calculateResistanceReduceDevice(
+    const resistanceReduction = await calculateResistanceReduceDevice(
       voyagePerYear,
       ciiRequired,
       ciiAttained,
       vesselData,
+      highestYearZValue,
     );
-    const hullCoating = calculateHullCoating(
+    const hullCoating = await calculateHullCoating(
       voyagePerYear,
       ciiRequired,
       ciiAttained,
       vesselData,
+      highestYearZValue,
     );
-    const powerSystemMachinery = calculatePowerSystemMachinery(
+    const powerSystemMachinery = await calculatePowerSystemMachinery(
       voyagePerYear,
       ciiRequired,
       ciiAttained,
       vesselData,
+      highestYearZValue,
     );
-    const propEffDevice = calculatePropEffDevice(
+    const propEffDevice = await calculatePropEffDevice(
       voyagePerYear,
       ciiRequired,
       ciiAttained,
       vesselData,
+      highestYearZValue,
     );
-    const wasteHeatRecovery = calculateWasteHeatRecovery(
+    const wasteHeatRecovery = await calculateWasteHeatRecovery(
       voyagePerYear,
       ciiRequired,
       ciiAttained,
       vesselData,
+      highestYearZValue,
     );
 
-    const lngFuel = await calculateLNGFuel(ciiRequired, anualCii, vesselData);
-    const bioFuel = await calculateBioFuel(ciiRequired, anualCii, vesselData);
+    const lngFuel = await calculateLNGFuel(ciiRequired, anualCii, vesselData, highestYearZValue);
+    const bioFuel = await calculateBioFuel(ciiRequired, anualCii, vesselData, highestYearZValue);
 
     const solarPower = await calculateSolarPower(
       ciiRequired,
       anualCii,
       vesselData,
+      highestYearZValue,
     );
     const windPower = await calculateWindPower(
       ciiRequired,
       anualCii,
       vesselData,
+      highestYearZValue,
     );
     const coldIroning = await calculateColdIroning(
       ciiRequired,
       anualCii,
       vesselData,
       voyagePerYear,
+      highestYearZValue,
     );
     const fuelCells = await calculateFuelCells(
       ciiRequired,
       anualCii,
       vesselData,
+      voyagePerYear,
     );
 
     const results = [
@@ -131,7 +145,7 @@ export class SEEMPService {
         name: 'Variable speed electric power generation',
         ...powerSystemMachinery,
       },
-      { name: 'Install propulsion efficiency devices', ...propEffDevice },
+      { name: 'Install propulsion exfficiency devices', ...propEffDevice },
       {
         name: 'Utilize waste heat recovery from machinery devices on ship',
         ...wasteHeatRecovery,

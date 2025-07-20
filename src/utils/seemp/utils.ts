@@ -96,11 +96,11 @@ export const calculateCostbyPower = (
   shipData: IShipData,
   costPerKw: number,
   useMe = true,
+  useAe = true,
 ): number => {
-  const totalPowerAE =
+  const totalPowerAE = useAe ?
     shipData.engineSpecs.auxiliaryEngine.engine[0].power *
-    shipData.engineSpecs.auxiliaryEngine.quantity;
-
+    shipData.engineSpecs.auxiliaryEngine.quantity : 0;
   const totalPowerME = useMe
     ? shipData.engineSpecs.mainEngine.engine.power *
       shipData.engineSpecs.mainEngine.quantity

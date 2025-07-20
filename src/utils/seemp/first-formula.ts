@@ -5,6 +5,7 @@ import {
   formatCost,
   calculateCostbyPower,
 } from './utils';
+import { calculateCostPerYear } from './cost-calc';
 
 export interface ISEEMPFormulaResult {
   ciiRatingAfter: number;
@@ -13,12 +14,13 @@ export interface ISEEMPFormulaResult {
   costDisplay: string;
 }
 
-export const calculateAirLubrication = (
+export const calculateAirLubrication = async (
   voyagePerYear: number,
   ciiRequired: number,
   ciiAttained: number,
   shipData: IShipData,
-): ISEEMPFormulaResult => {
+  highestYearZValue: number,
+): Promise<ISEEMPFormulaResult> => {
   const potentialCiiReduce = 8;
   const { ciiRatingAfter, ciiGradeAfter } = calculateFirstCiiAndGrade(
     ciiRequired,
@@ -38,20 +40,29 @@ export const calculateAirLubrication = (
     cost = 1280000;
   }
 
+  const costPerYear = await calculateCostPerYear(
+    shipData.typeData,
+    shipData.sizeData.capacity,
+    ciiRatingAfter,
+    highestYearZValue,
+    cost,
+  );
+
   return {
     ciiRatingAfter,
     ciiGradeAfter,
-    cost,
-    costDisplay: formatCost(cost),
+    cost: costPerYear,
+    costDisplay: formatCost(costPerYear),
   };
 };
 
-export const calculateHullCoating = (
+export const calculateHullCoating = async (
   voyagePerYear: number,
   ciiRequired: number,
   ciiAttained: number,
   shipData: IShipData,
-): ISEEMPFormulaResult => {
+  highestYearZValue: number,
+): Promise<ISEEMPFormulaResult> => {
   const potentialCiiReduce = 10;
   const { ciiRatingAfter, ciiGradeAfter } = calculateFirstCiiAndGrade(
     ciiRequired,
@@ -64,20 +75,29 @@ export const calculateHullCoating = (
   const S = calculateS(shipData.sizeData);
   const cost = S * 100;
 
+  const costPerYear = await calculateCostPerYear(
+    shipData.typeData,
+    shipData.sizeData.capacity,
+    ciiRatingAfter,
+    highestYearZValue,
+    cost,
+  );
+
   return {
     ciiRatingAfter,
     ciiGradeAfter,
-    cost,
-    costDisplay: formatCost(cost),
+    cost: costPerYear,
+    costDisplay: formatCost(costPerYear),
   };
 };
 
-export const calculatePowerSystemMachinery = (
+export const calculatePowerSystemMachinery = async (
   voyagePerYear: number,
   ciiRequired: number,
   ciiAttained: number,
   vesselData: IShipData,
-): ISEEMPFormulaResult => {
+  highestYearZValue: number,
+): Promise<ISEEMPFormulaResult> => {
   const potentialCiiReduce = 18;
   const { ciiRatingAfter, ciiGradeAfter } = calculateFirstCiiAndGrade(
     ciiRequired,
@@ -87,23 +107,36 @@ export const calculatePowerSystemMachinery = (
     potentialCiiReduce,
   );
 
-  // Assuming the cost calculation logic is yet to be defined, we'll use a placeholder
-  const cost = 0;
+  const cost = calculateCostbyPower(
+    vesselData,
+    500,
+    true, 
+    false
+  );
+
+  const costPerYear = await calculateCostPerYear(
+    vesselData.typeData,
+    vesselData.sizeData.capacity,
+    ciiRatingAfter,
+    highestYearZValue,
+    cost,
+  );
 
   return {
     ciiRatingAfter,
     ciiGradeAfter,
-    cost,
-    costDisplay: formatCost(cost),
+    cost: costPerYear,
+    costDisplay: formatCost(costPerYear),
   };
 };
 
-export const calculatePropEffDevice = (
+export const calculatePropEffDevice = async (
   voyagePerYear: number,
   ciiRequired: number,
   ciiAttained: number,
   vesselData: IShipData,
-): ISEEMPFormulaResult => {
+  highestYearZValue: number,
+): Promise<ISEEMPFormulaResult> => {
   const potentialCiiReduce = 13;
   const { ciiRatingAfter, ciiGradeAfter } = calculateFirstCiiAndGrade(
     ciiRequired,
@@ -113,22 +146,39 @@ export const calculatePropEffDevice = (
     potentialCiiReduce,
   );
 
-  const cost = 400000; // Assuming this is a fixed cost as per the original function
+
+  const costPerYearHigh = await calculateCostPerYear(
+    vesselData.typeData,
+    vesselData.sizeData.capacity,
+    ciiRatingAfter,
+    highestYearZValue,
+    800000,
+  );
+
+  const costPerYearLow = await calculateCostPerYear(
+    vesselData.typeData,
+    vesselData.sizeData.capacity,
+    ciiRatingAfter,
+    highestYearZValue,
+    100000,
+  );
+
 
   return {
     ciiRatingAfter,
     ciiGradeAfter,
-    cost,
-    costDisplay: '$100,000 - $800,000',
+    cost: (costPerYearHigh + costPerYearLow) / 2,
+    costDisplay: `${formatCost(costPerYearLow)} - ${formatCost(costPerYearHigh)}`,
   };
 };
 
-export const calculateResistanceReduceDevice = (
+export const calculateResistanceReduceDevice = async (
   voyagePerYear: number,
   ciiRequired: number,
   ciiAttained: number,
   vesselData: IShipData,
-): ISEEMPFormulaResult => {
+  highestYearZValue: number,
+): Promise<ISEEMPFormulaResult> => {
   const potentialCiiReduce = 9;
   const { ciiRatingAfter, ciiGradeAfter } = calculateFirstCiiAndGrade(
     ciiRequired,
@@ -138,22 +188,38 @@ export const calculateResistanceReduceDevice = (
     potentialCiiReduce,
   );
 
-  const cost = 500000;
+
+  const costPerYearHigh = await calculateCostPerYear(
+    vesselData.typeData,
+    vesselData.sizeData.capacity,
+    ciiRatingAfter,
+    highestYearZValue,
+    700000,
+  );
+
+  const costPerYearLow = await calculateCostPerYear(
+    vesselData.typeData,
+    vesselData.sizeData.capacity,
+    ciiRatingAfter,
+    highestYearZValue,
+    300000,
+  );
 
   return {
     ciiRatingAfter,
     ciiGradeAfter,
-    cost,
-    costDisplay: '$300,000 - $700,000',
+    cost: (costPerYearHigh + costPerYearLow) / 2,
+    costDisplay: `${formatCost(costPerYearLow)} - ${formatCost(costPerYearHigh)}`,
   };
 };
 
-export const calculateWasteHeatRecovery = (
+export const calculateWasteHeatRecovery = async (
   voyagePerYear: number,
   ciiRequired: number,
   ciiAttained: number,
   vesselData: IShipData,
-): ISEEMPFormulaResult => {
+  highestYearZValue: number,
+): Promise<ISEEMPFormulaResult> => {
   const potentialCiiReduce = 10;
   const { ciiRatingAfter, ciiGradeAfter } = calculateFirstCiiAndGrade(
     ciiRequired,
@@ -165,10 +231,18 @@ export const calculateWasteHeatRecovery = (
 
   const cost = calculateCostbyPower(vesselData, 100);
 
+  const costPerYear = await calculateCostPerYear(
+    vesselData.typeData,
+    vesselData.sizeData.capacity,
+    ciiRatingAfter,
+    highestYearZValue,
+    cost,
+  );
+
   return {
     ciiRatingAfter,
     ciiGradeAfter,
-    cost,
+    cost: costPerYear,
     costDisplay: formatCost(cost),
   };
 };

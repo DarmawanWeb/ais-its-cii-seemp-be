@@ -25,4 +25,12 @@ export class ZValueRepository {
   async delete(id: string): Promise<IZValue | null> {
     return ZValue.findByIdAndDelete(id);
   }
+
+  async getHighestYear(): Promise<number> {
+    const highestYearZValue = await ZValue.findOne()
+      .sort({ year: -1 })
+      .limit(1);
+    console.log('Highest Year ZValue:', highestYearZValue?.year);
+    return highestYearZValue?.year || 2030;
+  }
 }
