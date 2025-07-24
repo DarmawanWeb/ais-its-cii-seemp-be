@@ -20,6 +20,8 @@ export const calculateSolarPower = async (
     annualCII,
     shipData,
     0.12,
+    false,
+    42
   );
   const costPerKw = 3000;
   const cost = calculateCostbyPower(shipData, costPerKw, false);
@@ -49,7 +51,7 @@ export const calculateWindPower = async (
     ciiRequired,
     annualCII,
     vesselData,
-    0.5,
+    0.15,
   );
   const costPerKw = 4000;
   const cost = calculateCostbyPower(vesselData, costPerKw, false);

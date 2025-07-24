@@ -57,7 +57,9 @@ export class SEEMPService {
 
     const voyagePerYear = vesselData.generalData.annualVoyagePercentage ?? 0;
     const ciiRequired = thisYearCii?.cii[0].cii.ciiRequired ?? 0;
-    const ciiAttained = anualCii?.cii[0].cii.ciiAttained ?? 0;
+    const lastCii = anualCii?.cii?.[anualCii.cii.length - 1];
+    const ciiAttained = lastCii?.cii?.ciiAttained ?? 0;
+  
 
     const airLubrication = await calculateAirLubrication(
       voyagePerYear,
@@ -66,6 +68,7 @@ export class SEEMPService {
       vesselData,
       highestYearZValue,
     );
+
     const resistanceReduction = await calculateResistanceReduceDevice(
       voyagePerYear,
       ciiRequired,

@@ -30,7 +30,6 @@ export class ZValueRepository {
     const highestYearZValue = await ZValue.findOne()
       .sort({ year: -1 })
       .limit(1);
-    console.log('Highest Year ZValue:', highestYearZValue?.year);
     return highestYearZValue?.year || 2030;
   }
 }

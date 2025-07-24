@@ -30,6 +30,11 @@ export const calculateAirLubrication = async (
     potentialCiiReduce,
   );
 
+
+  console.log(
+    `Air Lubrication: ciiRequired: ${ciiRequired}, ciiAttained: ${ciiAttained}, voyagePerYear: ${voyagePerYear}, potentialCiiReduce: ${potentialCiiReduce}`,
+  );
+
   const LOA = shipData.sizeData.loa;
   let cost;
   if (LOA <= 100) {
@@ -98,7 +103,7 @@ export const calculatePowerSystemMachinery = async (
   vesselData: IShipData,
   highestYearZValue: number,
 ): Promise<ISEEMPFormulaResult> => {
-  const potentialCiiReduce = 18;
+  const potentialCiiReduce = 10;
   const { ciiRatingAfter, ciiGradeAfter } = calculateFirstCiiAndGrade(
     ciiRequired,
     ciiAttained,

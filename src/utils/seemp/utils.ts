@@ -57,9 +57,15 @@ export const calculateThirdCiiAndGrade = (
   isColdIrroning: boolean = false,
   voyagePerYear: number = 0,
 ): ICalculateResult => {
+
+  console.log(
+    `Third CII Calculation: ciiRequired: ${ciiRequired}, potentialCiiReduce: ${potentialCiiReduce}, isColdIrroning: ${isColdIrroning}, voyagePerYear: ${voyagePerYear}`,
+  );
   const fuelAe =
     annualCII.cii[0].cii.fuelConsumption.fuelConsumptionAeTon *
     (1 - voyagePerYear / 100);
+  
+  
 
   const totalFuelAe = isColdIrroning
     ? fuelAe +
@@ -67,16 +73,24 @@ export const calculateThirdCiiAndGrade = (
         voyagePerYear *
         0.8) /
         100
-    : annualCII.cii[0].cii.fuelConsumption.fuelConsumptionMeTon *
-      (1 - potentialCiiReduce);
+    : annualCII.cii[0].cii.fuelConsumption.fuelConsumptionAeTon *
+    (1 - potentialCiiReduce);
+
+  console.log(totalFuelAe);
 
   const totalFuel =
     totalFuelAe + annualCII.cii[0].cii.fuelConsumption.fuelConsumptionMeTon;
+  
+  
+  console.log(
+    `Fuel Consumption: ${totalFuel}, Fuel AE: ${totalFuelAe}, Fuel ME: ${annualCII.cii[0].cii.fuelConsumption.fuelConsumptionMeTon}`,
+  );
 
   const ciiAttainedAfter =
     ((totalFuel * shipData.fuelType.conversionFactor) /
       (annualCII.cii[0].cii.totalDistance * shipData.sizeData.capacity)) *
     10 ** 6;
+  
 
   return {
     ciiRatingAfter: ciiAttainedAfter / ciiRequired,
