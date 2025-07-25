@@ -20,7 +20,7 @@ export const calculatedYear = async (shipType: IShipType, capacity: number, ciiR
             ciiRequired
         )  
         if (ciiGrade === 'D' || ciiGrade === 'E') {
-            return year - currentYear -1 ; 
+            return year - currentYear -2 ; 
 
         }
     }

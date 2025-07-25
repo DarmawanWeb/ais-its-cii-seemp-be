@@ -23,9 +23,11 @@ const connectSocket = () => {
       if (!data || !data.message || !data.timestamp) {
         return;
       }
+  
       await aisService.createOrUpdateAis(data);
     } catch (error) {
       logger.error('Error processing message from server:', error);
+      console.error('Error processing message from server:', data);
       return;
     }
   });

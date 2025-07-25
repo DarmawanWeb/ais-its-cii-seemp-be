@@ -1,9 +1,11 @@
 import { type IAis, type IAisPosition } from '../models/Ais';
 import { AisRepository } from '../repositories/ais.repository';
 import { TimestampedAisMessage } from '../types/ais.type';
+import { CIIService } from './cii/cii.service';
 
 export class AisService {
   private aisRepository: AisRepository;
+  private ciiService: CIIService = new CIIService();
 
   constructor() {
     this.aisRepository = new AisRepository();
@@ -13,50 +15,63 @@ export class AisService {
     data: TimestampedAisMessage,
   ): Promise<IAis | void | null> {
     const messageData = data.message.data;
+    try {
 
-    if (!messageData) {
-      return null;
-    }
 
-    const { mmsi, navstatus, lat, lon, sog, cog, hdg, utc } = messageData;
+      if (!messageData) {
+        return null;
+      }
 
-    if (
-      !mmsi ||
-      navstatus == null ||
-      lat == null ||
-      lon == null ||
-      sog == null ||
-      cog == null ||
-      hdg == null
-    ) {
-      return null;
-    }
+      const { mmsi, navstatus, lat, lon, sog, cog, hdg, utc } = messageData;
 
-    const timestamp = new Date(data.timestamp);
-    timestamp.setSeconds(timestamp.getSeconds() - utc);
+      if (
+        !mmsi ||
+        navstatus == null ||
+        lat == null ||
+        lon == null ||
+        sog == null ||
+        cog == null ||
+        hdg == null
+      ) {
+        return null;
+      }
 
-    const newPosition: IAisPosition = {
-      navstatus,
-      lat,
-      lon,
-      sog,
-      cog,
-      hdg,
-      timestamp,
-    };
+      const timestamp = new Date(data.timestamp);
+      timestamp.setSeconds(timestamp.getSeconds() - utc);
 
-    const existingAis = await this.aisRepository.getByMmsi(mmsi);
-
-    if (!existingAis) {
-      const newAis = {
-        mmsi,
-        positions: [newPosition],
+      const newPosition: IAisPosition = {
+        navstatus,
+        lat,
+        lon,
+        sog,
+        cog,
+        hdg,
+        timestamp,
       };
-      return this.aisRepository.create(newAis as IAis);
+
+      const existingAis = await this.aisRepository.getByMmsi(mmsi);
+ 
+
+      if (!existingAis) {
+        const newAis = {
+          mmsi,
+          positions: [newPosition],
+        };
+        return this.aisRepository.create(newAis as IAis);
+      }
+  
+
+      const updatedPositions = [existingAis.positions[1], newPosition];
+      this.aisRepository.updatePositions(mmsi, updatedPositions);
+      if (data.message.data.mmsi == "525005223") {
+        console.log('Updating AIS for MMSI:', data.message.data.lat)
+        await this.ciiService.getCIIByMMSI(data.message.data.mmsi)
+      }
+    } catch (error) {
+      console.error('Error creating or updating AIS:', error);
+      return null;
     }
 
-    const updatedPositions = [existingAis.positions[1], newPosition];
-    this.aisRepository.updatePositions(mmsi, updatedPositions);
   }
 
   async getAllAis(): Promise<IAis[]> {

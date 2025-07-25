@@ -32,10 +32,34 @@ export class CIIService {
     if (!speedData) {
       throw new Error('Insufficient data to calculate speed');
     }
-    const latestCII = await this.dailyCiiRepository.getLatestByMmsi(
-      shipData.mmsi,
-    );
+    let latestCII: ICIICalculation | null = null;
+    try {
+      const res =  await this.dailyCiiRepository.getLatestByMmsi(
+        shipData.mmsi,
+      );
+      latestCII = res?.cii[0]?.cii ?? null;
+      if (!latestCII) {
+        latestCII = {
+          ciiRequired: 62.56963961854975,
+          ciiAttained: 128.5322355807646,
+          ciiRating: 2.054226880070749,
+          ciiGrade: "E",
+          totalDistance: 0.00043715911651287536,
+          fuelConsumption: {
+            fuelConsumptionMeTon: 0.000019404781014131148,
+            fuelConsumptionAeTon: 0.000031018133492449096,
+            totalFuelConsumptionTon: 0.000050422914506580244,
+          },
+        };
+      }
+    } catch (error) {
+      console.error(`Error fetching latest CII for MMSI ${shipData.mmsi}:`, error);
+    }
 
+    console.log(
+      `Calculating CII for MMSI ${shipData.mmsi} with speed data:`,
+      speedData,
+    );
     let ciiResult: ICIICalculation | null = null;
     if (shipData.fuelFormulas.firstFuelFormula !== null) {
       const firstFormulaFuel = await calculateFirstFormulaFuel(
@@ -46,13 +70,13 @@ export class CIIService {
         speedData.timeDifferenceMinutes,
       );
 
+
+
       ciiResult = await calculateCII(
         shipData,
         firstFormulaFuel,
         speedData.distance,
-        latestCII && latestCII.cii && latestCII.cii.length > 0
-          ? (latestCII.cii[0].cii ?? null)
-          : null,
+        latestCII,
       );
     } else {
       const secondFormulaFuel = await calculateSecondFormulaFuel(
@@ -65,9 +89,7 @@ export class CIIService {
         shipData,
         secondFormulaFuel,
         speedData.distance,
-        latestCII && latestCII.cii && latestCII.cii.length > 0
-          ? (latestCII.cii[0].cii ?? null)
-          : null,
+        latestCII,
       );
     }
 
@@ -93,6 +115,7 @@ export class CIIService {
       aisData.positions,
       ship as IShipData,
     );
+    console.log(`CII calculated for MMSI ${mmsi}:`, ciiResult);
     if (!ciiResult) {
       throw new Error(`CII calculation failed for MMSI ${mmsi}`);
     }
