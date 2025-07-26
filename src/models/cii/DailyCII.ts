@@ -20,6 +20,7 @@ const fuelConsumptionSchema: Schema = new Schema(
 
 const ciiCalculationSchema: Schema = new Schema(
   {
+    notes: { type: String, default: '' },
     ciiRequired: { type: Number, required: true },
     ciiAttained: { type: Number, required: true },
     ciiRating: { type: Number, required: true },
