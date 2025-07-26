@@ -122,3 +122,26 @@ export const deleteShipController = async (req: Request, res: Response) => {
     handleError(error, res);
   }
 };
+
+export const deleteShipByMMSIController = async(
+  req: Request,
+  res: Response,
+) => {
+  const { mmsi } = req.params;
+  try {
+    const deletedShip = await shipService.deleteShipByMMSI(mmsi);
+    if (!deletedShip) {
+      res.status(404).json({
+        message: 'Ship not found',
+        success: false,
+      });
+    } else {
+      res.status(200).json({
+        message: 'Ship deleted successfully',
+        success: true,
+      });
+    }
+  } catch (error: unknown) {
+    handleError(error, res);
+  }
+}
