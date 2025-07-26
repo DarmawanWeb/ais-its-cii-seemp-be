@@ -40,7 +40,6 @@ export class DailyCIIRepository {
     }
     return null;
   }
-
   async delete(mmsi: string): Promise<IDailyCII | null> {
     return DailyCII.findOneAndDelete({ mmsi });
   }

@@ -55,7 +55,7 @@ export interface IFuelConsumption {
 }
 
 export interface ICIICalculation {
-  notes?: string;
+  notes: string;
   ciiRequired: number;
   ciiAttained: number;
   ciiRating: number;

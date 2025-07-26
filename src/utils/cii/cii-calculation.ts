@@ -114,6 +114,7 @@ export const calculateCII = async (
   const ciiGrade = assignGradeBasedOnDdVector(vesselData.typeData.d, ciiRating);
 
   return {
+  notes: lastCii?.notes ?? '',
     ciiRequired,
     ciiAttained,
     ciiRating,

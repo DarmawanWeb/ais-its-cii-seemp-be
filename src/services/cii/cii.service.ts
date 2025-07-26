@@ -42,6 +42,7 @@ export class CIIService {
       latestCII = res?.cii[0]?.cii ?? null;
       if (!latestCII) {
         latestCII = {
+          notes: "Default CII values",
           ciiRequired: 62.56963961854975,
           ciiAttained: 128.5322355807646,
           ciiRating: 2.054226880070749,
@@ -65,6 +66,14 @@ export class CIIService {
     let ciiResult: ICIICalculation | null = null;
 
     const isTelemetryActive = await FuelDataRepository.isActive(shipData.mmsi);
+    let isFuelFormulaActive = false;
+    try {
+      isFuelFormulaActive = shipData.fuelFormulas?.firstFuelFormula !== undefined;
+    }
+    catch (error) {
+      console.error(`Error checking fuel formula for MMSI ${shipData.mmsi}:`, error);
+      isFuelFormulaActive = false;
+    }
     let notes;
 
 
@@ -90,7 +99,7 @@ export class CIIService {
         latestCII,
       );
 
-    } else if (shipData.fuelFormulas?.firstFuelFormula !== undefined) {
+    } else if (isFuelFormulaActive) {
       notes = `Using first fuel formula`;
       console.log(
         `Using first fuel formula for MMSI ${shipData.mmsi}`,
@@ -131,11 +140,13 @@ export class CIIService {
       );
     }
 
-    await this.dailyCiiRepository.update(shipData.mmsi, ciiResult);
-    return {
+    const resultCII = {
       ...ciiResult,
       notes: notes,
-    }
+    };
+
+    await this.dailyCiiRepository.update(shipData.mmsi, resultCII);
+    return resultCII;
   }
 
   async getCIIByMMSI(mmsi: string): Promise<ICIICalculation> {
