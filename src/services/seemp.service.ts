@@ -131,7 +131,7 @@ export class SEEMPService {
       ciiRequired,
       anualCii,
       vesselData,
-      voyagePerYear,
+      highestYearZValue,
     );
 
     const results = [

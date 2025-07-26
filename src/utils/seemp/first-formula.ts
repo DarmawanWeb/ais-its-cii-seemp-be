@@ -31,11 +31,8 @@ export const calculateAirLubrication = async (
   );
 
 
-  console.log(
-    `Air Lubrication: ciiRequired: ${ciiRequired}, ciiAttained: ${ciiAttained}, voyagePerYear: ${voyagePerYear}, potentialCiiReduce: ${potentialCiiReduce}`,
-  );
-
-  const LOA = shipData.sizeData.loa;
+  const LOA = shipData.sizeData.loa
+  console.log(`LOA: ${LOA}`);
   let cost;
   if (LOA <= 100) {
     cost = 430000;
@@ -248,6 +245,6 @@ export const calculateWasteHeatRecovery = async (
     ciiRatingAfter,
     ciiGradeAfter,
     cost: costPerYear,
-    costDisplay: formatCost(cost),
+    costDisplay: formatCost(costPerYear),
   };
 };

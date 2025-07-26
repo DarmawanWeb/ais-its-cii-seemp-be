@@ -6,6 +6,7 @@ import logger from '../src/config/logger';
 import { syncDatabase } from '../src/config/database';
 import config from '../src/config/config';
 import { connectSocket } from '../src/config/ws';
+import socketServer from '../src/config/ws-server';
 
 const normalizePort = (val: number): number | boolean => {
   if (isNaN(val)) return false;
@@ -39,6 +40,11 @@ app.set('port', port);
 
 syncDatabase();
 connectSocket();
+socketServer.listen(8082, () => {
+      logger.info(
+        `Socket.IO server is running on ws://localhost:${8081}`,
+      );
+});
 
 const server = http.createServer(app);
 server.listen(port);

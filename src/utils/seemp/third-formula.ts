@@ -111,7 +111,7 @@ export const calculateFuelCells = async (
   ciiRequired: number,
   annualCII: IAnnualCII,
   vesselData: IShipData,
-  voyagePerYear: number,
+  highestYearZValue: number,
 ): Promise<ISEEMPFormulaResult> => {
   const { ciiRatingAfter, ciiGradeAfter } = calculateThirdCiiAndGrade(
     ciiRequired,
@@ -121,13 +121,18 @@ export const calculateFuelCells = async (
   );
   const costPerKw = 1780;
   const cost = calculateCostbyPower(vesselData, costPerKw, false);
+
+ 
+
   const costPerYear = await calculateCostPerYear(
     vesselData.typeData,
     vesselData.sizeData.capacity,
     ciiRatingAfter,
-    voyagePerYear,
+    highestYearZValue,
     cost,
   );
+
+  console.log(`Fuel Cells Cost Per Year: ${costPerYear}`);
 
   return {
     ciiRatingAfter,

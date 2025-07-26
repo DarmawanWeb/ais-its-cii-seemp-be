@@ -7,6 +7,7 @@ export const calculatedYear = async (shipType: IShipType, capacity: number, ciiR
     const ciiRequiredInCurrentYear = await calculateCIIRequired(shipType, capacity);
     const ciiAttained = ciiRating * ciiRequiredInCurrentYear;
 
+    console.log(`CII Rating: ${ciiRating}, CII Required in Current Year: ${ciiRequiredInCurrentYear}, CII Attained: ${ciiAttained}`);
 
     for (let year = currentYear; year <= higestZValueYear; year++) {
         const ciiRequired = await calculateCIIRequired(
@@ -20,6 +21,7 @@ export const calculatedYear = async (shipType: IShipType, capacity: number, ciiR
             ciiRequired
         )  
         if (ciiGrade === 'D' || ciiGrade === 'E') {
+            console.log(`CII Rating: ${ciiRating}, CII Required: ${ciiRequired}, Year: ${year}, CII Grade: ${ciiGrade}`);
             return year - currentYear; 
 
         }
@@ -35,6 +37,7 @@ export const calculateCostPerYear = async(
     highestYearZValue: number,
     totalCost: number
 ): Promise<number> => {
+    console.log(`Calculating cost per year for ship type: ${shipType.name}, capacity: ${capacity}, ciiRating: ${ciiRating}, highestYearZValue: ${highestYearZValue}, totalCost: ${totalCost}`);
 
     const year = await calculatedYear(shipType, capacity, ciiRating, highestYearZValue);
     if (year <= 1) {
