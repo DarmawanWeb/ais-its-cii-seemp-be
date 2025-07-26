@@ -17,7 +17,7 @@ export const FuelDataRepository = {
 
       const now = new Date();
       const lastTimestamp = lastEntry.createdAt ? new Date(lastEntry.createdAt) : new Date(0);
-      const differenceInMinutes = (now.getTime() - lastTimestamp.getTime()) / 60000;
+      const differenceInMinutes = (now.getTime() - lastTimestamp.getTime()) / 10000;
       return differenceInMinutes <= 1;
     }
     catch (error) {
