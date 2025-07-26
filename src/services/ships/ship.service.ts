@@ -3,6 +3,7 @@ import { IShip } from '../../models/ships/Ship';
 import { IShipData } from '../../types/ship.type';
 import { ShipGeneralRepository } from '../../repositories/ships/general.repository';
 import { AisRepository } from '../../repositories/ais.repository';
+import { SecondaryShip } from '../../models/SecondaryShip';
 
 export class ShipService {
   private shipGeneralRepository: ShipGeneralRepository;
@@ -57,6 +58,7 @@ export class ShipService {
       const generalDataId = shipData.generalData as unknown as { _id: string };
       await this.shipGeneralRepository.delete(generalDataId._id);
     }
+    await SecondaryShip.findOneAndDelete({ MMSI: shipData?.mmsi });
     return await this.shipRepository.delete(id);
   }
 }
