@@ -1,15 +1,18 @@
 import { ShipRepository } from '../../repositories/ships/ships.repository';
 import { IShip } from '../../models/ships/Ship';
 import { IShipData } from '../../types/ship.type';
+import { ShipGeneralRepository } from '../../repositories/ships/general.repository';
 import { AisRepository } from '../../repositories/ais.repository';
 
 export class ShipService {
+  private shipGeneralRepository: ShipGeneralRepository;
   private shipRepository: ShipRepository;
   private aisRepository: AisRepository;
 
   constructor() {
     this.shipRepository = new ShipRepository();
     this.aisRepository = new AisRepository();
+    this.shipGeneralRepository = new ShipGeneralRepository();
   }
 
   async createShip(data: IShip): Promise<IShip> {
@@ -49,6 +52,11 @@ export class ShipService {
   }
 
   async deleteShip(id: string): Promise<IShip | null> {
+    const shipData = await this.shipRepository.getById(id);
+    if (shipData?.generalData) {
+      const generalDataId = shipData.generalData as unknown as { _id: string };
+      await this.shipGeneralRepository.delete(generalDataId._id);
+    }
     return await this.shipRepository.delete(id);
   }
 }

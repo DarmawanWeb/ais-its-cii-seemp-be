@@ -1,11 +1,14 @@
-import express from 'express';
-import { FuelDataController } from "../../../controllers/ships/fuel-data.controller";
-import { type Router } from 'express';
-
+import express, { Router } from "express";
+import {
+  addFuelData,
+  getAllFuelData,
+  deleteFuelData
+} from "../../../controllers/ships/fuel-data.controller";
 
 const router: Router = express.Router();
 
-router.post("/", FuelDataController.addFuelData);
-router.get("/", FuelDataController.getAllFuelData);
+router.post("/", addFuelData);
+router.get("/", getAllFuelData);
+router.delete("/:mmsi", deleteFuelData);
 
 export default router;

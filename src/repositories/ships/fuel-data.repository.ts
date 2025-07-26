@@ -34,4 +34,14 @@ export const FuelDataRepository = {
       throw error;
     }
   },
+
+  async deleteByMMSI(mmsi: string) {
+    try {
+      const result = await FuelData.deleteMany({ mmsi });
+      return result.deletedCount > 0;
+    } catch (error) {
+      console.error(`Error deleting fuel data for MMSI ${mmsi}:`, error);
+      throw error;
+    }
+  }
 };
