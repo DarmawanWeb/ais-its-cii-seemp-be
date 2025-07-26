@@ -3,10 +3,33 @@ import { SecondaryShip } from '../../models/SecondaryShip';
 import { IShipData } from '../../types/ship.type';
 import { IShipType } from '../../models/ships/Type';
 import { ISecondaryShip } from '../../models/SecondaryShip';
+import { ShipGeneral } from '../../models/ships/General';
+import { ShipType } from '../../models/ships/Type';
+import { ShipSize } from '../../models/ships/Size';
 
 export class ShipRepository {
   async create(data: IShip): Promise<IShip> {
     const ship = new Ship(data);
+    const generalData = await ShipGeneral.findById(data.generalData);
+    const typeData = await ShipType.findById(data.typeData);
+    const sizeData = await ShipSize.findById(data.sizeData);
+    await new SecondaryShip({
+      MMSI: data.mmsi,
+      IMO: generalData?.imoNumber,
+      NAME: generalData?.name,
+      BUILT: generalData?.built,
+      FLAG: generalData?.flag,  
+      FLAGNAME: generalData?.flag,
+      TYPE: typeData?.name,
+      TYPENAME: typeData?.name,
+      GT: sizeData?.capacity,
+      DWT: sizeData?.dwt,
+      LOA: sizeData?.loa,
+      BEAM: sizeData?.b,
+      DRAUGHT: sizeData?.t,
+      CLASS: "CLASS",
+      CLASSCODE: "CLASSCODE",
+    }).save();
     return await ship.save();
   }
 

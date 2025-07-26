@@ -2,6 +2,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IShipSize extends Document {
   capacity: number;
+  dwt?: number;
   cb: number;
   lwl: number;
   b: number;
@@ -23,6 +24,7 @@ export interface IShipSize extends Document {
 
 const shipSizeSchema: Schema = new Schema({
   capacity: { type: Number, required: true },
+  dwt: { type: Number, required: false },
   cb: { type: Number, required: true },
   lwl: { type: Number, required: true },
   b: { type: Number, required: true },
