@@ -27,6 +27,7 @@ services:
       - NODE_ENV=${NODE_ENV}
     ports:
       - '3001:3001'
+      - '8082:8082'
     depends_on:
       - mongo
     networks:
