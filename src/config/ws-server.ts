@@ -28,6 +28,8 @@ io.on('connection', (socket) => {
       if (!data || !data.message || !data.timestamp) {
         return;
       }
+
+      console.log('Received AIS data:', data);
   
       await aisService.createOrUpdateAis(data);
     } catch (error) {

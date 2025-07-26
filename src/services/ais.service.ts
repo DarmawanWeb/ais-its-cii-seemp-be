@@ -63,11 +63,10 @@ export class AisService {
 
       const updatedPositions = [existingAis.positions[1], newPosition];
       this.aisRepository.updatePositions(mmsi, updatedPositions);
-      if (data.message.data.mmsi == "525005223"
-        || data.message.data.mmsi == "22222222"
-        || data.message.data.mmsi == "11111111") {
-        console.log('Updating AIS for MMSI:', data.message.data.lat)
-        await this.ciiService.getCIIByMMSI(data.message.data.mmsi)
+      const validMMSIs = ["525005223", "222222222", "111111111"];
+      if (validMMSIs.includes(data.message.data.mmsi)) {
+        console.log('Updating AIS for MMSI:', data.message.data.lat);
+        await this.ciiService.getCIIByMMSI(data.message.data.mmsi);
       }
     } catch (error) {
       console.error('Error creating or updating AIS:', error);

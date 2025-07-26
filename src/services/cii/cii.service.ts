@@ -1,6 +1,7 @@
 import { IAis, IAisPosition } from '../../models/Ais';
 import { AisRepository } from '../../repositories/ais.repository';
 // import { IDailyCII } from '../../models/cii/DailyCII';
+import { FuelDataRepository } from '../../repositories/ships/fuel-data.repository';
 import { DailyCIIRepository } from '../../repositories/cii/dailycii.repository';
 import { ShipRepository } from '../../repositories/ships/ships.repository';
 
@@ -12,7 +13,7 @@ import {
   calculateSecondFormulaFuel,
 } from '../../utils/cii/fuel-calculation';
 import { calculateCII } from '../../utils/cii/cii-calculation';
-import { ICIICalculation } from '../../types/second-formula.types';
+import { ICIICalculation, IFuelConsumption } from '../../types/second-formula.types';
 
 export class CIIService {
   private shipRepository: ShipRepository;
@@ -23,6 +24,7 @@ export class CIIService {
     this.aisRepository = new AisRepository();
     this.dailyCiiRepository = new DailyCIIRepository();
   }
+  
 
   async calculateCII(
     positions: IAisPosition[],
@@ -61,7 +63,28 @@ export class CIIService {
       speedData,
     );
     let ciiResult: ICIICalculation | null = null;
-    if (shipData.fuelFormulas.firstFuelFormula !== null) {
+
+    const isTelemetryActive = await FuelDataRepository.isActive(shipData.mmsi);
+
+
+    if (isTelemetryActive) {
+     
+      const fuelData = await FuelDataRepository.getLatestByMMSI(shipData.mmsi);
+      if (!fuelData) {
+        throw new Error(`Fuel data for MMSI ${shipData.mmsi} is not available`);
+      }
+      const formatFuelData: IFuelConsumption = {
+        fuelConsumptionMeTon: Number(fuelData.fuelLogs[0].fuelME),
+        fuelConsumptionAeTon: Number(fuelData.fuelLogs[0].fuelAE),
+        totalFuelConsumptionTon: Number(fuelData.fuelLogs[0].fuelAE.toString()) + Number(fuelData.fuelLogs[0].fuelME.toString())
+      }
+      ciiResult = await calculateCII(
+        shipData,
+        formatFuelData,
+        speedData.distance,
+        latestCII,
+      );
+    } else if(shipData.fuelFormulas?.firstFuelFormula !== null) {
       const firstFormulaFuel = await calculateFirstFormulaFuel(
         positions[1].navstatus,
         shipData.fuelType,
@@ -69,8 +92,6 @@ export class CIIService {
         shipData.fuelFormulas.firstFuelFormula,
         speedData.timeDifferenceMinutes,
       );
-
-
 
       ciiResult = await calculateCII(
         shipData,
