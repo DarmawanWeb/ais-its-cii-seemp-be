@@ -127,7 +127,7 @@ export class CIIService {
         positions,
         shipData,
       );
-      notes = `Using fuel equation`;
+      notes = `Using Holtrop`;
 
        console.log(
         `Using second fuel formula for MMSI ${shipData.mmsi}`,
