@@ -68,6 +68,9 @@ export class CIIService {
 
 
     if (isTelemetryActive) {
+      console.log(
+        `Using telemetry data for MMSI ${shipData.mmsi}`,
+      );
      
       const fuelData = await FuelDataRepository.getLatestByMMSI(shipData.mmsi);
       if (!fuelData) {
@@ -84,7 +87,12 @@ export class CIIService {
         speedData.distance,
         latestCII,
       );
-    } else if(shipData.fuelFormulas?.firstFuelFormula !== null) {
+
+    } else if (shipData.fuelFormulas?.firstFuelFormula !== undefined) {
+      console.log(
+        `Using first fuel formula for MMSI ${shipData.mmsi}`,
+        shipData.fuelFormulas?.firstFuelFormula,
+      );
       const firstFormulaFuel = await calculateFirstFormulaFuel(
         positions[1].navstatus,
         shipData.fuelType,
@@ -100,12 +108,17 @@ export class CIIService {
         latestCII,
       );
     } else {
+
+     
       const secondFormulaFuel = await calculateSecondFormulaFuel(
         speedData,
         positions,
         shipData,
       );
 
+       console.log(
+        `Using second fuel formula for MMSI ${shipData.mmsi}`,
+      );
       ciiResult = await calculateCII(
         shipData,
         secondFormulaFuel,
