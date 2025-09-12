@@ -4,7 +4,7 @@ type ShipData = {
   hdg: number; 
 };
 
-export const predictedNavStatus = (current: ShipData, old: ShipData, minDistance: number): number => {
+export const calculatePredictedNavStatus = (current: ShipData, old: ShipData, minDistance: number): number => {
     if (!old) {
         return 1; 
     }

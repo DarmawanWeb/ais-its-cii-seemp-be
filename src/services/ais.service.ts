@@ -2,8 +2,8 @@ import { type IAis, type IAisPosition } from '../models/Ais';
 import { AisRepository } from '../repositories/ais.repository';
 import { TimestampedAisMessage } from '../types/ais.type';
 import { CIIService } from './cii/cii.service';
-import { predictedNavStatus } from './predict-navstatus.service';
-import { findNearestCoastDistance } from '../utils/find-nearest-coast';
+import { calculatePredictedNavStatus} from './predict-navstatus.service';
+import { findNearestCoastDistance, checkShipStatus } from '../utils/calculate-ews';
 
 
 export class AisService {
@@ -25,7 +25,9 @@ export class AisService {
         return null;
       }
 
-       const { mmsi, navstatus, lat, lon, sog, cog, hdg, utc } = messageData;
+      const { mmsi, navstatus, lat, lon, sog, cog, hdg, utc } = messageData;
+      
+      console.log('Processing MMSI:', mmsi, 'Lat:', lat, 'Lon:', lon);
 
       if (
         !mmsi ||
@@ -49,6 +51,7 @@ export class AisService {
       const existingAis = await this.aisRepository.getByMmsi(mmsi);
 
       if (!existingAis) {
+        const predictedNavStatus = calculatePredictedNavStatus({ sog, cog, hdg }, { sog, cog, hdg }, minDistance);
       newPosition = {
         navstatus,
         lat,
@@ -57,8 +60,8 @@ export class AisService {
         cog,
         hdg,
         timestamp,
-        predictedNavStatus: predictedNavStatus({ sog, cog, hdg }, { sog, cog, hdg }, minDistance),
-        
+        predictedNavStatus: predictedNavStatus,
+        ewsStatus: checkShipStatus(lat,lon,predictedNavStatus),
       };
     
         const newAis = {
@@ -67,6 +70,8 @@ export class AisService {
         };
         return this.aisRepository.create(newAis as IAis);
       }      
+      
+      const predictedNavStatus = calculatePredictedNavStatus({ sog, cog, hdg }, existingAis.positions[0], minDistance);
       newPosition = {
         navstatus,
         lat,
@@ -75,7 +80,8 @@ export class AisService {
         cog,
         hdg,
         timestamp,
-        predictedNavStatus: predictedNavStatus({sog, cog, hdg}, existingAis.positions[0], minDistance),
+        predictedNavStatus: predictedNavStatus,
+         ewsStatus: checkShipStatus(lat,lon,predictedNavStatus),
       };
       const updatedPositions = [existingAis.positions[1], newPosition];
       this.aisRepository.updatePositions(mmsi, updatedPositions);

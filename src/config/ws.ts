@@ -20,6 +20,14 @@ const connectSocket = () => {
 
   socket.on('messageFromServer', async (data: TimestampedAisMessage) => {
     try {
+      // if (!data || !data.message || !data.timestamp) {
+      //   return;
+      // }
+      // console.log('Received message from server:', data.message.data.mmsi);
+      // if (data.message.data.mmsi == '525016306') {
+      //   console.log('Received message from server:', data);
+      // }
+  
       await aisService.createOrUpdateAis(data);
     } catch (error) {
       logger.error('Error processing message from server:', error);

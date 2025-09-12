@@ -1,5 +1,5 @@
 import fs from "fs";
-import { FeatureCollection, Polygon, MultiPolygon } from "geojson";
+import { FeatureCollection, Polygon, MultiPolygon, LineString } from "geojson";
 import { point } from "@turf/helpers";
 import distance from "@turf/distance";
 import nearestPointOnLine from "@turf/nearest-point-on-line";
@@ -51,4 +51,43 @@ export const findNearestCoastDistance = (
   }
 
   return minDistance !== null ? minDistance : Infinity;
+};
+
+
+type PipelinePoint = {
+  Latitude: number;
+  Longitude: number;
+  Name?: string;
+};
+
+/**
+ * Check ship safety against pipeline
+ * Return:
+ *  0 = DANGER (< 500m)
+ *  1 = WARNING (500–1750m)
+ *  3 = SAFE (> 1750m)
+ */
+export const checkShipStatus = (
+  lat: number,
+  lon: number,
+  navstatus: number
+): 0 | 1 | 3 => {
+  const pipelineData = JSON.parse(
+    fs.readFileSync("data/pipeline.json", "utf8")
+  ) as { pipeline: PipelinePoint[] };
+
+  const line: LineString = {
+    type: "LineString",
+    coordinates: pipelineData.pipeline.map((p) => [p.Longitude, p.Latitude]),
+  };
+
+  const pt = point([lon, lat]);
+  const nearest = nearestPointOnLine(line, pt);
+  const d = distance(pt, nearest, { units: "meters" });
+
+  if (navstatus === 1) {
+    if (d < 500) return 0;
+    if (d < 1750) return 1;
+  }
+  return 3;
 };
