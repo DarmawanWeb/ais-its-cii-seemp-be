@@ -2,6 +2,9 @@ import { type IAis, type IAisPosition } from '../models/Ais';
 import { AisRepository } from '../repositories/ais.repository';
 import { TimestampedAisMessage } from '../types/ais.type';
 import { CIIService } from './cii/cii.service';
+import { predictedNavStatus } from './predict-navstatus.service';
+import { findNearestCoastDistance } from '../utils/find-nearest-coast';
+
 
 export class AisService {
   private aisRepository: AisRepository;
@@ -22,7 +25,7 @@ export class AisService {
         return null;
       }
 
-      const { mmsi, navstatus, lat, lon, sog, cog, hdg, utc } = messageData;
+       const { mmsi, navstatus, lat, lon, sog, cog, hdg, utc } = messageData;
 
       if (
         !mmsi ||
@@ -36,10 +39,19 @@ export class AisService {
         return null;
       }
 
+
+      const minDistance : number = findNearestCoastDistance("data/indonesia.json", lat, lon);
       const timestamp = new Date(data.timestamp);
       timestamp.setSeconds(timestamp.getSeconds() - utc);
 
-      const newPosition: IAisPosition = {
+      let newPosition: IAisPosition;
+  
+      const existingAis = await this.aisRepository.getByMmsi(mmsi);
+
+      if (!existingAis) {
+        console.log('No existing AIS entry for MMSI:', mmsi);
+        console.log("SOG:", sog, "COG:", cog, "HDG:", hdg, "MinDistance:", minDistance);
+      newPosition = {
         navstatus,
         lat,
         lon,
@@ -47,20 +59,26 @@ export class AisService {
         cog,
         hdg,
         timestamp,
+        predictedNavStatus: predictedNavStatus({ sog, cog, hdg }, { sog, cog, hdg }, minDistance),
+        
       };
-
-      const existingAis = await this.aisRepository.getByMmsi(mmsi);
- 
-
-      if (!existingAis) {
+    
         const newAis = {
           mmsi,
           positions: [newPosition],
         };
         return this.aisRepository.create(newAis as IAis);
-      }
-  
-
+      }      
+      newPosition = {
+        navstatus,
+        lat,
+        lon,
+        sog,
+        cog,
+        hdg,
+        timestamp,
+        predictedNavStatus: predictedNavStatus({sog, cog, hdg}, existingAis.positions[0], minDistance),
+      };
       const updatedPositions = [existingAis.positions[1], newPosition];
       this.aisRepository.updatePositions(mmsi, updatedPositions);
       const validMMSIs = ["525005223", "222222222", "111111111"];

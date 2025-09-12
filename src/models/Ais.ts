@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 export interface IAisPosition {
   navstatus: number;
+  predictedNavStatus: number;
   lat: number;
   lon: number;
   sog: number;
@@ -18,6 +19,7 @@ export interface IAis extends Document {
 const positionSchema = new Schema(
   {
     navstatus: { type: Number, required: true },
+    predictedNavStatus: { type: Number, required: true },
     lat: { type: Number, required: true },
     lon: { type: Number, required: true },
     sog: { type: Number, required: true },
