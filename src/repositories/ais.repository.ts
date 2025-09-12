@@ -10,7 +10,6 @@ export interface IAisRepository {
 export class AisRepository implements IAisRepository {
   async create(data: IAis): Promise<IAis> {
     const ais = new Ais(data);
-    console.log("Creating new AIS:", data);
     await ais.save();
     return ais;
   }
@@ -50,7 +49,6 @@ export class AisRepository implements IAisRepository {
     mmsi: string,
     newPosition: IAisPosition[],
   ): Promise<void> {
-    console.log("Updating positions for MMSI:", mmsi, "with new position:", newPosition);
     await Ais.findOneAndUpdate(
     
       { mmsi: mmsi },

@@ -49,8 +49,6 @@ export class AisService {
       const existingAis = await this.aisRepository.getByMmsi(mmsi);
 
       if (!existingAis) {
-        console.log('No existing AIS entry for MMSI:', mmsi);
-        console.log("SOG:", sog, "COG:", cog, "HDG:", hdg, "MinDistance:", minDistance);
       newPosition = {
         navstatus,
         lat,

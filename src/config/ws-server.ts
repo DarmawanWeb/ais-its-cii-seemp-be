@@ -29,7 +29,6 @@ io.on('connection', (socket) => {
         return;
       }
 
-      console.log('Received AIS data:', data);
   
       await aisService.createOrUpdateAis(data);
     } catch (error) {
