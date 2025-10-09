@@ -27,7 +27,7 @@ export class AisService {
 
       const { mmsi, navstatus, lat, lon, sog, cog, hdg, utc } = messageData;
       
-      console.log('Processing MMSI:', mmsi, 'Lat:', lat, 'Lon:', lon);
+      // console.log('Processing MMSI:', mmsi, 'Lat:', lat, 'Lon:', lon);
 
       if (
         !mmsi ||
@@ -85,7 +85,7 @@ export class AisService {
       };
       const updatedPositions = [existingAis.positions[1], newPosition];
       this.aisRepository.updatePositions(mmsi, updatedPositions);
-      const validMMSIs = ["525005223", "222222222", "111111111"];
+      const validMMSIs = [""];
       if (validMMSIs.includes(data.message.data.mmsi)) {
         console.log('Updating AIS for MMSI:', data.message.data.lat);
         await this.ciiService.getCIIByMMSI(data.message.data.mmsi);
@@ -99,6 +99,10 @@ export class AisService {
 
   async getAllAis(): Promise<IAis[]> {
     return this.aisRepository.getAll();
+    // // return if mmsi == '111111111' [];
+    // const allAis = await this.aisRepository.getAll();
+    // return allAis.filter(ais => ais.mmsi == '111111111' || ais.mmsi == "222222222");
+
   }
 
   async getAisByMmsi(mmsi: string): Promise<IAis | null> {

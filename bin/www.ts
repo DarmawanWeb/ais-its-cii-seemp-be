@@ -6,6 +6,8 @@ import logger from '../src/config/logger';
 import { syncDatabase } from '../src/config/database';
 import config from '../src/config/config';
 import { connectSocket } from '../src/config/ws';
+import socketServer from '../src/config/ws-server';
+
 
 const normalizePort = (val: number): number | boolean => {
   if (isNaN(val)) return false;
@@ -35,10 +37,14 @@ const onError = (error: NodeJS.ErrnoException): void => {
 logger.info('Starting server...');
 
 const port = normalizePort(config.server.port || 3003);
+const wsServerPort = normalizePort(config.websocket.serverPort || 3004);
 app.set('port', port);
+socketServer.listen(wsServerPort);
 
 syncDatabase();
 connectSocket();
+
+
 
 
 const server = http.createServer(app);

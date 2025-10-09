@@ -27,8 +27,10 @@ const connectSocket = () => {
       // if (data.message.data.mmsi == '525016306') {
       //   console.log('Received message from server:', data);
       // }
+      // console.log(data);
   
       await aisService.createOrUpdateAis(data);
+
     } catch (error) {
       logger.error('Error processing message from server:', error);
       console.error('Error processing message from server:', data);

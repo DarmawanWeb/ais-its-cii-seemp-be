@@ -27,6 +27,7 @@ interface Config {
   websocket: {
     url: string;
     token: string;
+    serverPort?: number;
   };
 }
 
@@ -65,6 +66,7 @@ const config: Config = {
   websocket: {
     url: process.env.WEBSOCKET_URI || 'http://localhost:8080',
     token: process.env.WEBSOCKET_TOKEN || 'your_websocket_token',
+    serverPort: Number(process.env.WEBSOCKET_SERVER_PORT) || 3004,
   },
 };
 
