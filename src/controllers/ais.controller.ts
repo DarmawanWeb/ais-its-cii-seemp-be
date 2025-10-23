@@ -42,3 +42,35 @@ export const getAisByMmsiController = async (
     handleError(error, res);
   }
 };
+
+export const getTwoShipRoutesInSpecificTimeRangeController = async(
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { mmsi1, mmsi2 } = req.params;
+    const { startTime, endTime } = req.query;
+
+    if (typeof startTime !== 'string' || typeof endTime !== 'string') {
+      res.status(400).json({
+        message: 'Invalid or missing startTime or endTime query parameters',
+        success: false,
+      });
+      return;
+    }
+    const routeData = await aisService.getTwoShipRoutesInSpecificTimeRange(
+      mmsi1,
+      mmsi2,
+      new Date(startTime),
+      new Date(endTime),
+    );
+    res.status(200).json({
+      message: 'Ship routes fetched successfully',
+      data: routeData,
+      success: true,
+    });
+  } catch (error: unknown) {
+    handleError(error, res);
+  }
+}
+

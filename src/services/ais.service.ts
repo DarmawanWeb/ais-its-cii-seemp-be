@@ -9,17 +9,31 @@ import { findNearestCoastDistance, checkShipStatus } from '../utils/calculate-ew
 export class AisService {
   private aisRepository: AisRepository;
   private ciiService: CIIService = new CIIService();
+  private readonly ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
   constructor() {
     this.aisRepository = new AisRepository();
   }
+
+private filterPositionsWithinOneDay(positions: IAisPosition[], currentTimestamp: Date): IAisPosition[] {
+  const oneHourAgo = new Date(currentTimestamp.getTime() - this.ONE_DAY_MS);
+
+  const validPositions = positions.filter(position => {
+    if (!position || !position.timestamp) return false;
+    const ts = new Date(position.timestamp); 
+    return ts >= oneHourAgo && ts <= currentTimestamp;
+  });
+
+  validPositions.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+  return validPositions;
+}
 
   async createOrUpdateAis(
     data: TimestampedAisMessage,
   ): Promise<IAis | void | null> {
     const messageData = data.message.data;
     try {
-
 
       if (!messageData) {
         return null;
@@ -41,7 +55,6 @@ export class AisService {
         return null;
       }
 
-
       const minDistance : number = findNearestCoastDistance("data/indonesia.json", lat, lon);
       const timestamp = new Date(data.timestamp);
       timestamp.setSeconds(timestamp.getSeconds() - utc);
@@ -52,17 +65,17 @@ export class AisService {
 
       if (!existingAis) {
         const predictedNavStatus = calculatePredictedNavStatus({ sog, cog, hdg }, { sog, cog, hdg }, minDistance);
-      newPosition = {
-        navstatus,
-        lat,
-        lon,
-        sog,
-        cog,
-        hdg,
-        timestamp,
-        predictedNavStatus: predictedNavStatus,
-        ewsStatus: checkShipStatus(lat,lon,predictedNavStatus),
-      };
+        newPosition = {
+          navstatus,
+          lat,
+          lon,
+          sog,
+          cog,
+          hdg,
+          timestamp,
+          predictedNavStatus: predictedNavStatus,
+          ewsStatus: checkShipStatus(lat, lon, predictedNavStatus),
+        };
     
         const newAis = {
           mmsi,
@@ -81,20 +94,22 @@ export class AisService {
         hdg,
         timestamp,
         predictedNavStatus: predictedNavStatus,
-         ewsStatus: checkShipStatus(lat,lon,predictedNavStatus),
+        ewsStatus: checkShipStatus(lat, lon, predictedNavStatus),
       };
-      const updatedPositions = [existingAis.positions[1], newPosition];
-      this.aisRepository.updatePositions(mmsi, updatedPositions);
-      const validMMSIs = [""];
-      if (validMMSIs.includes(data.message.data.mmsi)) {
-        console.log('Updating AIS for MMSI:', data.message.data.lat);
-        await this.ciiService.getCIIByMMSI(data.message.data.mmsi);
-      }
+
+    const allPositions = [newPosition, ...existingAis.positions];
+    const updatedPositions = this.filterPositionsWithinOneDay(allPositions, timestamp);
+
+    await this.aisRepository.updatePositions(mmsi, updatedPositions);
+    const validMMSIs = [""];
+    if (validMMSIs.includes(data.message.data.mmsi)) {
+      console.log('Updating AIS for MMSI:', data.message.data.lat);
+      await this.ciiService.getCIIByMMSI(data.message.data.mmsi);
+    }
     } catch (error) {
       console.error('Error creating or updating AIS:', error);
       return null;
     }
-
   }
 
   async getAllAis(): Promise<IAis[]> {
@@ -102,10 +117,38 @@ export class AisService {
     // // return if mmsi == '111111111' [];
     // const allAis = await this.aisRepository.getAll();
     // return allAis.filter(ais => ais.mmsi == '111111111' || ais.mmsi == "222222222");
-
   }
 
   async getAisByMmsi(mmsi: string): Promise<IAis | null> {
     return this.aisRepository.getByMmsi(mmsi);
+  }
+
+  async getTwoShipRoutesInSpecificTimeRange(
+    mmsi1: string,
+    mmsi2: string,
+    startTime: Date,
+    endTime: Date,
+  ): Promise<{ ship1Positions: IAisPosition[]; ship2Positions: IAisPosition[] }> {
+    const ship1 = await this.aisRepository.getByMmsi(mmsi1);
+    const ship2 = await this.aisRepository.getByMmsi(mmsi2);
+
+    const filterPositionsByTimeRange = (
+      positions: IAisPosition[],
+      start: Date,
+      end: Date,
+    ): IAisPosition[] => {
+      return positions.filter((position) => {
+        const posTime = new Date(position.timestamp);
+        return posTime >= start && posTime <= end;
+      });
+    };
+
+    const ship1Positions = ship1
+      ? filterPositionsByTimeRange(ship1.positions, startTime, endTime)
+      : [];
+    const ship2Positions = ship2
+      ? filterPositionsByTimeRange(ship2.positions, startTime, endTime)
+      : [];
+    return { ship1Positions, ship2Positions };
   }
 }
