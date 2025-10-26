@@ -11,9 +11,9 @@ export const isInBatamBounds = (lat: number, long: number): boolean => {
   const longRight = 109.22838;
 
   const batamMinDistance: number = findNearestCoastDistance(
-        'data/batam.json',
-        lat,
-        long,
+    'data/batam.json',
+    lat,
+    long,
   );
   if (batamMinDistance < 5000) {
     return false;
