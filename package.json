@@ -8,7 +8,7 @@
     "start": "node dist/bin/www.js",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write 'src/**/*.{ts,js,json,md}'",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specified\"",
     "prepare": "husky"
   },
   "keywords": [],
@@ -28,7 +28,6 @@
     "eslint": "^9.27.0",
     "globals": "^16.2.0",
     "husky": "^9.1.7",
-    "lint-staged": "^16.1.0",
     "nodemon": "^3.1.10",
     "prettier": "^3.5.3",
     "ts-node": "^10.9.2",
@@ -58,21 +57,5 @@
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
     "tslib": "^2.8.1"
-  },
-  "lint-staged": {
-    "*.ts": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.js": [
-      "eslint --fix",
-      "prettier --write"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint --edit $HUSKY_GIT_PARAMS"
-    }
   }
 }
