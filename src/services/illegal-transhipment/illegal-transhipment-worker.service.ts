@@ -8,7 +8,8 @@ export class IllegalTranshipmentWorker {
   private resultRepository: IllegalTranshipmentResultRepository;
   private aisRepository: AisRepository;
   private isRunning: boolean = false;
-  private processingDelay: number = 1000;
+  private processingDelay: number = 5000;
+  private idleDelay: number = 30000;
 
   constructor() {
     this.queueRepository = new IllegalTranshipmentQueueRepository();
@@ -25,13 +26,26 @@ export class IllegalTranshipmentWorker {
     this.isRunning = true;
     console.log('[Worker] Illegal transhipment worker started');
 
+    this.processLoop();
+  }
+
+  private async processLoop(): Promise<void> {
     while (this.isRunning) {
       try {
-        await this.processNextInQueue();
-        await this.sleep(this.processingDelay);
+        const hasProcessed = await this.processNextInQueue();
+        
+        if (hasProcessed) {
+          await this.sleep(this.processingDelay);
+        } else {
+          await this.sleep(this.idleDelay);
+        }
+
+        if (global.gc) {
+          global.gc();
+        }
       } catch (error) {
         console.error('[Worker] Error in main loop:', error);
-        await this.sleep(5000);
+        await this.sleep(10000);
       }
     }
   }
@@ -41,44 +55,44 @@ export class IllegalTranshipmentWorker {
     this.isRunning = false;
   }
 
-  private async processNextInQueue(): Promise<void> {
-    const queue = await this.queueRepository.getAllSorted();
-
-    if (queue.length === 0) {
-      return;
-    }
-
-    const queueItem = queue.find((item) => item.status === 'pending');
-
-    if (!queueItem) {
-      return;
-    }
-
-    const lastDetection = await this.resultRepository.getLastDetection(
-      queueItem.ship1MMSI,
-      queueItem.ship2MMSI,
-    );
-
-    if (lastDetection) {
-      const timeSinceLastDetection =
-        Date.now() - new Date(lastDetection.detectedAt).getTime();
-      const fifteenMinutes = 15 * 60 * 1000;
-
-      if (timeSinceLastDetection < fifteenMinutes) {
-        console.log(
-          `[Worker] Skipping ${queueItem.ship1MMSI}-${queueItem.ship2MMSI}: Last detection was ${Math.round(timeSinceLastDetection / 1000 / 60)} minutes ago`,
-        );
-        await this.queueRepository.delete(
-          queueItem.ship1MMSI,
-          queueItem.ship2MMSI,
-        );
-        return;
-      }
-    }
-
+  private async processNextInQueue(): Promise<boolean> {
     try {
+      const queue = await this.queueRepository.getAllSorted();
+
+      if (queue.length === 0) {
+        return false;
+      }
+
+      const queueItem = queue.find(item => item.status === 'pending');
+
+      if (!queueItem) {
+        return false;
+      }
+
+      const lastDetection = await this.resultRepository.getLastDetection(
+        queueItem.ship1MMSI,
+        queueItem.ship2MMSI,
+      );
+
+      if (lastDetection) {
+        const timeSinceLastDetection =
+          Date.now() - new Date(lastDetection.detectedAt).getTime();
+        const fifteenMinutes = 15 * 60 * 1000;
+
+        if (timeSinceLastDetection < fifteenMinutes) {
+          console.log(
+            `[Worker] Skipping ${queueItem.ship1MMSI}-${queueItem.ship2MMSI}: Last detection was ${Math.round(timeSinceLastDetection / 1000 / 60)} minutes ago`
+          );
+          await this.queueRepository.delete(
+            queueItem.ship1MMSI,
+            queueItem.ship2MMSI,
+          );
+          return true;
+        }
+      }
+
       console.log(
-        `[Worker] Processing ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI} (Priority: ${queueItem.priority})`,
+        `[Worker] Processing ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI} (Priority: ${queueItem.priority})`
       );
 
       await this.queueRepository.updateStatus(
@@ -97,24 +111,19 @@ export class IllegalTranshipmentWorker {
         60 * 60 * 1000,
       );
 
-      if (
-        !ship1Route ||
-        ship1Route.length === 0 ||
-        !ship2Route ||
-        ship2Route.length === 0
-      ) {
+      if (!ship1Route || ship1Route.length === 0 || !ship2Route || ship2Route.length === 0) {
         console.log(
-          `[Worker] Insufficient data for ${queueItem.ship1MMSI}-${queueItem.ship2MMSI}`,
+          `[Worker] Insufficient data for ${queueItem.ship1MMSI}-${queueItem.ship2MMSI}`
         );
         await this.queueRepository.delete(
           queueItem.ship1MMSI,
           queueItem.ship2MMSI,
         );
-        return;
+        return true;
       }
 
       console.log(
-        `[Worker] Analyzing routes: Ship1(${ship1Route.length} points), Ship2(${ship2Route.length} points)`,
+        `[Worker] Analyzing routes: Ship1(${ship1Route.length} points), Ship2(${ship2Route.length} points)`
       );
 
       const detectionResult = await detectIllegalTranshipment(
@@ -134,11 +143,11 @@ export class IllegalTranshipmentWorker {
 
       if (detectionResult.isIllegal) {
         console.log(
-          `[Worker] ⚠️  ILLEGAL TRANSHIPMENT DETECTED! ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI} (Accuracy: ${detectionResult.accuracy}%)`,
+          `[Worker] ⚠️  ILLEGAL TRANSHIPMENT DETECTED! ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI} (Accuracy: ${detectionResult.accuracy}%)`
         );
       } else {
         console.log(
-          `[Worker] ✓ No illegal activity detected for ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI}`,
+          `[Worker] ✓ No illegal activity detected for ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI}`
         );
       }
 
@@ -146,19 +155,15 @@ export class IllegalTranshipmentWorker {
         queueItem.ship1MMSI,
         queueItem.ship2MMSI,
       );
+
+      return true;
     } catch (error) {
-      console.error(
-        `[Worker] Error processing ${queueItem.ship1MMSI}-${queueItem.ship2MMSI}:`,
-        error,
-      );
-      await this.queueRepository.delete(
-        queueItem.ship1MMSI,
-        queueItem.ship2MMSI,
-      );
+      console.error('[Worker] Error processing queue item:', error);
+      return false;
     }
   }
 
   private sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

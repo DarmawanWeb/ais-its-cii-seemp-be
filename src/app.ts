@@ -6,7 +6,6 @@ import v1Routes from './routes/index';
 import cors from 'cors';
 import corsOptions from './config/cors';
 
-
 const app: Application = express();
 
 app.use(cors(corsOptions));
