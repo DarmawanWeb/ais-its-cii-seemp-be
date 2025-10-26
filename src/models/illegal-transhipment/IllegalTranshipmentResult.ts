@@ -49,7 +49,7 @@ const illegalTranshipmentResultSchema: Schema = new Schema(
     priorityDistribution: {
       low: { type: Number },
       medium: { type: Number },
-      high: { type: Number }
+      high: { type: Number },
     },
     detectedAt: {
       type: Date,

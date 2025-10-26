@@ -20,7 +20,7 @@ export class IllegalTranshipmentResultRepository {
     endTimestamp?: Date,
     accuracy?: number,
     averagePriority?: number,
-    priorityDistribution?: { low: number; medium: number; high: number }
+    priorityDistribution?: { low: number; medium: number; high: number },
   ): Promise<IIllegalTranshipmentResult> {
     const [sortedShip1MMSI, sortedShip2MMSI] = this.sortMMSI(
       ship1MMSI,
