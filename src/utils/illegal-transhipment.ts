@@ -66,20 +66,15 @@ export function checkIlegalTranshipmentPossibility(
   return result;
 }
 
-function interpolatePositions(
-  ship1: IAisPosition,
-  ship2: IAisPosition,
-  targetTime: Date,
-): IAisPosition {
+function interpolatePositions(ship1: IAisPosition, ship2: IAisPosition, targetTime: Date): IAisPosition {
   const time1 = new Date(ship1.timestamp).getTime();
   const time2 = new Date(ship2.timestamp).getTime();
   const targetTimeMs = targetTime.getTime();
-
+  
   const timeDiff = time2 - time1;
   const ratio = (targetTimeMs - time1) / timeDiff;
 
-  const interpolate = (start: number, end: number) =>
-    start + (end - start) * ratio;
+  const interpolate = (start: number, end: number) => start + (end - start) * ratio;
 
   return {
     ...ship1,
@@ -91,14 +86,11 @@ function interpolatePositions(
   };
 }
 
-function getPositionAtTime(
-  route: IAisPosition[],
-  targetTime: Date,
-): IAisPosition | null {
+function getPositionAtTime(route: IAisPosition[], targetTime: Date): IAisPosition | null {
   const targetTimeMs = targetTime.getTime();
-
+  
   const exactMatch = route.find(
-    (pos) => new Date(pos.timestamp).getTime() === targetTimeMs,
+    (pos) => new Date(pos.timestamp).getTime() === targetTimeMs
   );
   if (exactMatch) return exactMatch;
 
@@ -107,7 +99,7 @@ function getPositionAtTime(
 
   for (let i = 0; i < route.length; i++) {
     const posTime = new Date(route[i].timestamp).getTime();
-
+    
     if (posTime < targetTimeMs) {
       prevPos = route[i];
     } else if (posTime > targetTimeMs) {
@@ -123,32 +115,75 @@ function getPositionAtTime(
   return null;
 }
 
+interface PriorityWeight {
+  count: number;
+  totalWeight: number;
+}
+
 interface IllegalTranshipmentResult {
   isIllegal: boolean;
   startTimestamp?: Date;
   endTimestamp?: Date;
   accuracy?: number;
+  averagePriority?: number;
+  priorityDistribution?: {
+    low: number;
+    medium: number;
+    high: number;
+  };
+}
+
+function calculateWeightedScore(priorityValue: number): number {
+  if (priorityValue === 27) return 10;
+  if (priorityValue === 18) return 8;
+  if (priorityValue === 12) return 6;
+  if (priorityValue === 9) return 5;
+  if (priorityValue === 8) return 4;
+  if (priorityValue === 6) return 3;
+  if (priorityValue === 4) return 2;
+  if (priorityValue === 3) return 1.5;
+  if (priorityValue === 2) return 1;
+  if (priorityValue === 1) return 0.5;
+  return 0;
+}
+
+function getPriorityCategory(priorityValue: number): 'low' | 'medium' | 'high' {
+  if (priorityValue >= 18) return 'high';
+  if (priorityValue >= 6) return 'medium';
+  return 'low';
 }
 
 export async function detectIllegalTranshipment(
   route1: IAisPosition[],
   route2: IAisPosition[],
   checkDuration: number = 30 * 60 * 1000,
+  weightedThreshold: number = 70
 ): Promise<IllegalTranshipmentResult> {
   const startTime = Math.min(
     new Date(route1[0].timestamp).getTime(),
-    new Date(route2[0].timestamp).getTime(),
+    new Date(route2[0].timestamp).getTime()
   );
 
   const endTime = Math.max(
     new Date(route1[route1.length - 1].timestamp).getTime(),
-    new Date(route2[route2.length - 1].timestamp).getTime(),
+    new Date(route2[route2.length - 1].timestamp).getTime()
   );
 
   let currentWindowStart = startTime;
 
   while (currentWindowStart + checkDuration <= endTime) {
-    let possibilityCount = 0;
+    const priorityWeights: PriorityWeight = {
+      count: 0,
+      totalWeight: 0
+    };
+
+    const priorityDistribution = {
+      low: 0,
+      medium: 0,
+      high: 0
+    };
+
+    let totalPrioritySum = 0;
     let totalChecks = 0;
 
     let currentTime = new Date(currentWindowStart);
@@ -165,26 +200,43 @@ export async function detectIllegalTranshipment(
         const locationPriority = checkLocation(ship1Position, ship2Position);
         const headingPriority = checkHeading(ship1Position, ship2Position);
 
-        const totalPriority =
-          speedPriority * locationPriority * headingPriority;
+        const totalPriority = speedPriority * locationPriority * headingPriority;
 
         if (totalPriority > 0) {
-          possibilityCount++;
+          const weight = calculateWeightedScore(totalPriority);
+          priorityWeights.count++;
+          priorityWeights.totalWeight += weight;
+          totalPrioritySum += totalPriority;
+
+          const category = getPriorityCategory(totalPriority);
+          priorityDistribution[category]++;
         }
       }
 
       currentTime = new Date(currentTime.getTime() + 1 * 60 * 1000);
     }
 
-    if (totalChecks > 0) {
-      const possibilityPercentage = (possibilityCount / totalChecks) * 100;
+    if (totalChecks > 0 && priorityWeights.count > 0) {
+      const maxPossibleWeight = totalChecks * 10;
+      const weightedPercentage = (priorityWeights.totalWeight / maxPossibleWeight) * 100;
+      const averagePriority = totalPrioritySum / priorityWeights.count;
 
-      if (possibilityPercentage >= 80) {
+      const possibilityPercentage = (priorityWeights.count / totalChecks) * 100;
+
+      const finalAccuracy = (weightedPercentage * 0.7) + (possibilityPercentage * 0.3);
+
+      if (finalAccuracy >= weightedThreshold) {
         return {
           isIllegal: true,
           startTimestamp: new Date(currentWindowStart),
           endTimestamp: new Date(windowEnd),
-          accuracy: Math.round(possibilityPercentage * 100) / 100,
+          accuracy: Math.round(finalAccuracy * 100) / 100,
+          averagePriority: Math.round(averagePriority * 100) / 100,
+          priorityDistribution: {
+            low: Math.round((priorityDistribution.low / priorityWeights.count) * 100),
+            medium: Math.round((priorityDistribution.medium / priorityWeights.count) * 100),
+            high: Math.round((priorityDistribution.high / priorityWeights.count) * 100)
+          }
         };
       }
     }
@@ -193,6 +245,6 @@ export async function detectIllegalTranshipment(
   }
 
   return {
-    isIllegal: false,
+    isIllegal: false
   };
 }
