@@ -86,3 +86,20 @@ process.on('SIGINT', () => {
     process.exit(0);
   });
 });
+
+process.on('uncaughtException', (error) => {
+  logger.error('Uncaught Exception:', error);
+  if (worker) {
+    worker.stop();
+  }
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+setInterval(() => {
+  const usage = process.memoryUsage();
+  logger.info(`Memory usage: ${Math.round(usage.heapUsed / 1024 / 1024)}MB`);
+}, 60000); 

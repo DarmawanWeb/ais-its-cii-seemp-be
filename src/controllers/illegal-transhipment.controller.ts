@@ -8,13 +8,13 @@ const queueRepository = new IllegalTranshipmentQueueRepository();
 
 export const getAllResultsController = async (_req: Request, res: Response) => {
   try {
-    const results = await aisService.getIllegalTranshipmentResults();
-    res.status(200).json({
-      message: 'All illegal transhipment results fetched successfully',
-      data: results,
-      total: results.length,
-      success: true,
-    });
+    // const results = await aisService.getIllegalTranshipmentResults();
+    // res.status(200).json({
+    //   message: 'All illegal transhipment results fetched successfully',
+    //   data: null,
+    //   total: results.length,
+    //   success: true,
+    // });
   } catch (error: unknown) {
     handleError(error, res);
   }

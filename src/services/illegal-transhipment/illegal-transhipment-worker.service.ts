@@ -10,6 +10,9 @@ export class IllegalTranshipmentWorker {
   private isRunning: boolean = false;
   private processingDelay: number = 5000;
   private idleDelay: number = 30000;
+  private maxConsecutiveErrors: number = 5; // TAMBAHKAN INI
+  private consecutiveErrors: number = 0; // TAMBAHKAN INI
+  private maxMemoryUsage: number = 3000; // MB - TAMBAHKAN INI
 
   constructor() {
     this.queueRepository = new IllegalTranshipmentQueueRepository();
@@ -17,42 +20,63 @@ export class IllegalTranshipmentWorker {
     this.aisRepository = new AisRepository();
   }
 
-  async start(): Promise<void> {
-    if (this.isRunning) {
-      console.log('[Worker] Already running');
-      return;
+  // TAMBAHKAN METHOD INI
+  private checkMemoryUsage(): void {
+    const usage = process.memoryUsage();
+    const usedMB = Math.round(usage.heapUsed / 1024 / 1024);
+    
+    console.log(`[Worker] Memory usage: ${usedMB}MB / ${this.maxMemoryUsage}MB`);
+    
+    if (usedMB > this.maxMemoryUsage) {
+      console.warn('[Worker] Memory usage exceeded limit, forcing garbage collection');
+      if (global.gc) {
+        global.gc();
+      }
+      
+      // Jika masih tinggi setelah GC, stop worker
+      const afterGC = Math.round(process.memoryUsage().heapUsed / 1024 / 1024);
+      if (afterGC > this.maxMemoryUsage) {
+        console.error('[Worker] Memory usage still high after GC, stopping worker');
+        this.stop();
+      }
     }
-
-    this.isRunning = true;
-    console.log('[Worker] Illegal transhipment worker started');
-
-    this.processLoop();
   }
 
   private async processLoop(): Promise<void> {
     while (this.isRunning) {
       try {
+        // Check memory sebelum processing
+        this.checkMemoryUsage();
+        
         const hasProcessed = await this.processNextInQueue();
 
         if (hasProcessed) {
+          this.consecutiveErrors = 0; // Reset error counter on success
           await this.sleep(this.processingDelay);
         } else {
           await this.sleep(this.idleDelay);
         }
 
+        // Force GC periodically
         if (global.gc) {
           global.gc();
         }
       } catch (error) {
-        console.error('[Worker] Error in main loop:', error);
+        this.consecutiveErrors++;
+        console.error(`[Worker] Error in main loop (${this.consecutiveErrors}/${this.maxConsecutiveErrors}):`, error);
+        
+        // Stop worker jika terlalu banyak error berturut-turut
+        if (this.consecutiveErrors >= this.maxConsecutiveErrors) {
+          console.error('[Worker] Too many consecutive errors, stopping worker');
+          this.stop();
+          break;
+        }
+        
         await this.sleep(10000);
       }
     }
-  }
-
-  stop(): void {
-    console.log('[Worker] Stopping worker...');
-    this.isRunning = false;
+    
+    console.log('[Worker] Process loop ended');
   }
 
   private async processNextInQueue(): Promise<boolean> {
@@ -68,6 +92,9 @@ export class IllegalTranshipmentWorker {
       if (!queueItem) {
         return false;
       }
+
+      // Check memory before heavy processing
+      const beforeMemory = process.memoryUsage().heapUsed / 1024 / 1024;
 
       const lastDetection = await this.resultRepository.getLastDetection(
         queueItem.ship1MMSI,
@@ -127,13 +154,18 @@ export class IllegalTranshipmentWorker {
         return true;
       }
 
+      // BATASI JUMLAH DATA YANG DIPROSES
+      const maxRouteLength = 60; // Max 60 data points per ship
+      const limitedShip1Route = ship1Route.slice(-maxRouteLength);
+      const limitedShip2Route = ship2Route.slice(-maxRouteLength);
+
       console.log(
-        `[Worker] Analyzing routes: Ship1(${ship1Route.length} points), Ship2(${ship2Route.length} points)`,
+        `[Worker] Analyzing routes: Ship1(${limitedShip1Route.length} points), Ship2(${limitedShip2Route.length} points)`,
       );
 
       const detectionResult = await detectIllegalTranshipment(
-        ship1Route,
-        ship2Route,
+        limitedShip1Route,
+        limitedShip2Route,
         30 * 60 * 1000,
       );
 
@@ -168,14 +200,53 @@ export class IllegalTranshipmentWorker {
         queueItem.ship2MMSI,
       );
 
+      // Log memory usage after processing
+      const afterMemory = process.memoryUsage().heapUsed / 1024 / 1024;
+      const memoryDiff = afterMemory - beforeMemory;
+      console.log(`[Worker] Memory used for this processing: ${memoryDiff.toFixed(2)}MB`);
+
       return true;
     } catch (error) {
       console.error('[Worker] Error processing queue item:', error);
+      
+      // Mark as failed instead of pending to prevent infinite loop
+      try {
+        const queue = await this.queueRepository.getAllSorted();
+        const failedItem = queue.find((item) => item.status === 'in_progress');
+        if (failedItem) {
+          await this.queueRepository.updateStatus(
+            failedItem.ship1MMSI,
+            failedItem.ship2MMSI,
+            'failed',
+          );
+        }
+      } catch (cleanupError) {
+        console.error('[Worker] Error cleaning up failed item:', cleanupError);
+      }
+      
       return false;
     }
   }
 
   private sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async start(): Promise<void> {
+    if (this.isRunning) {
+      console.log('[Worker] Already running');
+      return;
+    }
+
+    this.isRunning = true;
+    this.consecutiveErrors = 0;
+    console.log('[Worker] Illegal transhipment worker started');
+
+    this.processLoop();
+  }
+
+  stop(): void {
+    console.log('[Worker] Stopping worker...');
+    this.isRunning = false;
   }
 }

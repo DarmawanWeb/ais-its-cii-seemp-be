@@ -9,7 +9,6 @@ import {
 import { type Router } from 'express';
 
 const router: Router = express.Router();
-
 router.get('/results', getAllResultsController);
 router.get('/results/:mmsi', getResultsByShipController);
 router.get('/queue/status', getQueueStatusController);

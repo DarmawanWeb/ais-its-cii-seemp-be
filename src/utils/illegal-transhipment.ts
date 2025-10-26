@@ -167,17 +167,23 @@ export async function detectIllegalTranshipment(
   checkDuration: number = 30 * 60 * 1000,
   weightedThreshold: number = 70,
 ): Promise<IllegalTranshipmentResult> {
+  // BATASI PANJANG ROUTE
+  const MAX_ROUTE_LENGTH = 60;
+  const limitedRoute1 = route1.slice(-MAX_ROUTE_LENGTH);
+  const limitedRoute2 = route2.slice(-MAX_ROUTE_LENGTH);
+
   const startTime = Math.min(
-    new Date(route1[0].timestamp).getTime(),
-    new Date(route2[0].timestamp).getTime(),
+    new Date(limitedRoute1[0].timestamp).getTime(),
+    new Date(limitedRoute2[0].timestamp).getTime(),
   );
 
   const endTime = Math.max(
-    new Date(route1[route1.length - 1].timestamp).getTime(),
-    new Date(route2[route2.length - 1].timestamp).getTime(),
+    new Date(limitedRoute1[limitedRoute1.length - 1].timestamp).getTime(),
+    new Date(limitedRoute2[limitedRoute2.length - 1].timestamp).getTime(),
   );
 
   let currentWindowStart = startTime;
+  const WINDOW_STEP = 5 * 60 * 1000; 
 
   while (currentWindowStart + checkDuration <= endTime) {
     const priorityWeights: PriorityWeight = {
@@ -196,10 +202,11 @@ export async function detectIllegalTranshipment(
 
     let currentTime = new Date(currentWindowStart);
     const windowEnd = currentWindowStart + checkDuration;
+    const CHECK_INTERVAL = 2 * 60 * 1000; 
 
     while (currentTime.getTime() < windowEnd) {
-      const ship1Position = getPositionAtTime(route1, currentTime);
-      const ship2Position = getPositionAtTime(route2, currentTime);
+      const ship1Position = getPositionAtTime(limitedRoute1, currentTime);
+      const ship2Position = getPositionAtTime(limitedRoute2, currentTime);
 
       if (ship1Position && ship2Position) {
         totalChecks++;
@@ -222,7 +229,7 @@ export async function detectIllegalTranshipment(
         }
       }
 
-      currentTime = new Date(currentTime.getTime() + 1 * 60 * 1000);
+      currentTime = new Date(currentTime.getTime() + CHECK_INTERVAL);
     }
 
     if (totalChecks > 0 && priorityWeights.count > 0) {
@@ -258,7 +265,7 @@ export async function detectIllegalTranshipment(
       }
     }
 
-    currentWindowStart += 1 * 60 * 1000;
+    currentWindowStart += WINDOW_STEP; 
   }
 
   return {
