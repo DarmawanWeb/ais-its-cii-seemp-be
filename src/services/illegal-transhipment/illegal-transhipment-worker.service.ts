@@ -137,22 +137,27 @@ export class IllegalTranshipmentWorker {
         30 * 60 * 1000,
       );
 
-      await this.resultRepository.create(
+     await this.resultRepository.create(
         queueItem.ship1MMSI,
         queueItem.ship2MMSI,
         detectionResult.isIllegal,
         detectionResult.startTimestamp,
         detectionResult.endTimestamp,
         detectionResult.accuracy,
+        detectionResult.averagePriority,
+        detectionResult.priorityDistribution,
       );
 
       if (detectionResult.isIllegal) {
         console.log(
-          `[Worker] ⚠️  ILLEGAL TRANSHIPMENT DETECTED! ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI} (Accuracy: ${detectionResult.accuracy}%)`,
+          `[Worker] ⚠️  ILLEGAL TRANSHIPMENT DETECTED! ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI}`
         );
+        console.log(`  Accuracy: ${detectionResult.accuracy}%`);
+        console.log(`  Average Priority: ${detectionResult.averagePriority}`);
+        console.log(`  Distribution - High: ${detectionResult.priorityDistribution?.high}%, Medium: ${detectionResult.priorityDistribution?.medium}%, Low: ${detectionResult.priorityDistribution?.low}%`);
       } else {
         console.log(
-          `[Worker] ✓ No illegal activity detected for ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI}`,
+          `[Worker] ✓ No illegal activity detected for ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI}`
         );
       }
 

@@ -7,6 +7,12 @@ export interface IIllegalTranshipmentResult extends Document {
   startTimestamp?: Date;
   endTimestamp?: Date;
   accuracy?: number;
+  averagePriority?: number;
+  priorityDistribution?: {
+    low: number;
+    medium: number;
+    high: number;
+  };
   detectedAt: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -36,6 +42,14 @@ const illegalTranshipmentResultSchema: Schema = new Schema(
     },
     accuracy: {
       type: Number,
+    },
+    averagePriority: {
+      type: Number,
+    },
+    priorityDistribution: {
+      low: { type: Number },
+      medium: { type: Number },
+      high: { type: Number }
     },
     detectedAt: {
       type: Date,
