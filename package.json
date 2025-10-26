@@ -8,7 +8,8 @@
     "start": "node dist/bin/www.js",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write 'src/**/*.{ts,js,json,md}'",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -59,8 +60,14 @@
     "tslib": "^2.8.1"
   },
   "lint-staged": {
-    "*.ts": "eslint --fix",
-    "*.js": "eslint --fix"
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "husky": {
     "hooks": {
