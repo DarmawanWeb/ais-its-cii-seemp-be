@@ -33,7 +33,7 @@ export class IllegalTranshipmentWorker {
     while (this.isRunning) {
       try {
         const hasProcessed = await this.processNextInQueue();
-        
+
         if (hasProcessed) {
           await this.sleep(this.processingDelay);
         } else {
@@ -63,7 +63,7 @@ export class IllegalTranshipmentWorker {
         return false;
       }
 
-      const queueItem = queue.find(item => item.status === 'pending');
+      const queueItem = queue.find((item) => item.status === 'pending');
 
       if (!queueItem) {
         return false;
@@ -81,7 +81,7 @@ export class IllegalTranshipmentWorker {
 
         if (timeSinceLastDetection < fifteenMinutes) {
           console.log(
-            `[Worker] Skipping ${queueItem.ship1MMSI}-${queueItem.ship2MMSI}: Last detection was ${Math.round(timeSinceLastDetection / 1000 / 60)} minutes ago`
+            `[Worker] Skipping ${queueItem.ship1MMSI}-${queueItem.ship2MMSI}: Last detection was ${Math.round(timeSinceLastDetection / 1000 / 60)} minutes ago`,
           );
           await this.queueRepository.delete(
             queueItem.ship1MMSI,
@@ -92,7 +92,7 @@ export class IllegalTranshipmentWorker {
       }
 
       console.log(
-        `[Worker] Processing ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI} (Priority: ${queueItem.priority})`
+        `[Worker] Processing ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI} (Priority: ${queueItem.priority})`,
       );
 
       await this.queueRepository.updateStatus(
@@ -111,9 +111,14 @@ export class IllegalTranshipmentWorker {
         60 * 60 * 1000,
       );
 
-      if (!ship1Route || ship1Route.length === 0 || !ship2Route || ship2Route.length === 0) {
+      if (
+        !ship1Route ||
+        ship1Route.length === 0 ||
+        !ship2Route ||
+        ship2Route.length === 0
+      ) {
         console.log(
-          `[Worker] Insufficient data for ${queueItem.ship1MMSI}-${queueItem.ship2MMSI}`
+          `[Worker] Insufficient data for ${queueItem.ship1MMSI}-${queueItem.ship2MMSI}`,
         );
         await this.queueRepository.delete(
           queueItem.ship1MMSI,
@@ -123,7 +128,7 @@ export class IllegalTranshipmentWorker {
       }
 
       console.log(
-        `[Worker] Analyzing routes: Ship1(${ship1Route.length} points), Ship2(${ship2Route.length} points)`
+        `[Worker] Analyzing routes: Ship1(${ship1Route.length} points), Ship2(${ship2Route.length} points)`,
       );
 
       const detectionResult = await detectIllegalTranshipment(
@@ -143,11 +148,11 @@ export class IllegalTranshipmentWorker {
 
       if (detectionResult.isIllegal) {
         console.log(
-          `[Worker] ⚠️  ILLEGAL TRANSHIPMENT DETECTED! ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI} (Accuracy: ${detectionResult.accuracy}%)`
+          `[Worker] ⚠️  ILLEGAL TRANSHIPMENT DETECTED! ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI} (Accuracy: ${detectionResult.accuracy}%)`,
         );
       } else {
         console.log(
-          `[Worker] ✓ No illegal activity detected for ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI}`
+          `[Worker] ✓ No illegal activity detected for ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI}`,
         );
       }
 
@@ -164,6 +169,6 @@ export class IllegalTranshipmentWorker {
   }
 
   private sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

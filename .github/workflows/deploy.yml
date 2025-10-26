@@ -49,12 +49,21 @@ jobs:
               echo "🔨 Building project"
               pnpm build
 
-              echo "🚀 Running or restarting app with PM2"
-              if pm2 describe ais-be > /dev/null; then
-                pm2 restart ais-be --update-env
+              echo "📁 Creating logs directory if not exists"
+              mkdir -p logs
+
+              echo "🚀 Deploying with PM2 using ecosystem config"
+              if pm2 describe ais-be > /dev/null 2>&1; then
+                echo "♻️  Restarting existing PM2 process"
+                pm2 restart ecosystem.config.js --env production --update-env
               else
-                pm2 start pnpm --name  "ais-be" -- start
+                echo "✨ Starting new PM2 process"
+                pm2 start ecosystem.config.js --env production
               fi
 
+              echo "💾 Saving PM2 configuration"
               pm2 save
+
+              echo "✅ Deployment completed successfully"
+              pm2 status
             '
