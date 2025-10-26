@@ -41,7 +41,7 @@ export class IllegalTranshipmentService {
           await this.itQueueRepository.updatePriority(
             shipMMSI,
             mmsi,
-            existingEntry.priority + 0.1,
+            existingEntry.priority + priority,
           );
         }
       }
