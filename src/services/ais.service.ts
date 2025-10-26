@@ -7,10 +7,13 @@ import {
   findNearestCoastDistance,
   checkShipStatus,
 } from '../utils/calculate-ews';
+import { IllegalTranshipmentService } from './illegal-transhipment.service';
 
 export class AisService {
   private aisRepository: AisRepository;
   private ciiService: CIIService = new CIIService();
+  private illegalTranshipmentService: IllegalTranshipmentService =
+    new IllegalTranshipmentService();
   private readonly ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
   constructor() {
@@ -47,9 +50,6 @@ export class AisService {
       }
 
       const { mmsi, navstatus, lat, lon, sog, cog, hdg, utc } = messageData;
-
-      // console.log('Processing MMSI:', mmsi, 'Lat:', lat, 'Lon:', lon);
-
       if (
         !mmsi ||
         navstatus == null ||
@@ -123,11 +123,17 @@ export class AisService {
       );
 
       await this.aisRepository.updatePositions(mmsi, updatedPositions);
+
       const validMMSIs = [''];
       if (validMMSIs.includes(data.message.data.mmsi)) {
         console.log('Updating AIS for MMSI:', data.message.data.lat);
         await this.ciiService.getCIIByMMSI(data.message.data.mmsi);
       }
+
+      await this.illegalTranshipmentService.detectIllegalTranshipment(
+        mmsi,
+        newPosition,
+      );
     } catch (error) {
       console.error('Error creating or updating AIS:', error);
       return null;

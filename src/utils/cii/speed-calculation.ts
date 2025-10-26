@@ -9,13 +9,14 @@ const positionToRadians = (position: IAisPosition): [number, number] => [
   degreesToRadians(position.lon),
 ];
 
-const calculateDistance = (
+export const calculateDistance = (
   firstPosition: IAisPosition,
   secondPosition: IAisPosition,
 ): {
   firstPositionRad: ILocation;
   secondPositionRad: ILocation;
   distance: number;
+  distanceInMeters: number;
 } => {
   const radiusOfEarth = 3438;
   const [firstLatRad, firstLonRad] = positionToRadians(firstPosition);
@@ -30,11 +31,11 @@ const calculateDistance = (
       Math.sin(deltaLon / 2) ** 2;
 
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
   return {
     firstPositionRad: { lat: firstLatRad, lon: firstLonRad },
     secondPositionRad: { lat: secondLatRad, lon: secondLonRad },
     distance: radiusOfEarth * c,
+    distanceInMeters: radiusOfEarth * c * 1852,
   };
 };
 
