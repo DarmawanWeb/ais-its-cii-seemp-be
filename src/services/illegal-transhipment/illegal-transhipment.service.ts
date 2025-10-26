@@ -26,6 +26,10 @@ export class IllegalTranshipmentService {
         new Date(Date.now() - 5 * 60 * 1000),
       );
 
+      const index = batamShips.findIndex((ship) => ship.mmsi === shipMMSI);
+      if (index !== -1) {
+        batamShips.splice(index, 1);
+      }
       const illegalTranshipmentPossibilities =
         checkIlegalTranshipmentPossibility(shipPosition, batamShips);
 
