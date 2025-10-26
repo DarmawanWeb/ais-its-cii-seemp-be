@@ -6,8 +6,8 @@ module.exports = {
       script: './dist/bin/www.js',
       instances: 1,
       exec_mode: 'fork',
-      max_memory_restart: '2000M',
-      node_args: '--max-old-space-size=512',
+      max_memory_restart: '4000M',
+      node_args: '--max-old-space-size=3584',
       env: {
         NODE_ENV: 'production',
         PORT: 3002
