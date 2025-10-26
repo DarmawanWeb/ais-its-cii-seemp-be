@@ -43,7 +43,7 @@ export const getAisByMmsiController = async (
   }
 };
 
-export const getTwoShipRoutesInSpecificTimeRangeController = async(
+export const getTwoShipRoutesInSpecificTimeRangeController = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
@@ -72,5 +72,4 @@ export const getTwoShipRoutesInSpecificTimeRangeController = async(
   } catch (error: unknown) {
     handleError(error, res);
   }
-}
-
+};

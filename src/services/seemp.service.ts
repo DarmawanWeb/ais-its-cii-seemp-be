@@ -21,7 +21,6 @@ import {
   calculateFuelCells,
 } from '../utils/seemp/third-formula';
 
-
 export class SEEMPService {
   private shipRepository: ShipRepository;
   private annualCiiRepository: AnnualCIIRepository;
@@ -59,7 +58,6 @@ export class SEEMPService {
     const ciiRequired = thisYearCii?.cii[0].cii.ciiRequired ?? 0;
     const lastCii = anualCii?.cii?.[anualCii.cii.length - 1];
     const ciiAttained = lastCii?.cii?.ciiAttained ?? 0;
-  
 
     const airLubrication = await calculateAirLubrication(
       voyagePerYear,
@@ -105,8 +103,18 @@ export class SEEMPService {
       highestYearZValue,
     );
 
-    const lngFuel = await calculateLNGFuel(ciiRequired, anualCii, vesselData, highestYearZValue);
-    const bioFuel = await calculateBioFuel(ciiRequired, anualCii, vesselData, highestYearZValue);
+    const lngFuel = await calculateLNGFuel(
+      ciiRequired,
+      anualCii,
+      vesselData,
+      highestYearZValue,
+    );
+    const bioFuel = await calculateBioFuel(
+      ciiRequired,
+      anualCii,
+      vesselData,
+      highestYearZValue,
+    );
 
     const solarPower = await calculateSolarPower(
       ciiRequired,

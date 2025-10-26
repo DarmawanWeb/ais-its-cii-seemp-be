@@ -29,14 +29,14 @@ export const assignGradeBasedOnDdVector = (
 export const assignGradeBasedOnDdVectorNew = (
   ddVector: IDdVector,
   ciiAttained: number,
-  ciiRequired : number,
+  ciiRequired: number,
 ): string => {
   let { d1, d2, d3, d4 } = ddVector;
   d1 = d1 * ciiRequired;
   d2 = d2 * ciiRequired;
   d3 = d3 * ciiRequired;
   d4 = d4 * ciiRequired;
-  
+
   console.log(
     `CII Attained: ${ciiAttained}, CII Required: ${ciiRequired}, D1: ${d1}, D2: ${d2}, D3: ${d3}, D4: ${d4}`,
   );
@@ -52,7 +52,6 @@ export const assignGradeBasedOnDdVectorNew = (
     return 'E';
   }
 };
-
 
 export const calculateCIIRequired = async (
   shipType: IShipType,
@@ -114,7 +113,7 @@ export const calculateCII = async (
   const ciiGrade = assignGradeBasedOnDdVector(vesselData.typeData.d, ciiRating);
 
   return {
-  notes: lastCii?.notes ?? '',
+    notes: lastCii?.notes ?? '',
     ciiRequired,
     ciiAttained,
     ciiRating,

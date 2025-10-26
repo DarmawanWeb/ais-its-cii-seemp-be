@@ -18,7 +18,7 @@ export class ShipRepository {
       IMO: generalData?.imoNumber,
       NAME: generalData?.name,
       BUILT: generalData?.built,
-      FLAG: generalData?.flag,  
+      FLAG: generalData?.flag,
       FLAGNAME: generalData?.flag,
       TYPE: typeData?.name,
       TYPENAME: typeData?.name,
@@ -27,8 +27,8 @@ export class ShipRepository {
       LOA: sizeData?.loa,
       BEAM: sizeData?.b,
       DRAUGHT: sizeData?.t,
-      CLASS: "CLASS",
-      CLASSCODE: "CLASSCODE",
+      CLASS: 'CLASS',
+      CLASSCODE: 'CLASSCODE',
     }).save();
     return await ship.save();
   }

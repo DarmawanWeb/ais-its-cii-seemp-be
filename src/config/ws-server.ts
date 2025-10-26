@@ -5,13 +5,12 @@ import logger from './logger';
 import type { TimestampedAisMessage } from '../types/ais.type';
 import { AisService } from '../services/ais.service';
 
-
 const aisService = new AisService();
 const socketServer = http.createServer();
 
 const io = new Server(socketServer, {
   cors: {
-    origin: "*",
+    origin: '*',
     methods: ['GET', 'POST'],
     credentials: false,
   },
@@ -24,13 +23,13 @@ io.on('connection', (socket) => {
   });
 
   socket.on('ais:data', async (data: TimestampedAisMessage) => {
-  try {
+    try {
       if (!data || !data.message || !data.timestamp) {
         return;
       }
 
       console.log('Received AIS data:', data);
-  
+
       await aisService.createOrUpdateAis(data);
     } catch (error) {
       logger.error('Error processing message from server:', error);

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Types } from "mongoose";
+import mongoose, { Schema, Types } from 'mongoose';
 
 export interface IFuelEntry {
   fuelME: Types.Decimal128;
@@ -28,7 +28,7 @@ const fuelEntrySchema = new Schema<IFuelEntry>(
       default: Date.now,
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const fuelDataSchema = new Schema<IFuelData>(
@@ -36,16 +36,16 @@ const fuelDataSchema = new Schema<IFuelData>(
     mmsi: {
       type: String,
       required: true,
-      ref: "Ais", 
+      ref: 'Ais',
     },
     fuelLogs: {
       type: [fuelEntrySchema],
       default: [],
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const FuelData = mongoose.model<IFuelData>("FuelData", fuelDataSchema);
+const FuelData = mongoose.model<IFuelData>('FuelData', fuelDataSchema);
 
 export default FuelData;

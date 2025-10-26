@@ -21,7 +21,7 @@ export const calculateSolarPower = async (
     shipData,
     0.12,
     false,
-    42
+    42,
   );
   const costPerKw = 3000;
   const cost = calculateCostbyPower(shipData, costPerKw, false);
@@ -102,7 +102,7 @@ export const calculateColdIroning = async (
   return {
     ciiRatingAfter,
     ciiGradeAfter,
-    cost : costPerYear,
+    cost: costPerYear,
     costDisplay: formatCost(costPerYear),
   };
 };
@@ -121,8 +121,6 @@ export const calculateFuelCells = async (
   );
   const costPerKw = 1780;
   const cost = calculateCostbyPower(vesselData, costPerKw, false);
-
- 
 
   const costPerYear = await calculateCostPerYear(
     vesselData.typeData,

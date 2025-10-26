@@ -72,6 +72,8 @@ export class ShipService {
       await this.shipGeneralRepository.delete(generalDataId._id);
     }
     await SecondaryShip.findOneAndDelete({ MMSI: shipData.mmsi });
-    return await this.shipRepository.delete((shipData as unknown as { _id: string })._id);
+    return await this.shipRepository.delete(
+      (shipData as unknown as { _id: string })._id,
+    );
   }
 }

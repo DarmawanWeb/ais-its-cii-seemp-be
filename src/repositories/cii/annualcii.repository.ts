@@ -55,9 +55,7 @@ export class AnnualCIIRepository {
     return AnnualCII.findOneAndDelete({ mmsi });
   }
 
-  async getLastYearCII(
-    mmsi: string,
-  ): Promise<ICIICalculation | null> {
+  async getLastYearCII(mmsi: string): Promise<ICIICalculation | null> {
     const annualCii = await this.getByMmsi(mmsi);
     if (annualCii && annualCii.cii.length > 0) {
       const lastYearCII = annualCii.cii[annualCii.cii.length - 1];

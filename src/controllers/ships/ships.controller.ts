@@ -123,7 +123,7 @@ export const deleteShipController = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteShipByMMSIController = async(
+export const deleteShipByMMSIController = async (
   req: Request,
   res: Response,
 ) => {
@@ -144,4 +144,4 @@ export const deleteShipByMMSIController = async(
   } catch (error: unknown) {
     handleError(error, res);
   }
-}
+};

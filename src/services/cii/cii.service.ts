@@ -13,7 +13,10 @@ import {
   calculateSecondFormulaFuel,
 } from '../../utils/cii/fuel-calculation';
 import { calculateCII } from '../../utils/cii/cii-calculation';
-import { ICIICalculation, IFuelConsumption } from '../../types/second-formula.types';
+import {
+  ICIICalculation,
+  IFuelConsumption,
+} from '../../types/second-formula.types';
 
 export class CIIService {
   private shipRepository: ShipRepository;
@@ -24,7 +27,6 @@ export class CIIService {
     this.aisRepository = new AisRepository();
     this.dailyCiiRepository = new DailyCIIRepository();
   }
-  
 
   async calculateCII(
     positions: IAisPosition[],
@@ -36,17 +38,15 @@ export class CIIService {
     }
     let latestCII: ICIICalculation | null = null;
     try {
-      const res =  await this.dailyCiiRepository.getLatestByMmsi(
-        shipData.mmsi,
-      );
+      const res = await this.dailyCiiRepository.getLatestByMmsi(shipData.mmsi);
       latestCII = res?.cii[0]?.cii ?? null;
       if (!latestCII) {
         latestCII = {
-          notes: "Default CII values",
+          notes: 'Default CII values',
           ciiRequired: 62.56963961854975,
           ciiAttained: 128.5322355807646,
           ciiRating: 2.054226880070749,
-          ciiGrade: "E",
+          ciiGrade: 'E',
           totalDistance: 0.00043715911651287536,
           fuelConsumption: {
             fuelConsumptionMeTon: 0.000019404781014131148,
@@ -56,7 +56,10 @@ export class CIIService {
         };
       }
     } catch (error) {
-      console.error(`Error fetching latest CII for MMSI ${shipData.mmsi}:`, error);
+      console.error(
+        `Error fetching latest CII for MMSI ${shipData.mmsi}:`,
+        error,
+      );
     }
 
     console.log(
@@ -68,21 +71,21 @@ export class CIIService {
     const isTelemetryActive = await FuelDataRepository.isActive(shipData.mmsi);
     let isFuelFormulaActive = false;
     try {
-      isFuelFormulaActive = shipData.fuelFormulas?.firstFuelFormula !== undefined;
-    }
-    catch (error) {
-      console.error(`Error checking fuel formula for MMSI ${shipData.mmsi}:`, error);
+      isFuelFormulaActive =
+        shipData.fuelFormulas?.firstFuelFormula !== undefined;
+    } catch (error) {
+      console.error(
+        `Error checking fuel formula for MMSI ${shipData.mmsi}:`,
+        error,
+      );
       isFuelFormulaActive = false;
     }
     let notes;
 
-
     if (isTelemetryActive) {
-      console.log(
-        `Using telemetry data for MMSI ${shipData.mmsi}`,
-      );
+      console.log(`Using telemetry data for MMSI ${shipData.mmsi}`);
       notes = `Using telemetry data`;
-     
+
       const fuelData = await FuelDataRepository.getLatestByMMSI(shipData.mmsi);
       if (!fuelData) {
         throw new Error(`Fuel data for MMSI ${shipData.mmsi} is not available`);
@@ -90,15 +93,16 @@ export class CIIService {
       const formatFuelData: IFuelConsumption = {
         fuelConsumptionMeTon: Number(fuelData.fuelLogs[0].fuelME),
         fuelConsumptionAeTon: Number(fuelData.fuelLogs[0].fuelAE),
-        totalFuelConsumptionTon: Number(fuelData.fuelLogs[0].fuelAE.toString()) + Number(fuelData.fuelLogs[0].fuelME.toString())
-      }
+        totalFuelConsumptionTon:
+          Number(fuelData.fuelLogs[0].fuelAE.toString()) +
+          Number(fuelData.fuelLogs[0].fuelME.toString()),
+      };
       ciiResult = await calculateCII(
         shipData,
         formatFuelData,
         speedData.distance,
         latestCII,
       );
-
     } else if (isFuelFormulaActive) {
       notes = `Using first fuel formula`;
       console.log(
@@ -120,8 +124,6 @@ export class CIIService {
         latestCII,
       );
     } else {
-
-     
       const secondFormulaFuel = await calculateSecondFormulaFuel(
         speedData,
         positions,
@@ -129,9 +131,7 @@ export class CIIService {
       );
       notes = `Using Holtrop`;
 
-       console.log(
-        `Using second fuel formula for MMSI ${shipData.mmsi}`,
-      );
+      console.log(`Using second fuel formula for MMSI ${shipData.mmsi}`);
       ciiResult = await calculateCII(
         shipData,
         secondFormulaFuel,

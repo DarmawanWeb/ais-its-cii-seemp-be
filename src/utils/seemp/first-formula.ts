@@ -30,8 +30,7 @@ export const calculateAirLubrication = async (
     potentialCiiReduce,
   );
 
-
-  const LOA = shipData.sizeData.loa
+  const LOA = shipData.sizeData.loa;
   console.log(`LOA: ${LOA}`);
   let cost;
   if (LOA <= 100) {
@@ -109,12 +108,7 @@ export const calculatePowerSystemMachinery = async (
     potentialCiiReduce,
   );
 
-  const cost = calculateCostbyPower(
-    vesselData,
-    500,
-    true, 
-    false
-  );
+  const cost = calculateCostbyPower(vesselData, 500, true, false);
 
   const costPerYear = await calculateCostPerYear(
     vesselData.typeData,
@@ -148,7 +142,6 @@ export const calculatePropEffDevice = async (
     potentialCiiReduce,
   );
 
-
   const costPerYearHigh = await calculateCostPerYear(
     vesselData.typeData,
     vesselData.sizeData.capacity,
@@ -164,7 +157,6 @@ export const calculatePropEffDevice = async (
     highestYearZValue,
     100000,
   );
-
 
   return {
     ciiRatingAfter,
@@ -189,7 +181,6 @@ export const calculateResistanceReduceDevice = async (
     vesselData,
     potentialCiiReduce,
   );
-
 
   const costPerYearHigh = await calculateCostPerYear(
     vesselData.typeData,

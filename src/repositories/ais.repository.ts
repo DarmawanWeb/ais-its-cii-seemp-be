@@ -50,7 +50,6 @@ export class AisRepository implements IAisRepository {
     newPosition: IAisPosition[],
   ): Promise<void> {
     await Ais.findOneAndUpdate(
-    
       { mmsi: mmsi },
       {
         $set: { positions: newPosition },

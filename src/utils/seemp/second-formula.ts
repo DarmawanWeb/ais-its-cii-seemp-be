@@ -34,7 +34,7 @@ export const calculateLNGFuel = async (
   return {
     ciiRatingAfter,
     ciiGradeAfter,
-    cost : costPerYear,
+    cost: costPerYear,
     costDisplay: formatCost(costPerYear),
   };
 };
