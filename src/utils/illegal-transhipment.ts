@@ -1,3 +1,5 @@
+// src/utils/illegal-transhipment.ts
+
 import { IAisPosition, IAis } from '../models/Ais';
 import { calculateDistance } from './cii/speed-calculation';
 
@@ -161,29 +163,57 @@ function getPriorityCategory(priorityValue: number): 'low' | 'medium' | 'high' {
   return 'low';
 }
 
+// OPTIMIZED: Sample route to reduce data points
+function sampleRoute(
+  route: IAisPosition[],
+  maxLength: number,
+  intervalMs: number,
+): IAisPosition[] {
+  if (route.length <= maxLength) {
+    return route;
+  }
+
+  const sampled: IAisPosition[] = [];
+  const startTime = new Date(route[0].timestamp).getTime();
+  const endTime = new Date(route[route.length - 1].timestamp).getTime();
+
+  let currentTime = startTime;
+  while (currentTime <= endTime && sampled.length < maxLength) {
+    const position = getPositionAtTime(route, new Date(currentTime));
+    if (position) {
+      sampled.push(position);
+    }
+    currentTime += intervalMs;
+  }
+
+  return sampled.length > 0 ? sampled : route.slice(-maxLength);
+}
+
 export async function detectIllegalTranshipment(
   route1: IAisPosition[],
   route2: IAisPosition[],
-  checkDuration: number = 30 * 60 * 1000,
+  checkDuration: number = 30 * 60 * 1000, // 30 minutes
   weightedThreshold: number = 70,
 ): Promise<IllegalTranshipmentResult> {
-  // BATASI PANJANG ROUTE
-  const MAX_ROUTE_LENGTH = 60;
-  const limitedRoute1 = route1.slice(-MAX_ROUTE_LENGTH);
-  const limitedRoute2 = route2.slice(-MAX_ROUTE_LENGTH);
+  // OPTIMIZE: Sample routes to reduce processing
+  const MAX_ROUTE_LENGTH = 30;
+  const SAMPLE_INTERVAL = 3 * 60 * 1000; // 3 minutes
+
+  const sampledRoute1 = sampleRoute(route1, MAX_ROUTE_LENGTH, SAMPLE_INTERVAL);
+  const sampledRoute2 = sampleRoute(route2, MAX_ROUTE_LENGTH, SAMPLE_INTERVAL);
 
   const startTime = Math.min(
-    new Date(limitedRoute1[0].timestamp).getTime(),
-    new Date(limitedRoute2[0].timestamp).getTime(),
+    new Date(sampledRoute1[0].timestamp).getTime(),
+    new Date(sampledRoute2[0].timestamp).getTime(),
   );
 
   const endTime = Math.max(
-    new Date(limitedRoute1[limitedRoute1.length - 1].timestamp).getTime(),
-    new Date(limitedRoute2[limitedRoute2.length - 1].timestamp).getTime(),
+    new Date(sampledRoute1[sampledRoute1.length - 1].timestamp).getTime(),
+    new Date(sampledRoute2[sampledRoute2.length - 1].timestamp).getTime(),
   );
 
   let currentWindowStart = startTime;
-  const WINDOW_STEP = 5 * 60 * 1000; 
+  const WINDOW_STEP = 10 * 60 * 1000; // 10 minutes
 
   while (currentWindowStart + checkDuration <= endTime) {
     const priorityWeights: PriorityWeight = {
@@ -202,11 +232,11 @@ export async function detectIllegalTranshipment(
 
     let currentTime = new Date(currentWindowStart);
     const windowEnd = currentWindowStart + checkDuration;
-    const CHECK_INTERVAL = 2 * 60 * 1000; 
+    const CHECK_INTERVAL = 5 * 60 * 1000; // Check every 5 minutes
 
     while (currentTime.getTime() < windowEnd) {
-      const ship1Position = getPositionAtTime(limitedRoute1, currentTime);
-      const ship2Position = getPositionAtTime(limitedRoute2, currentTime);
+      const ship1Position = getPositionAtTime(sampledRoute1, currentTime);
+      const ship2Position = getPositionAtTime(sampledRoute2, currentTime);
 
       if (ship1Position && ship2Position) {
         totalChecks++;
@@ -265,7 +295,7 @@ export async function detectIllegalTranshipment(
       }
     }
 
-    currentWindowStart += WINDOW_STEP; 
+    currentWindowStart += WINDOW_STEP;
   }
 
   return {

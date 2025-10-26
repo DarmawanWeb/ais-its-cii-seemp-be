@@ -1,230 +1,295 @@
-import { IllegalTranshipmentQueueRepository } from '../../repositories/illegal-transhipment/it-queue.repository';
-import { IllegalTranshipmentResultRepository } from '../../repositories/illegal-transhipment/it-result.repository';
-import { AisRepository } from '../../repositories/ais.repository';
-import { detectIllegalTranshipment } from '../../utils/illegal-transhipment';
+import { fork, ChildProcess } from 'child_process';
+import path from 'path';
+import logger from '../../config/logger';
+
+interface ChildMessage {
+  type: 'ready' | 'result' | 'error' | 'stats';
+  processed?: boolean;
+  stats?: WorkerStats;
+  error?: string;
+}
+
+interface WorkerStats {
+  processingCount: number;
+  isRunning: boolean;
+  memoryUsage: {
+    heapUsed: number;
+    heapTotal: number;
+    external: number;
+  };
+}
 
 export class IllegalTranshipmentWorker {
-  private queueRepository: IllegalTranshipmentQueueRepository;
-  private resultRepository: IllegalTranshipmentResultRepository;
-  private aisRepository: AisRepository;
+  private childProcess: ChildProcess | null = null;
   private isRunning: boolean = false;
-  private processingDelay: number = 5000;
-  private idleDelay: number = 30000;
-  private maxConsecutiveErrors: number = 5; // TAMBAHKAN INI
-  private consecutiveErrors: number = 0; // TAMBAHKAN INI
-  private maxMemoryUsage: number = 3000; // MB - TAMBAHKAN INI
+  private processingDelay: number = 10000; // 10 seconds between tasks
+  private idleDelay: number = 30000; // 30 seconds when idle
+  private isProcessing: boolean = false;
+  private consecutiveErrors: number = 0;
+  private maxConsecutiveErrors: number = 5;
+  private processedCount: number = 0;
+  private restartAttempts: number = 0;
+  private maxRestartAttempts: number = 3;
+  private lastStatsUpdate: Date = new Date();
 
-  constructor() {
-    this.queueRepository = new IllegalTranshipmentQueueRepository();
-    this.resultRepository = new IllegalTranshipmentResultRepository();
-    this.aisRepository = new AisRepository();
+  constructor() {}
+
+  async start(): Promise<void> {
+    if (this.isRunning) {
+      logger.info('[Worker] Already running');
+      return;
+    }
+
+    this.isRunning = true;
+    this.consecutiveErrors = 0;
+    this.restartAttempts = 0;
+    
+    logger.info('[Worker] Starting illegal transhipment worker');
+
+    await this.spawnChildProcess();
+    this.processLoop();
   }
 
-  // TAMBAHKAN METHOD INI
-  private checkMemoryUsage(): void {
-    const usage = process.memoryUsage();
-    const usedMB = Math.round(usage.heapUsed / 1024 / 1024);
-    
-    console.log(`[Worker] Memory usage: ${usedMB}MB / ${this.maxMemoryUsage}MB`);
-    
-    if (usedMB > this.maxMemoryUsage) {
-      console.warn('[Worker] Memory usage exceeded limit, forcing garbage collection');
-      if (global.gc) {
-        global.gc();
-      }
+  private async spawnChildProcess(): Promise<void> {
+    try {
+      // Path to compiled child worker
+      const workerPath = path.join(
+        __dirname,
+        '../../workers/illegal-transhipment-child-worker.js',
+      );
+
+      logger.info(`[Worker] Spawning child process: ${workerPath}`);
+
+      this.childProcess = fork(workerPath, [], {
+        execArgv: [
+          '--max-old-space-size=1024', // 1GB for child process
+          '--expose-gc',
+        ],
+        env: {
+          ...process.env,
+          NODE_ENV: process.env.NODE_ENV || 'production',
+        },
+      });
+
+      // Setup message handler
+      this.childProcess.on('message', (msg: ChildMessage) => {
+        this.handleChildMessage(msg);
+      });
+
+      // Setup error handler
+      this.childProcess.on('error', (error) => {
+        logger.error('[Worker] Child process error:', error);
+        this.handleChildError();
+      });
+
+      // Setup exit handler
+      this.childProcess.on('exit', (code, signal) => {
+        logger.warn(`[Worker] Child process exited with code ${code}, signal ${signal}`);
+        
+        if (this.isRunning) {
+          this.handleChildExit();
+        }
+      });
+
+      // Wait for child to be ready
+      await this.waitForReady();
       
-      // Jika masih tinggi setelah GC, stop worker
-      const afterGC = Math.round(process.memoryUsage().heapUsed / 1024 / 1024);
-      if (afterGC > this.maxMemoryUsage) {
-        console.error('[Worker] Memory usage still high after GC, stopping worker');
-        this.stop();
+      logger.info('[Worker] Child process spawned and ready');
+      this.restartAttempts = 0; // Reset on successful spawn
+
+    } catch (error) {
+      logger.error('[Worker] Failed to spawn child process:', error);
+      throw error;
+    }
+  }
+
+  private waitForReady(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('Child process ready timeout'));
+      }, 30000); // 30 second timeout
+
+      const handler = (msg : ChildMessage) => {
+        if (msg.type === 'ready') {
+          clearTimeout(timeout);
+          this.childProcess?.removeListener('message', handler);
+          resolve();
+        }
+      };
+
+      this.childProcess?.on('message', handler);
+    });
+  }
+
+  private handleChildMessage(msg: ChildMessage) {
+    switch (msg.type) {
+      case 'result':
+        this.isProcessing = false;
+        this.consecutiveErrors = 0;
+        
+        if (msg.processed) {
+          this.processedCount++;
+          logger.info(`[Worker] Item processed successfully (Total: ${this.processedCount})`);
+        } else {
+          logger.debug('[Worker] No items to process');
+        }
+
+        if (msg.stats) {
+          this.logChildStats(msg.stats);
+        }
+        break;
+
+      case 'error':
+        this.isProcessing = false;
+        this.consecutiveErrors++;
+        logger.error(
+          `[Worker] Child process error (${this.consecutiveErrors}/${this.maxConsecutiveErrors}):`,
+          msg.error,
+        );
+
+        if (this.consecutiveErrors >= this.maxConsecutiveErrors) {
+          logger.error('[Worker] Too many consecutive errors, stopping worker');
+          this.stop();
+        }
+        break;
+
+      case 'stats':
+        if (msg.stats) {
+          this.logChildStats(msg.stats);
+        }
+        break;
+
+      default:
+        logger.debug('[Worker] Unknown message type:', msg.type);
+    }
+  }
+
+  private handleChildError() {
+    this.isProcessing = false;
+    this.consecutiveErrors++;
+
+    if (this.consecutiveErrors >= this.maxConsecutiveErrors) {
+      logger.error('[Worker] Too many consecutive errors, stopping worker');
+      this.stop();
+    }
+  }
+
+  private async handleChildExit() {
+    this.isProcessing = false;
+    this.childProcess = null;
+
+    if (!this.isRunning) {
+      return;
+    }
+
+    this.restartAttempts++;
+
+    if (this.restartAttempts >= this.maxRestartAttempts) {
+      logger.error('[Worker] Max restart attempts reached, stopping worker');
+      this.stop();
+      return;
+    }
+
+    logger.info(
+      `[Worker] Attempting to restart child process (${this.restartAttempts}/${this.maxRestartAttempts})`,
+    );
+
+    setTimeout(async () => {
+      if (this.isRunning) {
+        try {
+          await this.spawnChildProcess();
+          logger.info('[Worker] Child process restarted successfully');
+        } catch (error) {
+          logger.error('[Worker] Failed to restart child process:', error);
+          this.handleChildExit(); // Try again
+        }
       }
+    }, 5000);
+  }
+
+  private logChildStats(stats: WorkerStats) {
+    const now = new Date();
+    const timeSinceLastUpdate = now.getTime() - this.lastStatsUpdate.getTime();
+
+    // Log stats every minute
+    if (timeSinceLastUpdate > 60000) {
+      logger.info('[Worker] Child process stats:', {
+        processingCount: stats.processingCount,
+        isRunning: stats.isRunning,
+        memoryUsage: `${stats.memoryUsage.heapUsed}MB / ${stats.memoryUsage.heapTotal}MB`,
+      });
+      this.lastStatsUpdate = now;
     }
   }
 
   private async processLoop(): Promise<void> {
+    logger.info('[Worker] Process loop started');
+
     while (this.isRunning) {
       try {
-        // Check memory sebelum processing
-        this.checkMemoryUsage();
-        
-        const hasProcessed = await this.processNextInQueue();
+        // Check if child process is alive and not processing
+        if (
+          !this.isProcessing &&
+          this.childProcess &&
+          !this.childProcess.killed
+        ) {
+          this.isProcessing = true;
+          
+          // Send process command to child
+          this.childProcess.send('process');
 
-        if (hasProcessed) {
-          this.consecutiveErrors = 0; // Reset error counter on success
+          // Wait for processing
           await this.sleep(this.processingDelay);
+
+          // If still processing after delay, reset flag
+          if (this.isProcessing) {
+            logger.warn('[Worker] Processing took longer than expected');
+            this.isProcessing = false;
+          }
         } else {
+          // Idle - wait longer
           await this.sleep(this.idleDelay);
         }
 
-        // Force GC periodically
-        if (global.gc) {
-          global.gc();
+        // Log main process memory usage periodically
+        this.logMainProcessStats();
+
+        // Request stats from child process every 5 minutes
+        if (
+          this.childProcess &&
+          !this.childProcess.killed &&
+          new Date().getTime() - this.lastStatsUpdate.getTime() > 300000
+        ) {
+          this.childProcess.send('stats');
         }
+
       } catch (error) {
-        this.consecutiveErrors++;
-        console.error(`[Worker] Error in main loop (${this.consecutiveErrors}/${this.maxConsecutiveErrors}):`, error);
-        
-        // Stop worker jika terlalu banyak error berturut-turut
-        if (this.consecutiveErrors >= this.maxConsecutiveErrors) {
-          console.error('[Worker] Too many consecutive errors, stopping worker');
-          this.stop();
-          break;
-        }
-        
+        logger.error('[Worker] Error in main loop:', error);
+        this.isProcessing = false;
         await this.sleep(10000);
       }
     }
-    
-    console.log('[Worker] Process loop ended');
+
+    logger.info('[Worker] Process loop ended');
   }
 
-  private async processNextInQueue(): Promise<boolean> {
-    try {
-      const queue = await this.queueRepository.getAllSorted();
+  private logMainProcessStats() {
+    const usage = process.memoryUsage();
+    const heapUsedMB = Math.round(usage.heapUsed / 1024 / 1024);
+    const heapTotalMB = Math.round(usage.heapTotal / 1024 / 1024);
+    const heapUsagePercent = ((usage.heapUsed / usage.heapTotal) * 100).toFixed(2);
 
-      if (queue.length === 0) {
-        return false;
+    // Only log if memory usage is high
+    if (heapUsedMB > 1500) {
+      logger.warn(
+        `[Worker] Main process high memory usage: ${heapUsedMB}MB / ${heapTotalMB}MB (${heapUsagePercent}%)`,
+      );
+
+      // Force GC if available
+      if (global.gc) {
+        logger.info('[Worker] Forcing garbage collection');
+        global.gc();
       }
-
-      const queueItem = queue.find((item) => item.status === 'pending');
-
-      if (!queueItem) {
-        return false;
-      }
-
-      // Check memory before heavy processing
-      const beforeMemory = process.memoryUsage().heapUsed / 1024 / 1024;
-
-      const lastDetection = await this.resultRepository.getLastDetection(
-        queueItem.ship1MMSI,
-        queueItem.ship2MMSI,
-      );
-
-      if (lastDetection) {
-        const timeSinceLastDetection =
-          Date.now() - new Date(lastDetection.detectedAt).getTime();
-        const fifteenMinutes = 15 * 60 * 1000;
-
-        if (timeSinceLastDetection < fifteenMinutes) {
-          console.log(
-            `[Worker] Skipping ${queueItem.ship1MMSI}-${queueItem.ship2MMSI}: Last detection was ${Math.round(timeSinceLastDetection / 1000 / 60)} minutes ago`,
-          );
-          await this.queueRepository.delete(
-            queueItem.ship1MMSI,
-            queueItem.ship2MMSI,
-          );
-          return true;
-        }
-      }
-
-      console.log(
-        `[Worker] Processing ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI} (Priority: ${queueItem.priority})`,
-      );
-
-      await this.queueRepository.updateStatus(
-        queueItem.ship1MMSI,
-        queueItem.ship2MMSI,
-        'in_progress',
-      );
-
-      const ship1Route = await this.aisRepository.getShipRouteByMMSI(
-        queueItem.ship1MMSI,
-        60 * 60 * 1000,
-      );
-
-      const ship2Route = await this.aisRepository.getShipRouteByMMSI(
-        queueItem.ship2MMSI,
-        60 * 60 * 1000,
-      );
-
-      if (
-        !ship1Route ||
-        ship1Route.length === 0 ||
-        !ship2Route ||
-        ship2Route.length === 0
-      ) {
-        console.log(
-          `[Worker] Insufficient data for ${queueItem.ship1MMSI}-${queueItem.ship2MMSI}`,
-        );
-        await this.queueRepository.delete(
-          queueItem.ship1MMSI,
-          queueItem.ship2MMSI,
-        );
-        return true;
-      }
-
-      // BATASI JUMLAH DATA YANG DIPROSES
-      const maxRouteLength = 60; // Max 60 data points per ship
-      const limitedShip1Route = ship1Route.slice(-maxRouteLength);
-      const limitedShip2Route = ship2Route.slice(-maxRouteLength);
-
-      console.log(
-        `[Worker] Analyzing routes: Ship1(${limitedShip1Route.length} points), Ship2(${limitedShip2Route.length} points)`,
-      );
-
-      const detectionResult = await detectIllegalTranshipment(
-        limitedShip1Route,
-        limitedShip2Route,
-        30 * 60 * 1000,
-      );
-
-      await this.resultRepository.create(
-        queueItem.ship1MMSI,
-        queueItem.ship2MMSI,
-        detectionResult.isIllegal,
-        detectionResult.startTimestamp,
-        detectionResult.endTimestamp,
-        detectionResult.accuracy,
-        detectionResult.averagePriority,
-        detectionResult.priorityDistribution,
-      );
-
-      if (detectionResult.isIllegal) {
-        console.log(
-          `[Worker] ⚠️  ILLEGAL TRANSHIPMENT DETECTED! ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI}`,
-        );
-        console.log(`  Accuracy: ${detectionResult.accuracy}%`);
-        console.log(`  Average Priority: ${detectionResult.averagePriority}`);
-        console.log(
-          `  Distribution - High: ${detectionResult.priorityDistribution?.high}%, Medium: ${detectionResult.priorityDistribution?.medium}%, Low: ${detectionResult.priorityDistribution?.low}%`,
-        );
-      } else {
-        console.log(
-          `[Worker] ✓ No illegal activity detected for ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI}`,
-        );
-      }
-
-      await this.queueRepository.delete(
-        queueItem.ship1MMSI,
-        queueItem.ship2MMSI,
-      );
-
-      // Log memory usage after processing
-      const afterMemory = process.memoryUsage().heapUsed / 1024 / 1024;
-      const memoryDiff = afterMemory - beforeMemory;
-      console.log(`[Worker] Memory used for this processing: ${memoryDiff.toFixed(2)}MB`);
-
-      return true;
-    } catch (error) {
-      console.error('[Worker] Error processing queue item:', error);
-      
-      // Mark as failed instead of pending to prevent infinite loop
-      try {
-        const queue = await this.queueRepository.getAllSorted();
-        const failedItem = queue.find((item) => item.status === 'in_progress');
-        if (failedItem) {
-          await this.queueRepository.updateStatus(
-            failedItem.ship1MMSI,
-            failedItem.ship2MMSI,
-            'failed',
-          );
-        }
-      } catch (cleanupError) {
-        console.error('[Worker] Error cleaning up failed item:', cleanupError);
-      }
-      
-      return false;
     }
   }
 
@@ -232,21 +297,35 @@ export class IllegalTranshipmentWorker {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  async start(): Promise<void> {
-    if (this.isRunning) {
-      console.log('[Worker] Already running');
-      return;
+  stop(): void {
+    logger.info('[Worker] Stopping worker...');
+    this.isRunning = false;
+
+    if (this.childProcess && !this.childProcess.killed) {
+      logger.info('[Worker] Sending stop signal to child process');
+      this.childProcess.send('stop');
+
+      // Force kill after 10 seconds if not stopped
+      setTimeout(() => {
+        if (this.childProcess && !this.childProcess.killed) {
+          logger.warn('[Worker] Force killing child process');
+          this.childProcess.kill('SIGKILL');
+          this.childProcess = null;
+        }
+      }, 10000);
     }
 
-    this.isRunning = true;
-    this.consecutiveErrors = 0;
-    console.log('[Worker] Illegal transhipment worker started');
-
-    this.processLoop();
+    logger.info(`[Worker] Stopped. Total items processed: ${this.processedCount}`);
   }
 
-  stop(): void {
-    console.log('[Worker] Stopping worker...');
-    this.isRunning = false;
+  getStatus() {
+    return {
+      isRunning: this.isRunning,
+      isProcessing: this.isProcessing,
+      processedCount: this.processedCount,
+      consecutiveErrors: this.consecutiveErrors,
+      restartAttempts: this.restartAttempts,
+      childProcessAlive: this.childProcess && !this.childProcess.killed,
+    };
   }
 }
