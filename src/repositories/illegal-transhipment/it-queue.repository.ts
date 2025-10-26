@@ -103,4 +103,15 @@ export class IllegalTranshipmentQueueRepository {
     }
     return null;
   }
+
+  async delete(ship1MMSI: string, ship2MMSI: string): Promise<void> {
+    const [sortedShip1MMSI, sortedShip2MMSI] = this.sortMMSI(
+      ship1MMSI,
+      ship2MMSI,
+    );
+    await IllegalTranshipmentQueue.deleteOne({
+      ship1MMSI: sortedShip1MMSI,
+      ship2MMSI: sortedShip2MMSI,
+    });
+  }
 }

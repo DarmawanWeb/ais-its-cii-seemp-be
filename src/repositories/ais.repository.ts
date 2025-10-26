@@ -5,6 +5,7 @@ export interface IAisRepository {
   getAll(): Promise<IAis[]>;
   getByMmsi(mmsi: string): Promise<IAis | null>;
   updatePositions(mmsi: string, newPosition: IAisPosition[]): Promise<void>;
+  getShipRouteByMMSI(mmsi: string, duration: number): Promise<IAisPosition[]>;
 }
 
 export class AisRepository implements IAisRepository {
@@ -89,6 +90,30 @@ export class AisRepository implements IAisRepository {
         $set: { positions: newPosition },
       },
       { new: true },
+    );
+  }
+
+  async getShipRouteByMMSI(
+    mmsi: string,
+    duration: number,
+  ): Promise<IAisPosition[]> {
+    const endTime = new Date();
+    const startTime = new Date(endTime.getTime() - duration);
+
+    const ship = await Ais.findOne({ mmsi });
+
+    if (!ship) {
+      return [];
+    }
+
+    const route = ship.positions.filter((position) => {
+      const posTime = new Date(position.timestamp);
+      return posTime >= startTime && posTime <= endTime;
+    });
+
+    return route.sort(
+      (a, b) =>
+        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
     );
   }
 }

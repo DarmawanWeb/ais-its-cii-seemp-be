@@ -7,7 +7,7 @@ import { syncDatabase } from '../src/config/database';
 import config from '../src/config/config';
 import { connectSocket } from '../src/config/ws';
 import socketServer from '../src/config/ws-server';
-
+import { IllegalTranshipmentWorker } from '../src/services/illegal-transhipment/illegal-transhipment-worker.service';
 
 const normalizePort = (val: number): number | boolean => {
   if (isNaN(val)) return false;
@@ -44,16 +44,45 @@ socketServer.listen(wsServerPort);
 syncDatabase();
 connectSocket();
 
-
-
+let worker: IllegalTranshipmentWorker;
 
 const server = http.createServer(app);
 server.listen(port);
 
 server.on('error', onError);
-server.on('listening', () => {
+server.on('listening', async () => {
   const addr = server.address();
   const bind =
     typeof addr === 'string' ? 'pipe ' + addr : addr ? 'port ' + addr.port : '';
   logger.info('Listening on ' + bind);
+
+  try {
+    worker = new IllegalTranshipmentWorker();
+    await worker.start();
+    logger.info('Illegal transhipment worker started successfully');
+  } catch (error) {
+    logger.error('Failed to start illegal transhipment worker:', error);
+  }
+});
+
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM received, shutting down gracefully');
+  if (worker) {
+    worker.stop();
+  }
+  server.close(() => {
+    logger.info('Server closed');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  logger.info('SIGINT received, shutting down gracefully');
+  if (worker) {
+    worker.stop();
+  }
+  server.close(() => {
+    logger.info('Server closed');
+    process.exit(0);
+  });
 });

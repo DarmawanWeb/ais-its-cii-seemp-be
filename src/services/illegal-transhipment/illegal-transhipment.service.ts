@@ -1,10 +1,10 @@
 import {
   isInBatamBounds,
   checkIlegalTranshipmentPossibility,
-} from '../utils/illegal-transhipment';
-import { IAisPosition } from '../models/Ais';
-import { AisRepository } from '../repositories/ais.repository';
-import { IllegalTranshipmentQueueRepository } from '../repositories/illegal-transhipment/it-queue.repository';
+} from '../../utils/illegal-transhipment';
+import { IAisPosition } from '../../models/Ais';
+import { AisRepository } from '../../repositories/ais.repository';
+import { IllegalTranshipmentQueueRepository } from '../../repositories/illegal-transhipment/it-queue.repository';
 
 export class IllegalTranshipmentService {
   private aisRepository: AisRepository;

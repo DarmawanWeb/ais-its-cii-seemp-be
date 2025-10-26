@@ -7,6 +7,7 @@ import ciiRoutes from './cii';
 import portRoutes from './port.routes';
 import telemetryRoutes from './telemetry.routes';
 import seempRoutes from './seemp.routes';
+import illegalTranshipmentRoutes from './illegal-transhipment.routes';
 
 const router: Router = express.Router();
 
@@ -16,5 +17,6 @@ router.use('/cii', ciiRoutes);
 router.use('/port', portRoutes);
 router.use('/telemetry', telemetryRoutes);
 router.use('/seemp', seempRoutes);
+router.use('/illegal-transhipment', illegalTranshipmentRoutes);
 
 export default router;

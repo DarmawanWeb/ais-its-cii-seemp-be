@@ -7,13 +7,16 @@ import {
   findNearestCoastDistance,
   checkShipStatus,
 } from '../utils/calculate-ews';
-import { IllegalTranshipmentService } from './illegal-transhipment.service';
+import { IllegalTranshipmentService } from './illegal-transhipment/illegal-transhipment.service';
+import { IllegalTranshipmentDetectionService } from './illegal-transhipment/illegal-transhipment-det.service';
 
 export class AisService {
   private aisRepository: AisRepository;
   private ciiService: CIIService = new CIIService();
   private illegalTranshipmentService: IllegalTranshipmentService =
     new IllegalTranshipmentService();
+  private illegalTranshipmentDetectionService: IllegalTranshipmentDetectionService =
+    new IllegalTranshipmentDetectionService();
   private readonly ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
   constructor() {
@@ -142,9 +145,6 @@ export class AisService {
 
   async getAllAis(): Promise<IAis[]> {
     return this.aisRepository.getAll();
-    // // return if mmsi == '111111111' [];
-    // const allAis = await this.aisRepository.getAll();
-    // return allAis.filter(ais => ais.mmsi == '111111111' || ais.mmsi == "222222222");
   }
 
   async getAisByMmsi(mmsi: string): Promise<IAis | null> {
@@ -181,5 +181,19 @@ export class AisService {
       ? filterPositionsByTimeRange(ship2.positions, startTime, endTime)
       : [];
     return { ship1Positions, ship2Positions };
+  }
+
+  async processIllegalTranshipmentQueue(): Promise<void> {
+    await this.illegalTranshipmentDetectionService.processQueue();
+  }
+
+  async getIllegalTranshipmentResults() {
+    return await this.illegalTranshipmentDetectionService.getIllegalTranshipmentResults();
+  }
+
+  async getIllegalTranshipmentResultsByShip(mmsi: string) {
+    return await this.illegalTranshipmentDetectionService.getResultsByShip(
+      mmsi,
+    );
   }
 }
