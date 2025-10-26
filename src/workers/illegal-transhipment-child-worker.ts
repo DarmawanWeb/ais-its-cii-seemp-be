@@ -41,9 +41,7 @@ class ChildWorker {
 
     try {
       this.processingCount++;
-      logger.info(
-        `[Child Worker] Processing item #${this.processingCount}`,
-      );
+      logger.info(`[Child Worker] Processing item #${this.processingCount}`);
 
       const queue = await this.queueRepository.getAllSorted();
 
@@ -202,7 +200,10 @@ class ChildWorker {
           );
         }
       } catch (cleanupError) {
-        logger.error('[Child Worker] Error cleaning up failed item:', cleanupError);
+        logger.error(
+          '[Child Worker] Error cleaning up failed item:',
+          cleanupError,
+        );
       }
 
       return false;
@@ -238,10 +239,10 @@ process.on('message', async (msg) => {
     if (msg === 'process') {
       const result = await worker.processOne();
       if (process.send) {
-        process.send({ 
-          type: 'result', 
+        process.send({
+          type: 'result',
           processed: result,
-          stats: worker.getStats()
+          stats: worker.getStats(),
         });
       }
     } else if (msg === 'stop') {
@@ -251,18 +252,18 @@ process.on('message', async (msg) => {
       }, 1000);
     } else if (msg === 'stats') {
       if (process.send) {
-        process.send({ 
-          type: 'stats', 
-          stats: worker.getStats() 
+        process.send({
+          type: 'stats',
+          stats: worker.getStats(),
         });
       }
     }
   } catch (error) {
     logger.error('[Child Worker] Error handling message:', error);
     if (process.send) {
-      process.send({ 
-        type: 'error', 
-        error: error instanceof Error ? error.message : String(error)
+      process.send({
+        type: 'error',
+        error: error instanceof Error ? error.message : String(error),
       });
     }
   }
@@ -302,7 +303,12 @@ process.on('uncaughtException', (error) => {
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  logger.error('[Child Worker] Unhandled rejection at:', promise, 'reason:', reason);
+  logger.error(
+    '[Child Worker] Unhandled rejection at:',
+    promise,
+    'reason:',
+    reason,
+  );
   worker.stop();
   process.exit(1);
 });

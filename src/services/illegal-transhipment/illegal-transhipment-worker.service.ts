@@ -43,7 +43,7 @@ export class IllegalTranshipmentWorker {
     this.isRunning = true;
     this.consecutiveErrors = 0;
     this.restartAttempts = 0;
-    
+
     logger.info('[Worker] Starting illegal transhipment worker');
 
     await this.spawnChildProcess();
@@ -84,8 +84,10 @@ export class IllegalTranshipmentWorker {
 
       // Setup exit handler
       this.childProcess.on('exit', (code, signal) => {
-        logger.warn(`[Worker] Child process exited with code ${code}, signal ${signal}`);
-        
+        logger.warn(
+          `[Worker] Child process exited with code ${code}, signal ${signal}`,
+        );
+
         if (this.isRunning) {
           this.handleChildExit();
         }
@@ -93,10 +95,9 @@ export class IllegalTranshipmentWorker {
 
       // Wait for child to be ready
       await this.waitForReady();
-      
+
       logger.info('[Worker] Child process spawned and ready');
       this.restartAttempts = 0; // Reset on successful spawn
-
     } catch (error) {
       logger.error('[Worker] Failed to spawn child process:', error);
       throw error;
@@ -109,7 +110,7 @@ export class IllegalTranshipmentWorker {
         reject(new Error('Child process ready timeout'));
       }, 30000); // 30 second timeout
 
-      const handler = (msg : ChildMessage) => {
+      const handler = (msg: ChildMessage) => {
         if (msg.type === 'ready') {
           clearTimeout(timeout);
           this.childProcess?.removeListener('message', handler);
@@ -126,10 +127,12 @@ export class IllegalTranshipmentWorker {
       case 'result':
         this.isProcessing = false;
         this.consecutiveErrors = 0;
-        
+
         if (msg.processed) {
           this.processedCount++;
-          logger.info(`[Worker] Item processed successfully (Total: ${this.processedCount})`);
+          logger.info(
+            `[Worker] Item processed successfully (Total: ${this.processedCount})`,
+          );
         } else {
           logger.debug('[Worker] No items to process');
         }
@@ -234,7 +237,7 @@ export class IllegalTranshipmentWorker {
           !this.childProcess.killed
         ) {
           this.isProcessing = true;
-          
+
           // Send process command to child
           this.childProcess.send('process');
 
@@ -262,7 +265,6 @@ export class IllegalTranshipmentWorker {
         ) {
           this.childProcess.send('stats');
         }
-
       } catch (error) {
         logger.error('[Worker] Error in main loop:', error);
         this.isProcessing = false;
@@ -277,7 +279,9 @@ export class IllegalTranshipmentWorker {
     const usage = process.memoryUsage();
     const heapUsedMB = Math.round(usage.heapUsed / 1024 / 1024);
     const heapTotalMB = Math.round(usage.heapTotal / 1024 / 1024);
-    const heapUsagePercent = ((usage.heapUsed / usage.heapTotal) * 100).toFixed(2);
+    const heapUsagePercent = ((usage.heapUsed / usage.heapTotal) * 100).toFixed(
+      2,
+    );
 
     // Only log if memory usage is high
     if (heapUsedMB > 1500) {
@@ -315,7 +319,9 @@ export class IllegalTranshipmentWorker {
       }, 10000);
     }
 
-    logger.info(`[Worker] Stopped. Total items processed: ${this.processedCount}`);
+    logger.info(
+      `[Worker] Stopped. Total items processed: ${this.processedCount}`,
+    );
   }
 
   getStatus() {
