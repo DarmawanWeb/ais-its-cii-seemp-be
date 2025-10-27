@@ -1,4 +1,3 @@
-// src/workers/illegal-transhipment-child-worker.ts
 import { IllegalTranshipmentQueueRepository } from '../repositories/illegal-transhipment/it-queue.repository';
 import { IllegalTranshipmentResultRepository } from '../repositories/illegal-transhipment/it-result.repository';
 import { AisRepository } from '../repositories/ais.repository';
@@ -30,10 +29,21 @@ class ChildWorker {
     }
   }
 
-  async processOne(): Promise<boolean> {
+  async checkQueue(): Promise<number> {
+    try {
+      const queue = await this.queueRepository.getAllSorted();
+      const pendingCount = queue.filter((item) => item.status === 'pending').length;
+      return pendingCount;
+    } catch (error) {
+      logger.error('[Child Worker] Error checking queue:', error);
+      return 0;
+    }
+  }
+
+  async processOne(): Promise<{ processed: boolean; queueEmpty: boolean }> {
     if (!this.isRunning) {
       logger.warn('[Child Worker] Not running, skipping process');
-      return false;
+      return { processed: false, queueEmpty: true };
     }
 
     const startTime = Date.now();
@@ -41,23 +51,21 @@ class ChildWorker {
 
     try {
       this.processingCount++;
-      logger.info(`[Child Worker] Processing item #${this.processingCount}`);
 
       const queue = await this.queueRepository.getAllSorted();
 
       if (queue.length === 0) {
         logger.debug('[Child Worker] Queue is empty');
-        return false;
+        return { processed: false, queueEmpty: true };
       }
 
       const queueItem = queue.find((item) => item.status === 'pending');
 
       if (!queueItem) {
         logger.debug('[Child Worker] No pending items');
-        return false;
+        return { processed: false, queueEmpty: true };
       }
 
-      // Check last detection
       const lastDetection = await this.resultRepository.getLastDetection(
         queueItem.ship1MMSI,
         queueItem.ship2MMSI,
@@ -76,7 +84,7 @@ class ChildWorker {
             queueItem.ship1MMSI,
             queueItem.ship2MMSI,
           );
-          return true;
+          return { processed: true, queueEmpty: queue.length <= 1 };
         }
       }
 
@@ -84,17 +92,15 @@ class ChildWorker {
         `[Child Worker] Processing ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI} (Priority: ${queueItem.priority})`,
       );
 
-      // Update status to in_progress
       await this.queueRepository.updateStatus(
         queueItem.ship1MMSI,
         queueItem.ship2MMSI,
         'in_progress',
       );
 
-      // Get ship routes
       const ship1Route = await this.aisRepository.getShipRouteByMMSI(
         queueItem.ship1MMSI,
-        60 * 60 * 1000, // Last 1 hour
+        60 * 60 * 1000,
       );
 
       const ship2Route = await this.aisRepository.getShipRouteByMMSI(
@@ -102,7 +108,6 @@ class ChildWorker {
         60 * 60 * 1000,
       );
 
-      // Validate routes
       if (
         !ship1Route ||
         ship1Route.length === 0 ||
@@ -116,10 +121,10 @@ class ChildWorker {
           queueItem.ship1MMSI,
           queueItem.ship2MMSI,
         );
-        return true;
+        
+        return { processed: true, queueEmpty: queue.length <= 1 };
       }
 
-      // Limit data to prevent memory issues
       const maxRouteLength = 60;
       const limitedShip1Route = ship1Route.slice(-maxRouteLength);
       const limitedShip2Route = ship2Route.slice(-maxRouteLength);
@@ -128,14 +133,12 @@ class ChildWorker {
         `[Child Worker] Analyzing routes: Ship1(${limitedShip1Route.length} points), Ship2(${limitedShip2Route.length} points)`,
       );
 
-      // Detect illegal transhipment
       const detectionResult = await detectIllegalTranshipment(
         limitedShip1Route,
         limitedShip2Route,
-        30 * 60 * 1000, // 30 minutes window
+        30 * 60 * 1000,
       );
 
-      // Save result
       await this.resultRepository.create(
         queueItem.ship1MMSI,
         queueItem.ship2MMSI,
@@ -147,7 +150,6 @@ class ChildWorker {
         detectionResult.priorityDistribution,
       );
 
-      // Log result
       if (detectionResult.isIllegal) {
         logger.warn(
           `[Child Worker] ⚠️  ILLEGAL TRANSHIPMENT DETECTED! ${queueItem.ship1MMSI} - ${queueItem.ship2MMSI}`,
@@ -163,13 +165,11 @@ class ChildWorker {
         );
       }
 
-      // Clean up queue
       await this.queueRepository.delete(
         queueItem.ship1MMSI,
         queueItem.ship2MMSI,
       );
 
-      // Log performance
       const endTime = Date.now();
       const endMemory = process.memoryUsage().heapUsed / 1024 / 1024;
       const duration = ((endTime - startTime) / 1000).toFixed(2);
@@ -179,16 +179,16 @@ class ChildWorker {
         `[Child Worker] Processing completed in ${duration}s, Memory used: ${memoryUsed}MB`,
       );
 
-      // Force garbage collection if available
+      const remainingQueue = queue.length - 1;
+
       if (global.gc) {
         global.gc();
       }
 
-      return true;
+      return { processed: true, queueEmpty: remainingQueue === 0 };
     } catch (error) {
       logger.error('[Child Worker] Error processing queue item:', error);
 
-      // Try to mark as failed
       try {
         const queue = await this.queueRepository.getAllSorted();
         const failedItem = queue.find((item) => item.status === 'in_progress');
@@ -206,7 +206,7 @@ class ChildWorker {
         );
       }
 
-      return false;
+      return { processed: false, queueEmpty: false };
     }
   }
 
@@ -224,16 +224,14 @@ class ChildWorker {
         heapUsed: Math.round(memUsage.heapUsed / 1024 / 1024),
         heapTotal: Math.round(memUsage.heapTotal / 1024 / 1024),
         external: Math.round(memUsage.external / 1024 / 1024),
+        rss: Math.round(memUsage.rss / 1024 / 1024),
       },
     };
   }
 }
 
-// ==================== Main Execution ====================
-
 const worker = new ChildWorker();
 
-// Handle messages from parent
 process.on('message', async (msg) => {
   try {
     if (msg === 'process') {
@@ -241,8 +239,18 @@ process.on('message', async (msg) => {
       if (process.send) {
         process.send({
           type: 'result',
-          processed: result,
+          processed: result.processed,
+          queueEmpty: result.queueEmpty,
           stats: worker.getStats(),
+        });
+      }
+    } else if (msg === 'checkQueue') {
+      const count = await worker.checkQueue();
+      if (process.send) {
+        process.send({
+          type: 'queueStatus',
+          count: count,
+          isEmpty: count === 0,
         });
       }
     } else if (msg === 'stop') {
@@ -269,7 +277,6 @@ process.on('message', async (msg) => {
   }
 });
 
-// Initialize worker
 (async () => {
   try {
     await worker.initialize();
@@ -283,7 +290,6 @@ process.on('message', async (msg) => {
   }
 })();
 
-// Handle shutdown signals
 process.on('SIGTERM', () => {
   logger.info('[Child Worker] SIGTERM received');
   worker.stop();

@@ -3,8 +3,11 @@ import path from 'path';
 import logger from '../../config/logger';
 
 interface ChildMessage {
-  type: 'ready' | 'result' | 'error' | 'stats';
+  type: 'ready' | 'result' | 'error' | 'stats' | 'queueStatus';
   processed?: boolean;
+  queueEmpty?: boolean;
+  count?: number;
+  isEmpty?: boolean;
   stats?: WorkerStats;
   error?: string;
 }
@@ -22,8 +25,9 @@ interface WorkerStats {
 export class IllegalTranshipmentWorker {
   private childProcess: ChildProcess | null = null;
   private isRunning: boolean = false;
-  private processingDelay: number = 10000; // 10 seconds between tasks
-  private idleDelay: number = 30000; // 30 seconds when idle
+  private processingDelay: number = 2000;
+  private idleDelay: number = 60000;
+  private emptyQueueDelay: number = 120000;
   private isProcessing: boolean = false;
   private consecutiveErrors: number = 0;
   private maxConsecutiveErrors: number = 5;
@@ -31,6 +35,7 @@ export class IllegalTranshipmentWorker {
   private restartAttempts: number = 0;
   private maxRestartAttempts: number = 3;
   private lastStatsUpdate: Date = new Date();
+  private queueCheckPending: boolean = false;
 
   constructor() {}
 
@@ -52,7 +57,6 @@ export class IllegalTranshipmentWorker {
 
   private async spawnChildProcess(): Promise<void> {
     try {
-      // Path to compiled child worker
       const workerPath = path.join(
         __dirname,
         '../../workers/illegal-transhipment-child-worker.js',
@@ -62,7 +66,7 @@ export class IllegalTranshipmentWorker {
 
       this.childProcess = fork(workerPath, [], {
         execArgv: [
-          '--max-old-space-size=1024', // 1GB for child process
+          '--max-old-space-size=1024',
           '--expose-gc',
         ],
         env: {
@@ -71,18 +75,15 @@ export class IllegalTranshipmentWorker {
         },
       });
 
-      // Setup message handler
       this.childProcess.on('message', (msg: ChildMessage) => {
         this.handleChildMessage(msg);
       });
 
-      // Setup error handler
       this.childProcess.on('error', (error) => {
         logger.error('[Worker] Child process error:', error);
         this.handleChildError();
       });
 
-      // Setup exit handler
       this.childProcess.on('exit', (code, signal) => {
         logger.warn(
           `[Worker] Child process exited with code ${code}, signal ${signal}`,
@@ -93,11 +94,10 @@ export class IllegalTranshipmentWorker {
         }
       });
 
-      // Wait for child to be ready
       await this.waitForReady();
 
       logger.info('[Worker] Child process spawned and ready');
-      this.restartAttempts = 0; // Reset on successful spawn
+      this.restartAttempts = 0;
     } catch (error) {
       logger.error('[Worker] Failed to spawn child process:', error);
       throw error;
@@ -108,7 +108,7 @@ export class IllegalTranshipmentWorker {
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         reject(new Error('Child process ready timeout'));
-      }, 30000); // 30 second timeout
+      }, 30000);
 
       const handler = (msg: ChildMessage) => {
         if (msg.type === 'ready') {
@@ -139,6 +139,16 @@ export class IllegalTranshipmentWorker {
 
         if (msg.stats) {
           this.logChildStats(msg.stats);
+        }
+        break;
+
+      case 'queueStatus':
+        this.queueCheckPending = false;
+        
+        if (msg.isEmpty) {
+          logger.debug('[Worker] Queue is empty, entering idle mode');
+        } else {
+          logger.debug(`[Worker] Queue has ${msg.count} pending items`);
         }
         break;
 
@@ -204,7 +214,7 @@ export class IllegalTranshipmentWorker {
           logger.info('[Worker] Child process restarted successfully');
         } catch (error) {
           logger.error('[Worker] Failed to restart child process:', error);
-          this.handleChildExit(); // Try again
+          this.handleChildExit();
         }
       }
     }, 5000);
@@ -214,7 +224,6 @@ export class IllegalTranshipmentWorker {
     const now = new Date();
     const timeSinceLastUpdate = now.getTime() - this.lastStatsUpdate.getTime();
 
-    // Log stats every minute
     if (timeSinceLastUpdate > 60000) {
       logger.info('[Worker] Child process stats:', {
         processingCount: stats.processingCount,
@@ -225,49 +234,78 @@ export class IllegalTranshipmentWorker {
     }
   }
 
+  private async checkQueueAndProcess(): Promise<boolean> {
+    return new Promise((resolve) => {
+      if (!this.childProcess || this.childProcess.killed) {
+        resolve(false);
+        return;
+      }
+
+      this.queueCheckPending = true;
+      
+      const timeout = setTimeout(() => {
+        this.queueCheckPending = false;
+        resolve(false);
+      }, 5000);
+
+      const handler = (msg: ChildMessage) => {
+        if (msg.type === 'queueStatus') {
+          clearTimeout(timeout);
+          this.childProcess?.removeListener('message', handler);
+          this.queueCheckPending = false;
+          resolve(!msg.isEmpty);
+        }
+      };
+
+      this.childProcess.on('message', handler);
+      this.childProcess.send('checkQueue');
+    });
+  }
+
   private async processLoop(): Promise<void> {
     logger.info('[Worker] Process loop started');
 
     while (this.isRunning) {
       try {
-        // Check if child process is alive and not processing
-        if (
-          !this.isProcessing &&
-          this.childProcess &&
-          !this.childProcess.killed
-        ) {
-          this.isProcessing = true;
-
-          // Send process command to child
-          this.childProcess.send('process');
-
-          // Wait for processing
-          await this.sleep(this.processingDelay);
-
-          // If still processing after delay, reset flag
-          if (this.isProcessing) {
-            logger.warn('[Worker] Processing took longer than expected');
-            this.isProcessing = false;
-          }
-        } else {
-          // Idle - wait longer
+        if (!this.childProcess || this.childProcess.killed) {
+          logger.warn('[Worker] Child process not available, waiting...');
           await this.sleep(this.idleDelay);
+          continue;
         }
 
-        // Log main process memory usage periodically
+        if (this.isProcessing || this.queueCheckPending) {
+          await this.sleep(1000);
+          continue;
+        }
+
+        const hasQueue = await this.checkQueueAndProcess();
+
+        if (!hasQueue) {
+          logger.debug('[Worker] No queue items, sleeping for 2 minutes');
+          await this.sleep(this.emptyQueueDelay);
+          continue;
+        }
+
+        logger.debug('[Worker] Queue has items, processing...');
+        this.isProcessing = true;
+        this.childProcess.send('process');
+
+        await this.sleep(this.processingDelay);
+
+        if (this.isProcessing) {
+          logger.debug('[Worker] Processing completed, checking queue again');
+          this.isProcessing = false;
+        }
+
         this.logMainProcessStats();
 
-        // Request stats from child process every 5 minutes
-        if (
-          this.childProcess &&
-          !this.childProcess.killed &&
-          new Date().getTime() - this.lastStatsUpdate.getTime() > 300000
-        ) {
+        if (new Date().getTime() - this.lastStatsUpdate.getTime() > 300000) {
           this.childProcess.send('stats');
         }
       } catch (error) {
         logger.error('[Worker] Error in main loop:', error);
         this.isProcessing = false;
+        this.queueCheckPending = false;
         await this.sleep(10000);
       }
     }
@@ -279,17 +317,13 @@ export class IllegalTranshipmentWorker {
     const usage = process.memoryUsage();
     const heapUsedMB = Math.round(usage.heapUsed / 1024 / 1024);
     const heapTotalMB = Math.round(usage.heapTotal / 1024 / 1024);
-    const heapUsagePercent = ((usage.heapUsed / usage.heapTotal) * 100).toFixed(
-      2,
-    );
+    const heapUsagePercent = ((usage.heapUsed / usage.heapTotal) * 100).toFixed(2);
 
-    // Only log if memory usage is high
     if (heapUsedMB > 1500) {
       logger.warn(
         `[Worker] Main process high memory usage: ${heapUsedMB}MB / ${heapTotalMB}MB (${heapUsagePercent}%)`,
       );
 
-      // Force GC if available
       if (global.gc) {
         logger.info('[Worker] Forcing garbage collection');
         global.gc();
@@ -309,7 +343,6 @@ export class IllegalTranshipmentWorker {
       logger.info('[Worker] Sending stop signal to child process');
       this.childProcess.send('stop');
 
-      // Force kill after 10 seconds if not stopped
       setTimeout(() => {
         if (this.childProcess && !this.childProcess.killed) {
           logger.warn('[Worker] Force killing child process');
