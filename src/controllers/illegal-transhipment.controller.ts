@@ -11,7 +11,7 @@ export const getAllResultsController = async (_req: Request, res: Response) => {
     const results = await aisService.getIllegalTranshipmentResults();
     res.status(200).json({
       message: 'All illegal transhipment results fetched successfully',
-      data: null,
+      data: results,
       total: results.length,
       success: true,
     });
