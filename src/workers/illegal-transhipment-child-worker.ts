@@ -32,7 +32,9 @@ class ChildWorker {
   async checkQueue(): Promise<number> {
     try {
       const queue = await this.queueRepository.getAllSorted();
-      const pendingCount = queue.filter((item) => item.status === 'pending').length;
+      const pendingCount = queue.filter(
+        (item) => item.status === 'pending',
+      ).length;
       return pendingCount;
     } catch (error) {
       logger.error('[Child Worker] Error checking queue:', error);
@@ -121,7 +123,7 @@ class ChildWorker {
           queueItem.ship1MMSI,
           queueItem.ship2MMSI,
         );
-        
+
         return { processed: true, queueEmpty: queue.length <= 1 };
       }
 

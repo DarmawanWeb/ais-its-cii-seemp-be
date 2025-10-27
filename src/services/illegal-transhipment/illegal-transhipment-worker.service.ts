@@ -65,10 +65,7 @@ export class IllegalTranshipmentWorker {
       logger.info(`[Worker] Spawning child process: ${workerPath}`);
 
       this.childProcess = fork(workerPath, [], {
-        execArgv: [
-          '--max-old-space-size=1024',
-          '--expose-gc',
-        ],
+        execArgv: ['--max-old-space-size=1024', '--expose-gc'],
         env: {
           ...process.env,
           NODE_ENV: process.env.NODE_ENV || 'production',
@@ -144,7 +141,7 @@ export class IllegalTranshipmentWorker {
 
       case 'queueStatus':
         this.queueCheckPending = false;
-        
+
         if (msg.isEmpty) {
           logger.debug('[Worker] Queue is empty, entering idle mode');
         } else {
@@ -242,7 +239,7 @@ export class IllegalTranshipmentWorker {
       }
 
       this.queueCheckPending = true;
-      
+
       const timeout = setTimeout(() => {
         this.queueCheckPending = false;
         resolve(false);
@@ -317,7 +314,9 @@ export class IllegalTranshipmentWorker {
     const usage = process.memoryUsage();
     const heapUsedMB = Math.round(usage.heapUsed / 1024 / 1024);
     const heapTotalMB = Math.round(usage.heapTotal / 1024 / 1024);
-    const heapUsagePercent = ((usage.heapUsed / usage.heapTotal) * 100).toFixed(2);
+    const heapUsagePercent = ((usage.heapUsed / usage.heapTotal) * 100).toFixed(
+      2,
+    );
 
     if (heapUsedMB > 1500) {
       logger.warn(
