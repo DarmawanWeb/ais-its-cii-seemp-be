@@ -16,14 +16,7 @@ export class AisRepository implements IAisRepository {
   }
 
   async getAll(): Promise<IAis[]> {
-    return Ais.aggregate([
-      {
-        $project: {
-          mmsi: 1,
-          positions: { $slice: ['$positions', -1] },
-        },
-      },
-    ]);
+    return Ais.find(); 
   }
 
   async getBatamShipsinLast5Minutes(cutoffTime: Date): Promise<IAis[]> {

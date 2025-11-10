@@ -143,10 +143,23 @@ export class AisService {
     }
   }
 
-  async getAllAis(): Promise<IAis[]> {
-    return this.aisRepository.getAll();
-  }
+   async getAllAis(): Promise<IAis[]> {
+    const oneHoursAgo = new Date(Date.now() - 1 * 60 * 60 * 1000);
 
+    const allAis = await this.aisRepository.getAll();
+
+    const filtered = allAis
+      .map(ais => ({
+        ...ais,
+        positions: ais.positions.filter(
+          pos => new Date(pos.timestamp) >= oneHoursAgo
+        ),
+      }))
+      .filter(ais => ais.positions.length > 0); 
+    return filtered;
+   }
+  
+  
   async getAisByMmsi(mmsi: string): Promise<IAis | null> {
     return this.aisRepository.getByMmsi(mmsi);
   }
