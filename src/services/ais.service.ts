@@ -129,7 +129,6 @@ export class AisService {
 
       const validMMSIs = [''];
       if (validMMSIs.includes(data.message.data.mmsi)) {
-        console.log('Updating AIS for MMSI:', data.message.data.lat);
         await this.ciiService.getCIIByMMSI(data.message.data.mmsi);
       }
 
@@ -145,6 +144,23 @@ export class AisService {
 
   async getAllAis(): Promise<IAis[]> {
     return this.aisRepository.getAll();
+  }
+
+    async getAllAisStreamed(hours: number): Promise<IAis[]> {
+    const stream = await this.aisRepository.streamRecent(hours);
+    const aisList: IAis[] = [];
+
+    return new Promise((resolve, reject) => {
+      stream.on('data', (doc: IAis) => {
+        aisList.push(doc);
+      });
+      stream.on('end', () => {
+        resolve(aisList);
+      });
+      stream.on('error', (err: Error) => {
+        reject(err);
+      });
+    });
   }
 
   async getAisByMmsi(mmsi: string): Promise<IAis | null> {
@@ -180,6 +196,7 @@ export class AisService {
     const ship2Positions = ship2
       ? filterPositionsByTimeRange(ship2.positions, startTime, endTime)
       : [];
+
     return { ship1Positions, ship2Positions };
   }
 

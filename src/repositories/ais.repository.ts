@@ -16,9 +16,7 @@ export class AisRepository implements IAisRepository {
   }
 
   async getAll(): Promise<IAis[]> {
-    const since = new Date(Date.now() - 1 * 60 * 60 * 1000);
-    console.log(since);
-    console.log('DATE NOW:', new Date(Date.now()));
+    const since = new Date(Date.now() - 12 * 60 * 60 * 1000);
     return Ais.aggregate([
       {
         $project: {
@@ -45,6 +43,21 @@ export class AisRepository implements IAisRepository {
       },
       { $match: { 'positions.0': { $exists: true } } },
     ]);
+  }
+
+  async streamRecent(hours: number) {
+    const cutoff = new Date(Date.now() - hours * 60 * 60 * 1000);
+
+    return Ais.aggregate([
+      { $unwind: "$positions" },
+      { $match: { "positions.timestamp": { $gte: cutoff } } },
+      {
+        $group: {
+          _id: "$mmsi",
+          positions: { $push: "$positions" },
+        },
+      },
+    ]).cursor({ batchSize: 500 });
   }
 
   async getBatamShipsinLast5Minutes(cutoffTime: Date): Promise<IAis[]> {
