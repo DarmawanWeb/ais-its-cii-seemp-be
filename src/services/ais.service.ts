@@ -146,7 +146,7 @@ export class AisService {
     return this.aisRepository.getAll();
   }
 
-    async getAllAisStreamed(hours: number): Promise<IAis[]> {
+  async getAllAisStreamed(hours: number): Promise<IAis[]> {
     const stream = await this.aisRepository.streamRecent(hours);
     const aisList: IAis[] = [];
 

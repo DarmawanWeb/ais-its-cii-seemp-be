@@ -49,12 +49,12 @@ export class AisRepository implements IAisRepository {
     const cutoff = new Date(Date.now() - hours * 60 * 60 * 1000);
 
     return Ais.aggregate([
-      { $unwind: "$positions" },
-      { $match: { "positions.timestamp": { $gte: cutoff } } },
+      { $unwind: '$positions' },
+      { $match: { 'positions.timestamp': { $gte: cutoff } } },
       {
         $group: {
-          _id: "$mmsi",
-          positions: { $push: "$positions" },
+          _id: '$mmsi',
+          positions: { $push: '$positions' },
         },
       },
     ]).cursor({ batchSize: 500 });
