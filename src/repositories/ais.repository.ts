@@ -16,9 +16,25 @@ export class AisRepository implements IAisRepository {
   }
 
   async getAll(): Promise<IAis[]> {
-    return Ais.find();
-  }
-
+      const since = new Date(Date.now() - 1 * 60 * 60 * 1000); 
+      return Ais.aggregate([
+        {
+          $project: {
+            mmsi: 1,
+            positions: {
+              $filter: {
+                input: "$positions",
+                as: "pos",
+                cond: { $gte: ["$$pos.timestamp", since] },
+              },
+            },
+          },
+        },
+        { $match: { "positions.0": { $exists: true } } },
+      ]);
+    }
+  
+  
   async getBatamShipsinLast5Minutes(cutoffTime: Date): Promise<IAis[]> {
     return Ais.aggregate([
       {
