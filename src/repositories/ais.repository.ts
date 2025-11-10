@@ -19,32 +19,32 @@ export class AisRepository implements IAisRepository {
     const since = new Date(Date.now() - 1 * 60 * 60 * 1000);
     console.log(since);
     console.log('DATE NOW:', new Date(Date.now()));
-      return Ais.aggregate([
-    {
-      $project: {
-        mmsi: 1,
-        positions: {
-          $filter: {
-            input: {
-              $map: {
-                input: "$positions",
-                as: "pos",
-                in: {
-                  $mergeObjects: [
-                    "$$pos",
-                    { timestampDate: { $toDate: "$$pos.timestamp" } },
-                  ],
+    return Ais.aggregate([
+      {
+        $project: {
+          mmsi: 1,
+          positions: {
+            $filter: {
+              input: {
+                $map: {
+                  input: '$positions',
+                  as: 'pos',
+                  in: {
+                    $mergeObjects: [
+                      '$$pos',
+                      { timestampDate: { $toDate: '$$pos.timestamp' } },
+                    ],
+                  },
                 },
               },
+              as: 'pos',
+              cond: { $gte: ['$$pos.timestampDate', since] },
             },
-            as: "pos",
-            cond: { $gte: ["$$pos.timestampDate", since] },
           },
         },
       },
-    },
-    { $match: { "positions.0": { $exists: true } } },
-      ]);
+      { $match: { 'positions.0': { $exists: true } } },
+    ]);
   }
 
   async getBatamShipsinLast5Minutes(cutoffTime: Date): Promise<IAis[]> {
