@@ -144,7 +144,7 @@ export class AisService {
   }
 
   async getAllAis(): Promise<IAis[]> {
-    return this.aisRepository.getAll()
+    return this.aisRepository.getAll();
   }
 
   async getAisByMmsi(mmsi: string): Promise<IAis | null> {
