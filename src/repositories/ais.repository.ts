@@ -51,10 +51,18 @@ export class AisRepository implements IAisRepository {
     return Ais.aggregate([
       { $unwind: '$positions' },
       { $match: { 'positions.timestamp': { $gte: cutoff } } },
+      { $sort: { 'positions.timestamp': -1 } }, 
       {
         $group: {
           _id: '$mmsi',
+          mmsi: { $first: '$mmsi' },
           positions: { $push: '$positions' },
+        },
+      },
+      {
+        $project: {
+          mmsi: 1,
+          positions: { $slice: ['$positions', 1] },
         },
       },
     ]).cursor({ batchSize: 500 });

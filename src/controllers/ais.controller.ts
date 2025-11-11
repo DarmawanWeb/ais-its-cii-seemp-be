@@ -9,7 +9,7 @@ export const getAllAisController = async (
   res: Response,
 ): Promise<void> => {
   try {
-    const aisData = await aisService.getAllAisStreamed(12);
+    const aisData = await aisService.getAllAisStreamed(6);
     res.status(200).json({
       message: 'AIS data (12h) fetched successfully',
       data: aisData,
