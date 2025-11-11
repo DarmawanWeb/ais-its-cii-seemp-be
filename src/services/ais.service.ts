@@ -109,7 +109,7 @@ export class AisService {
       // =======================
       // CASE 2: Kapal sudah ada
       // =======================
-      const lastData  = await this.aisRepository.getLastByMmsi(mmsi);
+      const lastData = await this.aisRepository.getLastByMmsi(mmsi);
       const lastPosition = lastData?.positions?.[0];
       newPosition = {
         navstatus,
@@ -119,13 +119,11 @@ export class AisService {
         cog,
         hdg,
         timestamp,
-        predictedNavStatus : 0,
+        predictedNavStatus: 0,
         ewsStatus: 0,
       };
       if (lastPosition) {
-        const distance = calculateDistance(
-          lastData.positions[0],newPosition
-        ); 
+        const distance = calculateDistance(lastData.positions[0], newPosition);
 
         if (distance.distanceInMeters < 0.1) {
           console.log(
