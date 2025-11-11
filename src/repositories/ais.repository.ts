@@ -44,7 +44,7 @@ export class AisRepository implements IAisRepository {
       { $match: { 'positions.0': { $exists: true } } },
     ]);
   }
-  
+
   async streamRecent(hours: number) {
     const cutoff = new Date(Date.now() - hours * 60 * 60 * 1000);
 
