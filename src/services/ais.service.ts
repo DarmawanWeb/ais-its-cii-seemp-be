@@ -9,6 +9,7 @@ import {
 } from '../utils/calculate-ews';
 import { IllegalTranshipmentService } from './illegal-transhipment/illegal-transhipment.service';
 import { IllegalTranshipmentDetectionService } from './illegal-transhipment/illegal-transhipment-det.service';
+import { calculateDistance } from '../utils/cii/speed-calculation';
 
 export class AisService {
   private aisRepository: AisRepository;
@@ -49,9 +50,7 @@ export class AisService {
   ): Promise<IAis | void | null> {
     const messageData = data.message.data;
     try {
-      if (!messageData) {
-        return null;
-      }
+      if (!messageData) return null;
 
       const { mmsi, navstatus, lat, lon, sog, cog, hdg, utc } = messageData;
       if (
@@ -66,7 +65,7 @@ export class AisService {
         return null;
       }
 
-      const minDistance: number = findNearestCoastDistance(
+      const minDistance = findNearestCoastDistance(
         'data/indonesia.json',
         lat,
         lon,
@@ -75,15 +74,18 @@ export class AisService {
       timestamp.setSeconds(timestamp.getSeconds() - utc);
 
       let newPosition: IAisPosition;
-
       const existingAis = await this.aisRepository.getByMmsi(mmsi);
 
+      // =======================
+      // CASE 1: Kapal baru
+      // =======================
       if (!existingAis) {
         const predictedNavStatus = calculatePredictedNavStatus(
           { sog, cog, hdg },
           { sog, cog, hdg },
           minDistance,
         );
+
         newPosition = {
           navstatus,
           lat,
@@ -92,23 +94,23 @@ export class AisService {
           cog,
           hdg,
           timestamp,
-          predictedNavStatus: predictedNavStatus,
+          predictedNavStatus,
           ewsStatus: checkShipStatus(lat, lon, predictedNavStatus),
         };
 
         const newAis = {
           mmsi,
-          isBatam: isBatam,
+          isBatam,
           positions: [newPosition],
         };
         return this.aisRepository.create(newAis as IAis);
       }
 
-      const predictedNavStatus = calculatePredictedNavStatus(
-        { sog, cog, hdg },
-        existingAis.positions[0],
-        minDistance,
-      );
+      // =======================
+      // CASE 2: Kapal sudah ada
+      // =======================
+      const lastData  = await this.aisRepository.getLastByMmsi(mmsi);
+      const lastPosition = lastData?.positions?.[0];
       newPosition = {
         navstatus,
         lat,
@@ -117,7 +119,39 @@ export class AisService {
         cog,
         hdg,
         timestamp,
-        predictedNavStatus: predictedNavStatus,
+        predictedNavStatus : 0,
+        ewsStatus: 0,
+      };
+      if (lastPosition) {
+        const distance = calculateDistance(
+          lastData.positions[0],newPosition
+        ); 
+
+        if (distance.distanceInMeters < 0.1) {
+          console.log(
+            `⏩ Skip update untuk ${mmsi}: pergerakan hanya ${distance.distanceInMeters.toFixed(
+              3,
+            )} meter`,
+          );
+          return;
+        }
+      }
+
+      const predictedNavStatus = calculatePredictedNavStatus(
+        { sog, cog, hdg },
+        existingAis.positions[0],
+        minDistance,
+      );
+
+      newPosition = {
+        navstatus,
+        lat,
+        lon,
+        sog,
+        cog,
+        hdg,
+        timestamp,
+        predictedNavStatus,
         ewsStatus: checkShipStatus(lat, lon, predictedNavStatus),
       };
 
@@ -130,8 +164,8 @@ export class AisService {
       await this.aisRepository.updatePositions(mmsi, updatedPositions);
 
       const validMMSIs = [''];
-      if (validMMSIs.includes(data.message.data.mmsi)) {
-        await this.ciiService.getCIIByMMSI(data.message.data.mmsi);
+      if (validMMSIs.includes(mmsi)) {
+        await this.ciiService.getCIIByMMSI(mmsi);
       }
 
       if (isBatam) {
