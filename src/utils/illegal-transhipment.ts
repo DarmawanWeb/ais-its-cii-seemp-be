@@ -2,26 +2,6 @@
 
 import { IAisPosition, IAis } from '../models/Ais';
 import { calculateDistance } from './cii/speed-calculation';
-import { findNearestCoastDistance } from './calculate-ews';
-
-export const isInBatamBounds = (lat: number, long: number): boolean => {
-  const latTop = 3.0372;
-  const latBottom = -0.89028;
-  const longLeft = 103.97159;
-  const longRight = 109.22838;
-
-  const batamMinDistance: number = findNearestCoastDistance(
-    'data/batam.json',
-    lat,
-    long,
-  );
-  if (batamMinDistance < 5000) {
-    return false;
-  }
-  return (
-    lat >= latBottom && lat <= latTop && long >= longLeft && long <= longRight
-  );
-};
 
 function checkSpeed(currentShip: IAisPosition, ship: IAisPosition): number {
   const speedDifference = Math.abs(ship.sog - currentShip.sog);

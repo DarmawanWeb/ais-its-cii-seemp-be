@@ -13,6 +13,7 @@ export interface IAisPosition {
 
 export interface IAis extends Document {
   mmsi: string;
+  isBatam: boolean;
   icon?: string;
   positions: IAisPosition[];
 }
@@ -35,6 +36,7 @@ const positionSchema = new Schema(
 const aisSchema = new Schema(
   {
     mmsi: { type: String, unique: true, required: true },
+    isBatam: { type: Boolean, default: false },
     positions: {
       type: [positionSchema],
       required: true,

@@ -45,6 +45,7 @@ export class AisService {
 
   async createOrUpdateAis(
     data: TimestampedAisMessage,
+    isBatam: boolean = false,
   ): Promise<IAis | void | null> {
     const messageData = data.message.data;
     try {
@@ -97,6 +98,7 @@ export class AisService {
 
         const newAis = {
           mmsi,
+          isBatam: isBatam,
           positions: [newPosition],
         };
         return this.aisRepository.create(newAis as IAis);
@@ -132,10 +134,12 @@ export class AisService {
         await this.ciiService.getCIIByMMSI(data.message.data.mmsi);
       }
 
-      await this.illegalTranshipmentService.detectIllegalTranshipment(
-        mmsi,
-        newPosition,
-      );
+      if (isBatam) {
+        await this.illegalTranshipmentService.detectIllegalTranshipment(
+          mmsi,
+          newPosition,
+        );
+      }
     } catch (error) {
       console.error('Error creating or updating AIS:', error);
       return null;

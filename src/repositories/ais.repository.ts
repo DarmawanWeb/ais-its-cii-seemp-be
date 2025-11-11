@@ -51,7 +51,7 @@ export class AisRepository implements IAisRepository {
     return Ais.aggregate([
       { $unwind: '$positions' },
       { $match: { 'positions.timestamp': { $gte: cutoff } } },
-      { $sort: { 'positions.timestamp': -1 } }, 
+      { $sort: { 'positions.timestamp': -1 } },
       {
         $group: {
           _id: '$mmsi',
@@ -71,25 +71,18 @@ export class AisRepository implements IAisRepository {
   async getBatamShipsinLast5Minutes(cutoffTime: Date): Promise<IAis[]> {
     return Ais.aggregate([
       {
+        $match: {
+          isBatam: true,
+        },
+      },
+      {
         $project: {
           mmsi: 1,
           positions: {
             $filter: {
               input: '$positions',
               as: 'position',
-              cond: {
-                $and: [
-                  { $gte: ['$$position.timestamp', cutoffTime] },
-                  {
-                    $and: [
-                      { $gte: ['$$position.lat', -0.89028] },
-                      { $lte: ['$$position.lat', 3.0372] },
-                      { $gte: ['$$position.lon', 103.97159] },
-                      { $lte: ['$$position.lon', 109.22838] },
-                    ],
-                  },
-                ],
-              },
+              cond: { $gte: ['$$position.timestamp', cutoffTime] },
             },
           },
         },
@@ -99,7 +92,7 @@ export class AisRepository implements IAisRepository {
           'positions.0': { $exists: true },
         },
       },
-    ]);
+    ]).exec();
   }
 
   async getByMmsi(mmsi: string): Promise<IAis | null> {

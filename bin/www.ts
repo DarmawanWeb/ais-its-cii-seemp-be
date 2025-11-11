@@ -7,6 +7,7 @@ import { syncDatabase } from '../src/config/database';
 import config from '../src/config/config';
 import { connectSocket } from '../src/config/ws';
 import socketServer from '../src/config/ws-server';
+import {batamConnectSocket} from '../src/config/ws-batam'
 
 const normalizePort = (val: number): number | boolean => {
   if (isNaN(val)) return false;
@@ -42,6 +43,7 @@ socketServer.listen(wsServerPort);
 
 syncDatabase();
 connectSocket();
+batamConnectSocket();
 
 const server = http.createServer(app);
 server.listen(port);
