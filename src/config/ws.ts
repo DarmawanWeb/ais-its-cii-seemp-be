@@ -2,9 +2,9 @@ import { io, Socket } from 'socket.io-client';
 import config from './config';
 import logger from './logger';
 import type { TimestampedAisMessage } from '../types/ais.type';
-// import { AisService } from '../services/ais.service';
+import { AisService } from '../services/ais.service';
 
-// const aisService = new AisService();
+const aisService = new AisService();
 const connectSocket = () => {
   const socket: Socket = io(config.websocket.url, {
     auth: {
@@ -28,7 +28,7 @@ const connectSocket = () => {
       //   console.log('Received message from server:', data);
       // }
       // console.log(data);
-      // await aisService.createOrUpdateAis(data);
+      await aisService.createOrUpdateAis(data);
     } catch (error) {
       logger.error('Error processing message from server:', error);
       console.error('Error processing message from server:', data);

@@ -147,21 +147,24 @@ export class AisService {
   }
 
   async getAllAisStreamed(hours: number): Promise<IAis[]> {
-    const stream = await this.aisRepository.streamRecent(hours);
+    const cursor = await this.aisRepository.streamRecent(hours);
     const aisList: IAis[] = [];
 
-    return new Promise((resolve, reject) => {
-      stream.on('data', (doc: IAis) => {
-        aisList.push(doc);
-      });
-      stream.on('end', () => {
-        resolve(aisList);
-      });
-      stream.on('error', (err: Error) => {
-        reject(err);
-      });
-    });
+    console.log('Streaming AIS data...');
+
+    try {
+      for await (const doc of cursor) {
+        aisList.push(doc as IAis);
+      }
+
+      console.log('✅ Stream selesai, total data:', aisList.length);
+      return aisList;
+    } catch (err) {
+      console.error('❌ Stream error:', err);
+      throw err;
+    }
   }
+
 
   async getAisByMmsi(mmsi: string): Promise<IAis | null> {
     return this.aisRepository.getByMmsi(mmsi);
