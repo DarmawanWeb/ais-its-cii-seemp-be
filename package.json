@@ -2,9 +2,10 @@
   "name": "express-starter",
   "version": "1.0.0",
   "description": "",
-  "scripts": {
+    "scripts": {
     "build": "tsc",
     "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node bin/www.ts",
+    "worker": "node dist/bin/worker.js",
     "start": "node dist/bin/www.js",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write 'src/**/*.{ts,js,json,md}'",

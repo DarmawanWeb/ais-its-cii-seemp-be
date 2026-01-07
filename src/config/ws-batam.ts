@@ -21,6 +21,7 @@ const batamConnectSocket = () => {
   socket.on('messageFromServer', async (data: TimestampedAisMessage) => {
     try {
       await aisService.createOrUpdateAis(data, true);
+      console.log('Batam AIS data processed for MMSI:', data.message.data.mmsi);
     } catch (error) {
       logger.error('Error processing message from server:', error);
       console.error('Error processing message from server:', data);
